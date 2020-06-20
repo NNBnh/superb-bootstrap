@@ -1,12 +1,12 @@
 #!/bin/sh
 
-#     ____ 
-#    / __ )   __     __      __ 
-#   / __  |__/ /__  / /____ / / 
-#  / /_/ / _  / _ \/ __(_-</ _ \
-# /_____/\_,_/\___/\__/___/_//_/
+#     ____
+#    / __ )       __ 
+#   / __  |  ___ / / 
+#  / /_/ /_ (_-</ _ \
+# /_____/(_)___/_//_/
 
-# File:         bdot.sh
+# File:         b.sh
 # Description:  Dotfiles manager that superB
 # Author:       NNB
 #               └─ https://github.com/NNBnh
@@ -44,25 +44,26 @@ pm=(
 	}
 
 	function ins-packages() {
+		if [[ -f "${dir_dotfiles}/install/info" ]]; then
+			info=$(awk '{gsub("#.*$", "");print}' "${dir_dotfiles}/install/info")
 
-		info=$(awk '{gsub("#.*$", "");print}' "${dir_dotfiles}/install/info")
+			[[ "${options_pm}" == 'a' ]] && [[ "${info}" == *AUR:* ]] && pm_add+="1 "
+			                                [[ "${info}" == *FLA:* ]] && pm_add+="2 " && dependencies[0]+="flatpak "
+			[[ "${options_pm}" == 'a' ]] && [[ "${info}" == *SNA:* ]] && pm_add+="3 " && pm[3,3]='sudo pacman -S --noconfirm --needed snapd || ins-snap'
+			[[ "${options_pm}" == 'd' ]] && [[ "${info}" == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
 
-		[[ "${options_pm}" == 'a' ]] && [[ "${info}" == *AUR:* ]] && pm_add+="1 "
-		                                [[ "${info}" == *FLA:* ]] && pm_add+="2 " && dependencies[0]+="flatpak "
-		[[ "${options_pm}" == 'a' ]] && [[ "${info}" == *SNA:* ]] && pm_add+="3 " && pm[3,3]='sudo pacman -S --noconfirm --needed snapd || ins-snap'
-		[[ "${options_pm}" == 'd' ]] && [[ "${info}" == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
+			for p in "0 ${pm_add}"
+			do
+				print "Installing ${pm[$p,0]} Packages"
 
-		for p in "0 ${pm_add}"
-		do
-			print "Installing ${pm[$p,0]} Packages"
+				${pm[$p,4]}
 
-			${pm[$p,4]}
-
-			sudo ${pm[$p,1]}${pm[$p,2]} ${dependencies[$p]} \
-				$(print "${info}" \
-				| awk -v FPAT="${pm[$p,3]}:[^\S]+" 'NF{ print $1 }' \
-				| awk "{gsub(\"${pm[$p,3]}:\", \"\");print}")
-		done
+				sudo ${pm[$p,1]}${pm[$p,2]} ${dependencies[$p]} \
+					$(print "${info}" \
+					| awk -v FPAT="${pm[$p,3]}:[^\S]+" 'NF{ print $1 }' \
+					| awk "{gsub(\"${pm[$p,3]}:\", \"\");print}")
+			done
+		fi
 	}
 
 		# YAY
@@ -88,7 +89,13 @@ pm=(
 	# Dotfiles
 		# Download dotfiles
 		function dl-dotfiles() {
-			if [[ -z ${repo} ]]
+			if [[ ${repo} = '+' ]]
+				print 'Make dotfiles directory'
+
+				mkdir -p ${dir_dotfiles}/Dotfiles/{install,home,root,other}
+
+				exit
+			elif [[ -z ${repo} ]]
 				print 'Download dotfiles'
 
 				git clone ${repo} "${dir_dotfiles}" && dotfiles='exist'
@@ -103,11 +110,9 @@ pm=(
 
 			for dir_stow in 'home' 'root'
 			do
-				if [[ ! -f "${dir_dotfiles}/${dir_stow}" ]]; then
-					sudo stow -vt ~ ${dir_stow}
-				else
-					print "${dir_dotfiles}/${dir_stow} directory does not exist"
-				fi
+				[[ -d "${dir_dotfiles}/${dir_stow}" ]] \
+					&& sudo stow -vt ~ ${dir_stow} \
+					|| print "${dir_dotfiles}/${dir_stow} directory does not exist"
 			done
 
 			cd "${dir_now}"
@@ -117,7 +122,7 @@ pm=(
 	function exec-before() {
 		print 'Executing before installation'
 
-		[[ ! -f "${dir_dotfiles}/install/before" ]] \
+		[[ -f "${dir_dotfiles}/install/before" ]] \
 			&& "${dir_dotfiles}/install/before" \
 			|| print "${dir_dotfiles}/install/before file does not exist"
 	}
@@ -126,44 +131,59 @@ pm=(
 	function exec-after() {
 		print 'Executing after installation'
 
-		[[ ! -f "${dir_dotfiles}/install/after" ]] \
+		[[ -f "${dir_dotfiles}/install/after" ]] \
 			&& "${dir_dotfiles}/install/after" \
 			|| print "${dir_dotfiles}/install/after file does not exist"
 	}
 
 	# Prompt
 	function prompt() {
-		print '     ____\n' \
-		      '   / __ )   __     __      __\n' \
-		      '  / __  |__/ /__  / /____ / /\n' \
-		      ' / /_/ / _  / _ \\/ __(_-</ _ \\\n' \
-		      '/_____/\\_,_/\\___/\\__/___/_//_/\n' \
+		print '\n' \
+		      '    ____            \n' \
+		      '   / __ )       __  \n' \
+		      '  / __  |  ___ / /  \n' \
+		      ' / /_/ /_ (_-</ _ \\\n' \
+		      '/_____/(_)___/_//_/ \n' \
 		      '\n' \
 		      'Dotfiles manager that superB\n'
 		read -s -p ' Press [↵ Enter]'
 
-		print ' \n' \
-		      'Enter your git repository address or leave it blank to use current working directory\n'
+		print '\n' \
+		      'Enter your git repository address\n' \
+		      '  __ ______                      \n' \
+		      '  ╷  ╷                           \n' \
+		      '  │  └ Username                  \n' \
+		      '  │                              \n' \
+		      '  └ gh = github                  \n' \
+		      '    gl = gitlab                  \n' \
+		      '    bb = bitbucket               \n' \
+		      '    ct = custom                  \n' \
+		      '\n' \
+		      '(Leave all blank to use current working directory)\n' \
+		      "(Enter '+' to make new dotfiles directory)        \n"
 		read -p ' Datas address: ' -a options_repo
-		case ${options_repo} in
-			'')  repo=''                ;;
-			*/*) repo="${options_repo}" ;;
+		case ${options_repo[1]} in
+			'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
 			*)
-				case ${options_repo[1]} in
-					'gl') repo="https://gitlab.com/${options_repo[0]}/Dotfiles.git"    ;;
-					'bb') repo="https://bitbucket.org/${options_repo[0]}/Dotfiles.git" ;;
-					*)    repo="https://github.com/${options_repo[0]}/Dotfiles.git"    ;;
+				case ${options_repo[0]} in
+					'gh') repo="https://github.com/${options_repo[1]}/Dotfiles.git"    ;;
+					'gl') repo="https://gitlab.com/${options_repo[1]}/Dotfiles.git"    ;;
+					'bb') repo="https://bitbucket.org/${options_repo[1]}/Dotfiles.git" ;;
+					'ct') repo="${options_repo}"                                       ;;
+					'+')  repo='+'                                                     ;;
+					'')   repo=''                                                      ;;
 				esac
 			;;
 		esac
 
 		if [[ ! -z "${options_repo}" ]]; then
-			print ' \n' \
-			      'Enter directory to download dotfiles\n'
+			print '\n' \
+			      'Enter directory to store dotfiles           \n' \
+			      "(Enter '.' to use current working directory)\n"
 			read -p ' Location: ' options_dir
 			case ${options_dir} in
 				'')  dir_dotfiles="${$HOME}/Dotfiles"      ;;
-				'.') dir_dotfiles="${dir_now}"                 ;;
+				'.') dir_dotfiles="${dir_now}"             ;;
 				*)   dir_dotfiles="${HOME}/${options_dir}" ;;
 			esac
 		else
@@ -172,7 +192,7 @@ pm=(
 
 		while [[ -z '' ]]
 		do
-			print ' \n' \
+			print '\n' \
 			      'Enter the distribution \n' \
 			      "  a = Archlinux's base \n" \
 			      "  d = Debian's base \n" \
