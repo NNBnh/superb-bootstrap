@@ -10,7 +10,7 @@
 # Description:  Dotfiles manager that superB
 # Author:       NNB
 #               └─ https://github.com/NNBnh
-# URL:          https://github.com/NNBnh/bdots
+# URL:          https://github.com/NNBnh/b.sh
 # License:      GPLv3
 
 #    This program is free software: you can redistribute it and/or modify
