@@ -29,3 +29,5 @@ github_username:  NNBnh
 
 # Build settings
 markdown: kramdown
+
+theme: jekyll-theme-cayman
