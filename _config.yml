@@ -11,4 +11,3 @@ github_username:
 # Build settings
 markdown: kramdown
 remote_theme: volny/creative-theme-jekyll
-theme: jekyll-theme-cayman
