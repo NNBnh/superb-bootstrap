@@ -1,9 +1,11 @@
 <h1 align="center"><b><i>B.sh</i></b></h1>
 <p align="center">Dotfiles manager that <i>SuperB</i></p>
 
-<p align="center">
-    <img src="image/logo.png">
-</p>
+
+<!-- <p align="center"> -->
+<!--     <img src="image/logo.png"> -->
+<!-- </p> -->
+
 
 ## About
 **B.sh** is a command-line tool written in `sh` to download and manager dotfiles. <br>
@@ -30,9 +32,10 @@ Dotfiles/
   * [Features](#features)
 * [Contents](#contents)
 * [Setup](#setup)
-  * [dependencies](#dependencies)
+  * [Dependencies](#dependencies)
+    * [To start b.sh](#to-start-bsh)
+    * [Installation process](#installation-process)
 * [Usage](#usage)
-  * [Configuration](#configuration)
 
 ## Setup
 ### Dependencies
@@ -44,7 +47,7 @@ Dotfiles/
 * `sh` to process
 * `curl` or `wget` to take the script
 
-## Installation process
+#### Installation process
 * `git` to download from git's repository
 * `stow` to install dotfiles
 * `awk` to read installation file
