@@ -8,12 +8,15 @@
 
 
 ## About
-**B.sh** is a command-line tool written in `sh` to download and manager dotfiles. <br>
+**B.sh** is a *SuperB* dotfiles manager written in `sh`.
+
+###### NOTE: B.sh pronounce as B-dot-sh.
 
 ### Features
 * Super **minimum** with only [**256** line of `sh`](b.sh).
 * Super [**low Dependencies**](#dependencies):
 * Super **Easy** to use:
+
 ```
 Dotfiles/
 ├─ .git/
@@ -54,10 +57,13 @@ Dotfiles/
 
 ## Usage
 Type this command to the terminal:
+
 ```sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/NNBnh/b.sh/master/b.sh)"
 ```
+
 If you want to use `wget`:
+
 ```sh
 sh -c "$(wget -qO - https://raw.githubusercontent.com/NNBnh/b.sh/master/b.sh)"
 ```
