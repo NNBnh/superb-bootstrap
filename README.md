@@ -1,11 +1,9 @@
 <h1 align="center"><b><i>B.sh</i></b></h1>
 <p align="center">Dotfiles manager that <i>SuperB</i></p>
 
-
 <!-- <p align="center"> -->
 <!--     <img src="image/logo.png"> -->
 <!-- </p> -->
-
 
 ## About
 **B.sh** is a *SuperB* dotfiles manager written in `sh`.
@@ -13,9 +11,9 @@
 ###### NOTE: B.sh pronounce as B-dot-sh.
 
 ### Features
-* Super **minimum** with only [**256** line of `sh`](b.sh).
-* Super [**low dependencies**](#dependencies):
-* Super **easy** to use:
+- Super **minimum** with only [**256** line of `sh`](b.sh).
+- Super [**low dependencies**](#dependencies):
+- Super **easy** to use:
 
 ```
 Dotfiles/
@@ -31,29 +29,29 @@ Dotfiles/
 ```
 
 ## Contents
-* [About](#about)
-  * [Features](#features)
-* [Contents](#contents)
-* [Setup](#setup)
-  * [Dependencies](#dependencies)
-    * [To start b.sh](#to-start-bsh)
-    * [Installation process](#installation-process)
-* [Usage](#usage)
+- [About](#about)
+  - [Features](#features)
+- [Contents](#contents)
+- [Setup](#setup)
+  - [Dependencies](#dependencies)
+    - [To start b.sh](#to-start-bsh)
+    - [Installation process](#installation-process)
+- [Usage](#usage)
 
 ## Setup
 ### Dependencies
 #### To start b.sh
-* One of this linux system:
-  * Archlinux's base
-  * Debian's base
-  * Voidlinux's base
-* `sh` to process
-* `curl` or `wget` to take the script
+- One of this linux system:
+  - Archlinux's base
+  - Debian's base
+  - Voidlinux's base
+- `sh` to process
+- `curl` or `wget` to take the script
 
 #### Installation process
-* `git` to download from git's repository
-* `stow` to install dotfiles
-* `awk` to read installation file
+- `git` to download from git's repository
+- `stow` to install dotfiles
+- `awk` to read installation file
 
 ## Usage
 Type this command to the terminal:
