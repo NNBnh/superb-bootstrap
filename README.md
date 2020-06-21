@@ -14,8 +14,8 @@
 
 ### Features
 * Super **minimum** with only [**256** line of `sh`](b.sh).
-* Super [**low Dependencies**](#dependencies):
-* Super **Easy** to use:
+* Super [**low dependencies**](#dependencies):
+* Super **easy** to use:
 
 ```
 Dotfiles/
