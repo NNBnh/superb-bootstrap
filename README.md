@@ -39,7 +39,7 @@ Dotfiles/
 ## Setup
 ### Dependencies
 #### To start b.sh
-- One of this linux system:
+- One of these linux distributions:
   - Archlinux's base
   - Debian's base
   - Voidlinux's base
