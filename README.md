@@ -1,9 +1,9 @@
-<h1 align="center"><b><i>B.sh</i></b></h1>
-<p align="center">Dotfiles manager that <i>SuperB</i></p>
+<!-- <h1 align="center"><b><i>B.sh</i></b></h1> -->
 
 <p align="center">
-	<img src="image/logo.png">
+	<img src="logo.png">
 </p>
+<p align="center">Dotfiles manager that <i>SuperB</i></p>
 
 ## About
 **B.sh** is a *SuperB* dotfiles manager written in `sh`.
