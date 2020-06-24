@@ -1,5 +1,5 @@
 <p align="center">
-	<img width="50%" src="l0go.png" alt="B.sh">
+	<img width="50%" src="logo.png" alt="B.sh">
 </p>
 <p align="center">Dotfiles manager that <i>SuperB</i></p>
 
