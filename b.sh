@@ -37,9 +37,9 @@ pm=(
 )
 
 # Functions
-	# Ddependencies
+	# Dependencies
 	function ins-dependencies() {
-		print 'Installing dependencies'
+		echo 'Installing dependencies'
 
 		sudo ${pm[0,1]}${pm[0,3]} git stow awk
 	}
@@ -55,12 +55,12 @@ pm=(
 
 			for p in "0 ${pm_add}"
 			do
-				print "Installing ${pm[$p,0]} Packages"
+				echo "Installing ${pm[$p,0]} Packages"
 
 				${pm[$p,4]}
 
 				sudo ${pm[$p,1]}${pm[$p,2]} ${dependencies[$p]} \
-					$(print "${info}" \
+					$(echo "${info}" \
 					| awk -v FPAT="${pm[$p,3]}:[^\S]+" 'NF{ print $1 }' \
 					| awk "{gsub(\"${pm[$p,3]}:\", \"\");print}")
 			done
@@ -69,7 +69,7 @@ pm=(
 
 		# YAY
 		function ins-yay() {
-			print 'Installing YAY'
+			echo 'Installing YAY'
 
 			git clone https://aur.archlinux.org/yay.git "${HOME}/yay" \
 				&& cd "${HOME}/yay" \
@@ -78,7 +78,7 @@ pm=(
 
 		# Snap
 		function ins-snap() {
-			print 'Installing Snap'
+			echo 'Installing Snap'
 
 			git clone https://aur.archlinux.org/snapd.git "${HOME}/snap" \
 				&& cd "${HOME}/snap" \
@@ -91,13 +91,13 @@ pm=(
 		# Download dotfiles
 		function dl-dotfiles() {
 			if [[ ${repo} = '+' ]]
-				print 'Make dotfiles directory'
+				echo 'Make dotfiles directory'
 
 				mkdir -p ${dir_dotfiles}/Dotfiles/{install,home,root,other}
 
 				exit
 			elif [[ -z ${repo} ]]
-				print 'Download dotfiles'
+				echo 'Download dotfiles'
 
 				git clone ${repo} "${dir_dotfiles}" && dotfiles='exist'
 			fi
@@ -105,7 +105,7 @@ pm=(
 
 		# Install dotfiles
 		function ins-dotfiles() {
-			print 'Installing dotfiles'
+			echo 'Installing dotfiles'
 
 			cd "${dir_dotfiles}"
 
@@ -113,7 +113,7 @@ pm=(
 			do
 				[[ -d "${dir_dotfiles}/${dir_stow}" ]] \
 					&& sudo stow -vt ~ ${dir_stow} \
-					|| print "${dir_dotfiles}/${dir_stow} directory does not exist"
+					|| echo "${dir_dotfiles}/${dir_stow} directory does not exist"
 			done
 
 			cd "${dir_now}"
@@ -121,49 +121,51 @@ pm=(
 
 	# Before
 	function exec-before() {
-		print 'Executing before installation'
+		echo 'Executing before installation'
 
 		[[ -f "${dir_dotfiles}/install/before" ]] \
 			&& "${dir_dotfiles}/install/before" \
-			|| print "${dir_dotfiles}/install/before file does not exist"
+			|| echo "${dir_dotfiles}/install/before file does not exist"
 	}
 
 	# After
 	function exec-after() {
-		print 'Executing after installation'
+		echo 'Executing after installation'
 
 		[[ -f "${dir_dotfiles}/install/after" ]] \
 			&& "${dir_dotfiles}/install/after" \
-			|| print "${dir_dotfiles}/install/after file does not exist"
+			|| echo "${dir_dotfiles}/install/after file does not exist"
 	}
 
 	# Prompt
 	function prompt() {
-		print '\n' \
-		      '██                    ██\n' \
-		      '██                    ██\n' \
-		      '██████  ▓▓▓▓⣷⣄  █████ ██████\n' \
-		      '██  ██  ▓▓▓▓▓▓  ██▇▇▇ ██  ██\n' \
-		      '██████  ▓▓  ▓▓  ▇▇▇██ ██  ██\n' \
-		      '        ▓▓▓▓▓▓\n' \
-		      '\n' \
-		      'Dotfiles manager that superB\n'
-		read -s -p ' Press [↵ Enter]'
+	echo "
+  ██                    ██
+  ██                    ██
+  ██████  ▓▓▓▓⣷⣄  █████ ██████
+  ██  ██  ▓▓▓▓▓▓  ██▇▇▇ ██  ██
+  ██████  ▓▓  ▓▓  ▇▇▇██ ██  ██
+          ▓▓▓▓▓▓
 
-		print '\n' \
-		      'Enter your git repository address\n' \
-		      '  __ ______                      \n' \
-		      '  ╷  ╷                           \n' \
-		      '  │  └ Username                  \n' \
-		      '  │                              \n' \
-		      '  └ gh = github                  \n' \
-		      '    gl = gitlab                  \n' \
-		      '    bb = bitbucket               \n' \
-		      '    ct = custom                  \n' \
-		      '\n' \
-		      '(Leave all blank to use current working directory)\n' \
-		      "(Enter '+' to make new dotfiles directory)        \n"
-		read -p ' Datas address: ' -a options_repo
+  Dotfiles manager that superB
+"
+		read -s -p 'Press [↵ Enter]'
+
+		echo "
+Enter your git repository address
+  __ ______
+  ╷  ╷
+  │  └ Username
+  │
+  └ gh = github
+    gl = gitlab
+    bb = bitbucket
+    ct = custom
+
+(Leave all blank to use current working directory)
+(Enter '+' to make new dotfiles directory)
+"
+		read -p 'Datas address: ' -a options_repo
 		case ${options_repo[1]} in
 			'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
 			*)
@@ -179,10 +181,11 @@ pm=(
 		esac
 
 		if [[ ! -z "${options_repo}" ]]; then
-			print '\n' \
-			      'Enter directory to store dotfiles           \n' \
-			      "(Enter '.' to use current working directory)\n"
-			read -p ' Location: ' options_dir
+			echo "
+Enter directory to store dotfiles
+(Enter '.' to use current working directory)
+"
+			read -p 'Location: ' options_dir
 			case ${options_dir} in
 				'')  dir_dotfiles="${$HOME}/Dotfiles"      ;;
 				'.') dir_dotfiles="${dir_now}"             ;;
@@ -194,12 +197,13 @@ pm=(
 
 		while [[ -z '' ]]
 		do
-			print '\n' \
-			      'Enter the distribution \n' \
-			      "  a = Archlinux's base \n" \
-			      "  d = Debian's base \n" \
-			      "  v = Voidlinux's base \n"
-			read -N 1 -p ' Distro: ' options_pm
+			echo "
+Enter the distribution
+  a = Archlinux's base
+  d = Debian's base
+  v = Voidlinux's base
+"
+			read -N 1 -p 'Distro: ' options_pm
 			case ${options_pm} in
 				'a') pm+=( [0,0]='Archlinux' [0,1]='pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
 				'd') pm+=( [0,0]='Debian'    [0,1]='apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
