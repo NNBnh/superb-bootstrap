@@ -124,7 +124,7 @@ pm=(
 		print 'Executing before installation'
 
 		[[ -f "${dir_dotfiles}/install/before" ]] \
-			&& "${dir_dotfiles}/install/before" \
+			&& sudo "${dir_dotfiles}/install/before" \
 			|| print "${dir_dotfiles}/install/before file does not exist"
 	}
 
@@ -133,7 +133,7 @@ pm=(
 		print 'Executing after installation'
 
 		[[ -f "${dir_dotfiles}/install/after" ]] \
-			&& "${dir_dotfiles}/install/after" \
+			&& sudo "${dir_dotfiles}/install/after" \
 			|| print "${dir_dotfiles}/install/after file does not exist"
 	}
 
