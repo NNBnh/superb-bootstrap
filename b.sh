@@ -28,6 +28,7 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+# Value
 dir_now="${PWD}"
 declare -A pm
 pm=(
@@ -35,6 +36,81 @@ pm=(
 	[2,0]='Flatpak'   [2,1]='flatpak' [2,2]=' install'                [2,3]='sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo' [2,4]='FLA'
 	[3,0]='Snapcraft' [3,1]='snap'    [3,2]=' install'                [3,3]=''                                                                                             [3,4]='SNA'
 )
+
+function prompt() {
+echo "
+  ██                    ██
+  ██                    ██
+  ██████  ▓▓▓▓⣷⣄  █████ ██████
+  ██  ██  ▓▓▓▓▓▓  ██▇▇▇ ██  ██
+  ██████  ▓▓  ▓▓  ▇▇▇██ ██  ██
+          ▓▓▓▓▓▓
+
+  Dotfiles manager that superB
+"
+	read -s -p 'Press [↵ Enter]'
+
+	echo "
+Enter your git repository address
+  __ ______
+  ╷  ╷
+  │  └ Username
+  │
+  └ gh = github
+    gl = gitlab
+    bb = bitbucket
+    ct = custom
+
+(Leave all blank to use current working directory)
+(Enter '+' to make new dotfiles directory)
+"
+	read -p 'Datas address: ' -a options_repo
+	case ${options_repo[1]} in
+		'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
+		*)
+			case ${options_repo[0]} in
+				'gh') repo="https://github.com/${options_repo[1]}/Dotfiles.git"    ;;
+				'gl') repo="https://gitlab.com/${options_repo[1]}/Dotfiles.git"    ;;
+				'bb') repo="https://bitbucket.org/${options_repo[1]}/Dotfiles.git" ;;
+				'ct') repo="${options_repo}"                                       ;;
+				'+')  repo='+'                                                     ;;
+				'')   repo=''                                                      ;;
+			esac
+		;;
+	esac
+
+	if [[ ! -z "${options_repo}" ]]; then
+		echo "
+Enter directory to store dotfiles
+(Enter '.' to use current working directory)
+"
+		read -p 'Location: ' options_dir
+		case ${options_dir} in
+			'')  dir_dotfiles="${$HOME}/Dotfiles"      ;;
+			'.') dir_dotfiles="${dir_now}"             ;;
+			*)   dir_dotfiles="${HOME}/${options_dir}" ;;
+		esac
+	else
+		dir_dotfiles="${dir_now}"
+	fi
+
+	while [[ -z '' ]]
+	do
+		echo "
+Enter the distribution
+  a = Archlinux's base
+  d = Debian's base
+  v = Voidlinux's base
+"
+		read -N 1 -p 'Distro: ' options_pm
+		case ${options_pm} in
+			'a') pm+=( [0,0]='Archlinux' [0,1]='pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
+			'd') pm+=( [0,0]='Debian'    [0,1]='apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
+			'v') pm+=( [0,0]='Voidlinux' [0,1]='xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
+		esac
+	done
+}
+
 
 # Functions
 	# Dependencies
@@ -93,7 +169,33 @@ pm=(
 			if [[ ${repo} = '+' ]]
 				echo 'Make dotfiles directory'
 
-				mkdir -p ${dir_dotfiles}/Dotfiles/{install,home,root,other}
+				mkdir -p ${dir_dotfiles}/{install,home,root,other}
+				echo '
+# This file stores package-list and installation settings.
+#
+# Packages-lists:              |  Exemple:
+#   syntax: ___:______         |    # This is a comment
+#           ╷   ╷              |    
+#           │   └ package      |    # Terminal stuff
+#           │                  |    PAC:alacritty APT:alacritty XBP:alacritty
+#           └ PAC = archlinux  |    
+#             APT = Debian     |        # Cool tool
+#             XBP = voidlinux  |        PAC:figlet APT:figlet XBP:figlet
+#             AUR = aur        |    
+#             FLA = flatpak    |    # Game maker
+#             SNA = Snapcraft  |    AUR:godot FLA:org.godotengine.Godot XBP:godot
+#                              |
+#
+' >> "${dir_dotfiles}/install/info"
+				echo '#!/bin/sh
+
+# This script file ran before dotfiles were linked
+' >> "${dir_dotfiles}/install/before"
+				echo '#!/bin/sh
+
+# This script file ran after dotfiles were linked
+' >> "${dir_dotfiles}/install/after"
+				chmod +x {before,after}
 
 				exit
 			elif [[ -z ${repo} ]]
@@ -137,81 +239,6 @@ pm=(
 			|| echo "${dir_dotfiles}/install/after file does not exist"
 	}
 
-	# Prompt
-	function prompt() {
-	echo "
-  ██                    ██
-  ██                    ██
-  ██████  ▓▓▓▓⣷⣄  █████ ██████
-  ██  ██  ▓▓▓▓▓▓  ██▇▇▇ ██  ██
-  ██████  ▓▓  ▓▓  ▇▇▇██ ██  ██
-          ▓▓▓▓▓▓
-
-  Dotfiles manager that superB
-"
-		read -s -p 'Press [↵ Enter]'
-
-		echo "
-Enter your git repository address
-  __ ______
-  ╷  ╷
-  │  └ Username
-  │
-  └ gh = github
-    gl = gitlab
-    bb = bitbucket
-    ct = custom
-
-(Leave all blank to use current working directory)
-(Enter '+' to make new dotfiles directory)
-"
-		read -p 'Datas address: ' -a options_repo
-		case ${options_repo[1]} in
-			'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
-			*)
-				case ${options_repo[0]} in
-					'gh') repo="https://github.com/${options_repo[1]}/Dotfiles.git"    ;;
-					'gl') repo="https://gitlab.com/${options_repo[1]}/Dotfiles.git"    ;;
-					'bb') repo="https://bitbucket.org/${options_repo[1]}/Dotfiles.git" ;;
-					'ct') repo="${options_repo}"                                       ;;
-					'+')  repo='+'                                                     ;;
-					'')   repo=''                                                      ;;
-				esac
-			;;
-		esac
-
-		if [[ ! -z "${options_repo}" ]]; then
-			echo "
-Enter directory to store dotfiles
-(Enter '.' to use current working directory)
-"
-			read -p 'Location: ' options_dir
-			case ${options_dir} in
-				'')  dir_dotfiles="${$HOME}/Dotfiles"      ;;
-				'.') dir_dotfiles="${dir_now}"             ;;
-				*)   dir_dotfiles="${HOME}/${options_dir}" ;;
-			esac
-		else
-			dir_dotfiles="${dir_now}"
-		fi
-
-		while [[ -z '' ]]
-		do
-			echo "
-Enter the distribution
-  a = Archlinux's base
-  d = Debian's base
-  v = Voidlinux's base
-"
-			read -N 1 -p 'Distro: ' options_pm
-			case ${options_pm} in
-				'a') pm+=( [0,0]='Archlinux' [0,1]='pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
-				'd') pm+=( [0,0]='Debian'    [0,1]='apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
-				'v') pm+=( [0,0]='Voidlinux' [0,1]='xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
-			esac
-		done
-	}
-
 
 # Installation
 for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-dotfiles exec-after'
@@ -222,39 +249,8 @@ done
 
 exit
 
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+
+# Yes, this file is only 256 lines.
+# ---------------------------------
+# > 2^8↵
+# 256
