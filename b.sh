@@ -237,6 +237,87 @@ Enter the distribution
 		[[ -f "${dir_dotfiles}/install/after" ]] \
 			&& "${dir_dotfiles}/install/after" \
 			|| echo "${dir_dotfiles}/install/after file does not exist"
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+	}
+
+	# Prompt
+	function prompt() {
+	echo "
+  ██                    ██
+  ██                    ██
+  ██████  ▓▓▓▓⣷⣄  █████ ██████
+  ██  ██  ▓▓▓▓▓▓  ██▇▇▇ ██  ██
+  ██████  ▓▓  ▓▓  ▇▇▇██ ██  ██
+          ▓▓▓▓▓▓
+
+  Dotfiles manager that superB
+"
+		read -s -p 'Press [↵ Enter]'
+
+		echo "
+Enter your git repository address
+  __ ______
+  ╷  ╷
+  │  └ Username
+  │
+  └ gh = github
+    gl = gitlab
+    bb = bitbucket
+    ct = custom
+
+(Leave all blank to use current working directory)
+(Enter '+' to make new dotfiles directory)
+"
+		read -p 'Datas address: ' -a options_repo
+		case ${options_repo[1]} in
+			'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
+			*)
+				case ${options_repo[0]} in
+					'gh') repo="https://github.com/${options_repo[1]}/Dotfiles.git"    ;;
+					'gl') repo="https://gitlab.com/${options_repo[1]}/Dotfiles.git"    ;;
+					'bb') repo="https://bitbucket.org/${options_repo[1]}/Dotfiles.git" ;;
+					'ct') repo="${options_repo}"                                       ;;
+					'+')  repo='+'                                                     ;;
+					'')   repo=''                                                      ;;
+				esac
+			;;
+		esac
+
+		if [[ ! -z "${options_repo}" ]]; then
+			echo "
+Enter directory to store dotfiles
+(Enter '.' to use current working directory)
+"
+			read -p 'Location: ' options_dir
+			case ${options_dir} in
+				'')  dir_dotfiles="${$HOME}/Dotfiles"      ;;
+				'.') dir_dotfiles="${dir_now}"             ;;
+				*)   dir_dotfiles="${HOME}/${options_dir}" ;;
+			esac
+		else
+			dir_dotfiles="${dir_now}"
+		fi
+
+		while [[ -z '' ]]
+		do
+			echo "
+Enter the distribution
+  a = Archlinux's base
+  d = Debian's base
+  v = Voidlinux's base
+"
+			read -N 1 -p 'Distro: ' options_pm
+			case ${options_pm} in
+				'a') pm+=( [0,0]='Archlinux' [0,1]='pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
+				'd') pm+=( [0,0]='Debian'    [0,1]='apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
+				'v') pm+=( [0,0]='Voidlinux' [0,1]='xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
+			esac
+		done
+>>>>>>> 315a20a4d2f78b3121f4833a1a26dea3522c454f
+>>>>>>> 412eced8a34465e70bec3f90374fa38c69acb05e
 	}
 
 
