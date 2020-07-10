@@ -55,11 +55,11 @@ Dotfiles/
 Type this command to the terminal:
 
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/NNBnh/b.sh/master/b.sh)"
+curl -fsSL https://raw.githubusercontent.com/NNBnh/b.sh/master/b.sh | sh
 ```
 
 If you want to use `wget`:
 
 ```sh
-sh -c "$(wget -qO - https://raw.githubusercontent.com/NNBnh/b.sh/master/b.sh)"
+wget -qO - https://raw.githubusercontent.com/NNBnh/b.sh/master/b.sh | sh
 ```
