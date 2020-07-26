@@ -29,7 +29,7 @@
 
 
 # Value
-dir_now="${PWD}"
+dir_now=$PWD
 declare -A pm
 pm=(
 	[1,0]='AUR'       [1,1]='yay'     [1,2]=' -S --nodiffmenu --save' [1,3]='sudo pacman -S --noconfirm --needed yay || ins-yay'                                           [1,4]='AUR'
@@ -38,7 +38,7 @@ pm=(
 )
 
 function prompt() {
-echo "
+echo '''
   ██                    ██
   ██                    ██
   ██████  ▓▓▓▓⣷⣄  █████ ██████
@@ -47,10 +47,10 @@ echo "
           ▓▓▓▓▓▓
 
   Dotfiles manager that superB
-"
+'''
 	read -s -p 'Press [↵ Enter]'
 
-	echo "
+	echo '''
 Enter your git repository address
   __ ______
   ╷  ╷
@@ -62,8 +62,8 @@ Enter your git repository address
     ct = custom
 
 (Leave all blank to use current working directory)
-(Enter '+' to make new dotfiles directory)
-"
+(Enter "+" to make new dotfiles directory)
+'''
 	read -p 'Datas address: ' -a options_repo
 	case ${options_repo[1]} in
 		'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
@@ -72,38 +72,37 @@ Enter your git repository address
 				'gh') repo="https://github.com/${options_repo[1]}/Dotfiles.git"    ;;
 				'gl') repo="https://gitlab.com/${options_repo[1]}/Dotfiles.git"    ;;
 				'bb') repo="https://bitbucket.org/${options_repo[1]}/Dotfiles.git" ;;
-				'ct') repo="${options_repo}"                                       ;;
+				'ct') repo=$options_repo                                           ;;
 				'+')  repo='+'                                                     ;;
 				'')   repo=''                                                      ;;
 			esac
 		;;
 	esac
 
-	if [[ ! -z "${options_repo}" ]]; then
-		echo "
+	if [[ ! -z $options_repo ]]; then
+		echo '''
 Enter directory to store dotfiles
-(Enter '.' to use current working directory)
-"
+(Enter "." to use current working directory)
+'''
 		read -p 'Location: ' options_dir
-		case ${options_dir} in
-			'')  dir_dotfiles="${$HOME}/Dotfiles"      ;;
-			'.') dir_dotfiles="${dir_now}"             ;;
-			*)   dir_dotfiles="${HOME}/${options_dir}" ;;
+		case $options_dir in
+			'')  dir_dotfiles="$$HOME/Dotfiles"    ;;
+			'.') dir_dotfiles=$dir_now             ;;
+			*)   dir_dotfiles="$HOME/$options_dir" ;;
 		esac
 	else
-		dir_dotfiles="${dir_now}"
+		dir_dotfiles=$dir_now
 	fi
 
-	while [[ -z '' ]]
-	do
-		echo "
+	while :; do
+		echo '''
 Enter the distribution
-  a = Archlinux's base
-  d = Debian's base
-  v = Voidlinux's base
-"
+  a = Archlinux base
+  d = Debian base
+  v = Voidlinux base
+'''
 		read -N 1 -p 'Distro: ' options_pm
-		case ${options_pm} in
+		case $options_pm in
 			'a') pm+=( [0,0]='Archlinux' [0,1]='pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
 			'd') pm+=( [0,0]='Debian'    [0,1]='apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
 			'v') pm+=( [0,0]='Voidlinux' [0,1]='xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
@@ -121,22 +120,21 @@ Enter the distribution
 	}
 
 	function ins-packages() {
-		if [[ -f "${dir_dotfiles}/install/info" ]]; then
-			info=$(awk '{gsub("#.*$", "");print}' "${dir_dotfiles}/install/info")
+		if [[ -f "$dir_dotfiles/install/info" ]]; then
+			info=$(awk '{gsub("#.*$", "");print}' "$dir_dotfiles/install/info")
 
-			[[ "${options_pm}" == 'a' ]] && [[ "${info}" == *AUR:* ]] && pm_add+="1 "
-			                                [[ "${info}" == *FLA:* ]] && pm_add+="2 " && dependencies[0]+="flatpak "
-			[[ "${options_pm}" == 'a' ]] && [[ "${info}" == *SNA:* ]] && pm_add+="3 " && pm[3,3]='sudo pacman -S --noconfirm --needed snapd || ins-snap'
-			[[ "${options_pm}" == 'd' ]] && [[ "${info}" == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
+			[[ $options_pm == 'a' ]] && [[ $info == *AUR:* ]] && pm_add+="1 "
+			                                [[ $info == *FLA:* ]] && pm_add+="2 " && dependencies[0]+="flatpak "
+			[[ $options_pm == 'a' ]] && [[ $info == *SNA:* ]] && pm_add+="3 " && pm[3,3]='sudo pacman -S --noconfirm --needed snapd || ins-snap'
+			[[ $options_pm == 'd' ]] && [[ $info == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
 
-			for p in "0 ${pm_add}"
-			do
+			for p in 0 $pm_add; do
 				echo "Installing ${pm[$p,0]} Packages"
 
 				${pm[$p,4]}
 
 				sudo ${pm[$p,1]}${pm[$p,2]} ${dependencies[$p]} \
-					$(echo "${info}" \
+					$(echo info \
 					| awk -v FPAT="${pm[$p,3]}:[^\S]+" 'NF{ print $1 }' \
 					| awk "{gsub(\"${pm[$p,3]}:\", \"\");print}")
 			done
@@ -147,8 +145,8 @@ Enter the distribution
 		function ins-yay() {
 			echo 'Installing YAY'
 
-			git clone https://aur.archlinux.org/yay.git "${HOME}/yay" \
-				&& cd "${HOME}/yay" \
+			git clone https://aur.archlinux.org/yay.git "$HOME/yay" \
+				&& cd "$HOME/yay" \
 				&& makepkg -si
 		}
 
@@ -156,8 +154,8 @@ Enter the distribution
 		function ins-snap() {
 			echo 'Installing Snap'
 
-			git clone https://aur.archlinux.org/snapd.git "${HOME}/snap" \
-				&& cd "${HOME}/snap" \
+			git clone https://aur.archlinux.org/snapd.git "$HOME/snap" \
+				&& cd "$HOME/snap" \
 				&& makepkg -si \
 				&& sudo systemctl enable --now snapd.socket \
 				&& sudo ln -s /var/lib/snapd/snap /snap
@@ -166,42 +164,42 @@ Enter the distribution
 	# Dotfiles
 		# Download dotfiles
 		function dl-dotfiles() {
-			if [[ ${repo} = '+' ]]
+			if [[ $repo = '+' ]]
 				echo 'Make dotfiles directory'
 
-				mkdir -p ${dir_dotfiles}/{install,home,root,other}
+				mkdir -p $dir_dotfiles/{install,home,root,other}
 				echo '
 # This file stores package-list and installation settings.
 #
-# Packages-lists:              |  Exemple:
-#   syntax: ___:______         |    # This is a comment
-#           ╷   ╷              |    
-#           │   └ package      |    # Terminal stuff
-#           │                  |    PAC:alacritty APT:alacritty XBP:alacritty
-#           └ PAC = archlinux  |    
-#             APT = Debian     |        # Cool tool
-#             XBP = voidlinux  |        PAC:figlet APT:figlet XBP:figlet
-#             AUR = aur        |    
-#             FLA = flatpak    |    # Game maker
-#             SNA = Snapcraft  |    AUR:godot FLA:org.godotengine.Godot XBP:godot
-#                              |
+# Packages-lists:              │  Exemple:
+#   syntax: ___:______         │    # This is a comment
+#           ╷   ╷              │    
+#           │   └ package      │    # Terminal stuff
+#           │                  │    PAC:alacritty APT:alacritty XBP:alacritty
+#           └ PAC = archlinux  │    
+#             APT = Debian     │        # Cool tool
+#             XBP = voidlinux  │        PAC:figlet APT:figlet XBP:figlet
+#             AUR = aur        │    
+#             FLA = flatpak    │    # Game maker
+#             SNA = Snapcraft  │    AUR:godot FLA:org.godotengine.Godot XBP:godot
+#                              │
 #
-' >> "${dir_dotfiles}/install/info"
+' >> "$dir_dotfiles/install/info"
 				echo '#!/bin/sh
 
 # This script file ran before dotfiles were linked
-' >> "${dir_dotfiles}/install/before"
+' >> "$dir_dotfiles/install/before"
 				echo '#!/bin/sh
 
 # This script file ran after dotfiles were linked
-' >> "${dir_dotfiles}/install/after"
+' >> "$dir_dotfiles/install/after"
 				chmod +x {before,after}
 
 				exit
-			elif [[ -z ${repo} ]]
+			elif [[ -z $repo ]]
 				echo 'Download dotfiles'
 
-				git clone ${repo} "${dir_dotfiles}" && dotfiles='exist'
+				git clone $repo $dir_dotfiles && dotfiles='exist'
 			fi
 		}
 
@@ -209,45 +207,47 @@ Enter the distribution
 		function ins-dotfiles() {
 			echo 'Installing dotfiles'
 
-			cd "${dir_dotfiles}"
+			cd $dir_dotfiles
 
-			for dir_stow in 'home' 'root'
-			do
-				[[ -d "${dir_dotfiles}/${dir_stow}" ]] \
-					&& sudo stow -vt ~ ${dir_stow} \
-					|| echo "${dir_dotfiles}/${dir_stow} directory does not exist"
+			for dir_stow in 'home' 'root'; do
+				[[ -d "$dir_dotfiles/$dir_stow" ]] \
+					&& sudo stow -vt ~ $dir_stow \
+					|| echo "$dir_dotfiles/$dir_stow directory does not exist"
 			done
 
-			cd "${dir_now}"
+			cd $dir_now
 		}
 
 	# Before
 	function exec-before() {
 		echo 'Executing before installation'
 
-		[[ -f "${dir_dotfiles}/install/before" ]] \
-			&& "${dir_dotfiles}/install/before" \
-			|| echo "${dir_dotfiles}/install/before file does not exist"
+		[[ -f "$dir_dotfiles/install/before" ]] \
+			&& "$dir_dotfiles/install/before" \
+			|| echo "$dir_dotfiles/install/before file does not exist"
 	}
 
 	# After
 	function exec-after() {
 		echo 'Executing after installation'
 
-		[[ -f "${dir_dotfiles}/install/after" ]] \
-			&& "${dir_dotfiles}/install/after" \
-			|| echo "${dir_dotfiles}/install/after file does not exist"
+		[[ -f "$dir_dotfiles/install/after" ]] \
+			&& "$dir_dotfiles/install/after" \
+			|| echo "$dir_dotfiles/install/after file does not exist"
 	}
 
 
 # Installation
-for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-dotfiles exec-after'
-do
-	${stage}
+for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-dotfiles exec-after'; do
+	$stage
 done
 
 
 exit
+
+
+
+
 
 
 # Yes, this file is only 256 lines.
