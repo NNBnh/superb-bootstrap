@@ -184,15 +184,15 @@ Enter the distribution
 #             SNA = Snapcraft  │    AUR:godot FLA:org.godotengine.Godot XBP:godot
 #                              │
 #
-' >> "$dir_dotfiles/install/info"
+' > "$dir_dotfiles/install/info"
 				echo '#!/bin/sh
 
 # This script file ran before dotfiles were linked
-' >> "$dir_dotfiles/install/before"
+' > "$dir_dotfiles/install/before"
 				echo '#!/bin/sh
 
 # This script file ran after dotfiles were linked
-' >> "$dir_dotfiles/install/after"
+' > "$dir_dotfiles/install/after"
 				chmod +x {before,after}
 
 				exit
