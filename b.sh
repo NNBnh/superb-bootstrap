@@ -38,7 +38,7 @@ pm=(
 )
 
 function prompt() {
-echo '''
+	echo '''
   ██                    ██
   ██                    ██
   ██████  ▓▓▓▓⣷⣄  █████ ██████
@@ -119,14 +119,18 @@ Enter the distribution
 		sudo ${pm[0,1]}${pm[0,3]} git stow awk
 	}
 
+	# Packages
 	function ins-packages() {
 		if [[ -f "$dir_dotfiles/install/info" ]]; then
 			info=$(awk '{gsub("#.*$", "");print}' "$dir_dotfiles/install/info")
+			info_aur=$(echo $info | awk "!/${pm[0,4]}:/")
+			info_flatpak=$(echo $info_aur | awk "!/FLA:/")
+			info_snap=$(echo $info_flatpak | awk "!/SNA:/")
 
-			[[ $options_pm == 'a' ]] && [[ $info == *AUR:* ]] && pm_add+="1 "
-			                                [[ $info == *FLA:* ]] && pm_add+="2 " && dependencies[0]+="flatpak "
-			[[ $options_pm == 'a' ]] && [[ $info == *SNA:* ]] && pm_add+="3 " && pm[3,3]='sudo pacman -S --noconfirm --needed snapd || ins-snap'
-			[[ $options_pm == 'd' ]] && [[ $info == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
+			[[ $options_pm == 'a' ]] && [[ $info_aur     == *AUR:* ]] && pm_add+="1 "
+			                            [[ $info_flatpak == *FLA:* ]] && pm_add+="2 " && dependencies[0]+="flatpak "
+			[[ $options_pm == 'a' ]] && [[ $info_snap    == *SNA:* ]] && pm_add+="3 " && pm[3,3]='sudo pacman -S --noconfirm --needed snapd || ins-snap'
+			[[ $options_pm == 'd' ]] && [[ $info_snap    == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
 
 			for p in 0 $pm_add; do
 				echo "Installing ${pm[$p,0]} Packages"
@@ -173,13 +177,13 @@ Enter the distribution
 #
 # Packages-lists:              │  Exemple:
 #   syntax: ___:______         │    # This is a comment
-#           ╷   ╷              │    
+#           ╷   ╷              │
 #           │   └ package      │    # Terminal stuff
 #           │                  │    PAC:alacritty APT:alacritty XBP:alacritty
-#           └ PAC = archlinux  │    
+#           └ PAC = archlinux  │
 #             APT = Debian     │        # Cool tool
 #             XBP = voidlinux  │        PAC:figlet APT:figlet XBP:figlet
-#             AUR = aur        │    
+#             AUR = aur        │
 #             FLA = flatpak    │    # Game maker
 #             SNA = Snapcraft  │    AUR:godot FLA:org.godotengine.Godot XBP:godot
 #                              │
@@ -210,9 +214,14 @@ Enter the distribution
 			cd $dir_dotfiles
 
 			for dir_stow in 'home' 'root'; do
-				[[ -d "$dir_dotfiles/$dir_stow" ]] \
-					&& sudo stow -vt ~ $dir_stow \
-					|| echo "$dir_dotfiles/$dir_stow directory does not exist"
+				if [[ -d "$dir_dotfiles/$dir_stow" ]]; then
+					while [[ $stow_done == '1' ]]; do
+						sudo stow -vt ~ $dir_stow && stow_done='1'
+						read -s -p 'Please remove all conflict file then press [↵ Enter]'
+					done
+				else
+					echo "$dir_dotfiles/$dir_stow directory does not exist"
+				fi
 			done
 
 			cd $dir_now
@@ -244,13 +253,4 @@ done
 
 
 exit
-
-
-
-
-
-
-# Yes, this file is only 256 lines.
-# ---------------------------------
-# > 2^8↵
-# 256
+# Yes, this file has exactly 256 lines.
