@@ -9,7 +9,7 @@
 ###### NOTE: B.sh pronounce as B-dot-sh.
 
 ### Features
-- Super **minimum** with only [**256** lines of `sh`](b.sh#L256).
+- Super **minimum** with exactly [**256** lines of `sh`](b.sh#L256).
 - Super [**low dependencies**](#dependencies):
 - Super **easy** to use:
 
