@@ -215,8 +215,8 @@ Enter the distribution
 
 			for dir_stow in 'home' 'root'; do
 				if [[ -d "$dir_dotfiles/$dir_stow" ]]; then
-					while [[ $stow_done == '1' ]]; do
-						sudo stow -vt ~ $dir_stow && stow_done='1'
+					while :; do
+						sudo stow -vt ~ $dir_stow && break
 						read -s -p 'Please remove all conflict file then press [↵ Enter]'
 					done
 				else
