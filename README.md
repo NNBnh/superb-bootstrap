@@ -1,7 +1,7 @@
 <p align="center"><img width="50%" src="logo.png" alt="B.sh">
 <p align="center">Dotfiles manager that <i>SuperB</i>
-<p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/github/languages/top/NNBnh/b.sh?style=for-the-badge" alt="Shell: 100%"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?style=for-the-badge">
-<p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?style=flat-square">
+<p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=918175&color=98BC37&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/github/languages/top/NNBnh/b.sh?labelColor=918175&color=98BC37&style=for-the-badge" alt="Shell: 100%"> <img src="https://img.shields.io/badge/curl%20-%2398BC37.svg?style=for-the-badge&logo=curl&logoColor=FFFFFF" alt="Curl"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?labelColor=918175&color=98BC37&style=for-the-badge">
+<p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?labelColor=918175&color=98BC37&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?labelColor=918175&color=98BC37&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?labelColor=918175&color=98BC37&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?labelColor=918175&color=98BC37&style=flat-square">
 
 ## About
 **B.sh** is a *SuperB* dotfiles manager written in `sh`.
