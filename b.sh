@@ -32,16 +32,16 @@
 dir_now=$PWD
 declare -A pm
 pm=(
-	[1,0]='AUR'       [1,1]='yay'     [1,2]=' -S --nodiffmenu --save' [1,3]='sudo pacman -S --noconfirm --needed yay || ins-yay'                                           [1,4]='AUR'
-	[2,0]='Flatpak'   [2,1]='flatpak' [2,2]=' install'                [2,3]='sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo' [2,4]='FLA'
-	[3,0]='Snapcraft' [3,1]='snap'    [3,2]=' install'                [3,3]=''                                                                                             [3,4]='SNA'
+	[1,0]='AUR'       [1,1]='yay'          [1,2]=' -S --nodiffmenu --save' [1,3]='sudo pacman -S --noconfirm --needed yay || ins-yay'                                           [1,4]='AUR'
+	[2,0]='Flatpak'   [2,1]='sudo flatpak' [2,2]=' install'                [2,3]='sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo' [2,4]='FLA'
+	[3,0]='Snapcraft' [3,1]='sudo snap'    [3,2]=' install'                [3,3]=''                                                                                             [3,4]='SNA'
 )
 
 function prompt() {
 	echo '''
   ██                  ██
   ██                  ██
-  ██████ ▓▓▓▓⣷  █████ ██████
+  ██████ ▓▓▓▓⣷⣄ █████ ██████
   ██  ██ ▓▓▓▓▓▓ ██▇▇▇ ██  ██
   ██████ ▓▓  ▓▓ ▇▇▇██ ██  ██
          ▓▓▓▓▓▓
@@ -66,12 +66,12 @@ Enter your git repository address
 '''
 	read -p 'Datas address: ' -a options_repo
 	case ${options_repo[1]} in
-		'') repo="https://github.com/${options_repo[0]}/Dotfiles.git" ;;
+		'') repo="https://github.com/${options_repo[0]}/dots.git" ;;
 		*)
 			case ${options_repo[0]} in
-				'gh') repo="https://github.com/${options_repo[1]}/Dotfiles.git"    ;;
-				'gl') repo="https://gitlab.com/${options_repo[1]}/Dotfiles.git"    ;;
-				'bb') repo="https://bitbucket.org/${options_repo[1]}/Dotfiles.git" ;;
+				'gh') repo="https://github.com/${options_repo[1]}/dots.git"    ;;
+				'gl') repo="https://gitlab.com/${options_repo[1]}/dots.git"    ;;
+				'bb') repo="https://bitbucket.org/${options_repo[1]}/dots.git" ;;
 				'ct') repo=$options_repo                                           ;;
 				'+')  repo='+'                                                     ;;
 				'')   repo=''                                                      ;;
@@ -86,7 +86,7 @@ Enter directory to store dotfiles
 '''
 		read -p 'Location: ' options_dir
 		case $options_dir in
-			'')  dir_dotfiles="$$HOME/Dotfiles"    ;;
+			'')  dir_dotfiles="$$HOME/dots"    ;;
 			'.') dir_dotfiles=$dir_now             ;;
 			*)   dir_dotfiles="$HOME/$options_dir" ;;
 		esac
@@ -103,9 +103,9 @@ Enter the distribution
 '''
 		read -N 1 -p 'Distro: ' options_pm
 		case $options_pm in
-			'a') pm+=( [0,0]='Archlinux' [0,1]='pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
-			'd') pm+=( [0,0]='Debian'    [0,1]='apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
-			'v') pm+=( [0,0]='Voidlinux' [0,1]='xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
+			'a') pm+=( [0,0]='Archlinux' [0,1]='sudo pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
+			'd') pm+=( [0,0]='Debian'    [0,1]='sudo apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
+			'v') pm+=( [0,0]='Voidlinux' [0,1]='sudo xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
 		esac
 	done
 }
@@ -116,7 +116,7 @@ Enter the distribution
 	function ins-dependencies() {
 		echo 'Installing dependencies'
 
-		sudo ${pm[0,1]}${pm[0,3]} git stow awk
+		${pm[0,1]}${pm[0,3]} git stow awk
 	}
 
 	# Packages
@@ -137,7 +137,7 @@ Enter the distribution
 
 				${pm[$p,4]}
 
-				sudo ${pm[$p,1]}${pm[$p,2]} ${dependencies[$p]} \
+				${pm[$p,1]}${pm[$p,2]} ${dependencies[$p]} \
 					$(echo info \
 					| awk -v FPAT="${pm[$p,3]}:[^\S]+" 'NF{ print $1 }' \
 					| awk "{gsub(\"${pm[$p,3]}:\", \"\");print}")
@@ -215,9 +215,11 @@ Enter the distribution
 
 			for dir_stow in 'home' 'root'; do
 				if [[ -d "$dir_dotfiles/$dir_stow" ]]; then
+					[[ $dir_stow == 'root']] && stow_root='sudo'
 					while :; do
-						sudo stow -vt ~ $dir_stow && break
-						read -s -p 'Please remove all conflict file then press [↵ Enter]'
+						$stow_root stow -vt ~ $dir_stow && break
+						echo 'Please remove all conflict file then press [Ctrl+d]'
+						$SHELL
 					done
 				else
 					echo "$dir_dotfiles/$dir_stow directory does not exist"
@@ -251,6 +253,4 @@ for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-d
 	$stage
 done
 
-
-exit
-# Yes, this file has exactly 256 lines.
+exit # Yes, this file has exactly 256 lines.
