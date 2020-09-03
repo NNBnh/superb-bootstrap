@@ -111,7 +111,7 @@ done
 # Functions
 	# Dependencies
 	function ins-dependencies() {
-		echo 'Installing dependencies'
+		echo '#### Installing dependencies'
 
 		${pm[0,1]}${pm[0,3]} git stow awk
 	}
@@ -130,7 +130,7 @@ done
 			[[ $options_pm == 'd' ]] && [[ $info_snap    == *SNA:* ]] && pm_add+="3 " && dependencies[0]+="snapd "
 
 			for p in 0 $pm_add; do
-				echo "Installing ${pm[$p,0]} Packages"
+				echo "#### Installing ${pm[$p,0]} Packages"
 
 				${pm[$p,4]}
 
@@ -144,7 +144,7 @@ done
 
 		# YAY
 		function ins-yay() {
-			echo 'Installing YAY'
+			echo '#### Installing YAY'
 
 			git clone https://aur.archlinux.org/yay.git "$HOME/yay" \
 				&& cd "$HOME/yay" \
@@ -153,7 +153,7 @@ done
 
 		# Snap
 		function ins-snap() {
-			echo 'Installing Snap'
+			echo '#### Installing Snap'
 
 			git clone https://aur.archlinux.org/snapd.git "$HOME/snap" \
 				&& cd "$HOME/snap" \
@@ -166,7 +166,7 @@ done
 		# Download dotfiles
 		function dl-dotfiles() {
 			if [[ $repo = '+' ]]; then
-				echo 'Make dotfiles directory'
+				echo '#### Make dotfiles directory'
 
 				mkdir -p $dir_dotfiles/{install,home,root,other}
 				echo '
@@ -196,7 +196,7 @@ done
 ' > "$dir_dotfiles/install/after"
 				chmod +x {before,after}
 			elif [[ -z $repo ]]; then
-				echo 'Download dotfiles'
+				echo '#### Download dotfiles'
 
 				git clone $repo $dir_dotfiles && dotfiles='exist'
 			fi
@@ -204,7 +204,7 @@ done
 
 		# Install dotfiles
 		function ins-dotfiles() {
-			echo 'Installing dotfiles'
+			echo '#### Installing dotfiles'
 
 			cd $dir_dotfiles
 
@@ -213,7 +213,7 @@ done
 					[[ $dir_stow == 'root' ]] && stow_root='sudo'
 					while :; do
 						$stow_root stow -vt ~ $dir_stow && break
-						echo 'Please remove all conflict file then press [Ctrl+d]'
+						echo '!!! Please remove all conflict file then press [Ctrl+d]'
 						$SHELL
 					done
 				else
@@ -226,7 +226,7 @@ done
 
 	# Before
 	function exec-before() {
-		echo 'Executing before installation'
+		echo '#### Executing before installation'
 
 		[[ -f "$dir_dotfiles/install/before" ]] \
 			&& "$dir_dotfiles/install/before" \
@@ -235,7 +235,7 @@ done
 
 	# After
 	function exec-after() {
-		echo 'Executing after installation'
+		echo '#### Executing after installation'
 
 		[[ -f "$dir_dotfiles/install/after" ]] \
 			&& "$dir_dotfiles/install/after" \
