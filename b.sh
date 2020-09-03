@@ -37,32 +37,7 @@ declare -A pm=(
 )
 
 function prompt() {
-	echo '''
-  ##                  ##
-  ##                  ##
-  ###### ||||h. ##### ######
-  ##  ## |||||| ##=== ##  ##
-  ###### ||  || ===## ##  ##
-         ||||||
-
-  Dotfiles manager that superB
-'''
-	read -s -p 'Press [Enter]'
-
-	echo '''
-Enter your git repository address
-  __ ______
-  |  |
-  |  `- Username
-  |
-  `- gh = github
-     gl = gitlab
-     bb = bitbucket
-     ct = custom
-
-(Leave all blank to use current working directory)
-(Enter "+" to make new dotfiles directory)
-'''
+	read -s -p 'Press [↵ Enter]'
 	read -p 'Datas address: ' -a options_repo
 	case ${options_repo[1]} in
 		'') repo="https://github.com/${options_repo[0]}/dots.git" ;;
@@ -79,10 +54,6 @@ Enter your git repository address
 	esac
 
 	if [[ ! -z $options_repo ]]; then
-		echo '''
-Enter directory to store dotfiles
-(Enter "." to use current working directory)
-'''
 		read -p 'Location: ' options_dir
 		case $options_dir in
 			'')  dir_dotfiles="$$HOME/dots"    ;;
@@ -94,12 +65,6 @@ Enter directory to store dotfiles
 	fi
 
 	while :; do
-		echo '''
-Enter the distribution
-  a = Archlinux base
-  d = Debian base
-  v = Voidlinux base
-'''
 		read -N 1 -p 'Distro: ' options_pm
 		case $options_pm in
 			'a') pm+=( [0,0]='Archlinux' [0,1]='sudo pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
