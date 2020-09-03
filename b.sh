@@ -246,7 +246,7 @@ Enter the distribution
 
 
 # Installation
-for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-dotfiles exec-after'; do
+for stage in prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-dotfiles exec-after; do
 	$stage
 done
 
