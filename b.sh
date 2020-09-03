@@ -212,7 +212,7 @@ Enter the distribution
 
 			for dir_stow in 'home' 'root'; do
 				if [[ -d "$dir_dotfiles/$dir_stow" ]]; then
-					[[ $dir_stow == 'root']] && stow_root='sudo'
+					[[ $dir_stow == 'root' ]] && stow_root='sudo'
 					while :; do
 						$stow_root stow -vt ~ $dir_stow && break
 						echo 'Please remove all conflict file then press [Ctrl+d]'
