@@ -36,8 +36,7 @@ declare -A pm=(
 	[3,0]='Snapcraft' [3,1]='sudo snap'    [3,2]=' install'                [3,3]=''                                                                                             [3,4]='SNA'
 )
 
-function prompt() {
-	echo '''
+echo '''
   ██                  ██
   ██                  ██
   ██████ ▓▓▓▓⣷⣄ █████ ██████
@@ -47,9 +46,9 @@ function prompt() {
 
   Dotfiles manager that superB
 '''
-	read -s -p 'Press [↵ Enter]'
+read -s -p 'Press [↵ Enter]'
 
-	echo '''
+echo '''
 Enter your git repository address
   __ ______
   ╷  ╷
@@ -63,51 +62,50 @@ Enter your git repository address
 (Leave all blank to use current working directory)
 (Enter "+" to make new dotfiles directory)
 '''
-	read -p 'Datas address: ' -a options_repo ; options_repo='NNBnh' #FIXME
-	case ${options_repo[1]} in
-		'') repo="https://github.com/${options_repo[0]}/dots" ;;
-		*)
-			case ${options_repo[0]} in
-				'gh') repo="https://github.com/${options_repo[1]}/dots"    ;;
-				'gl') repo="https://gitlab.com/${options_repo[1]}/dots"    ;;
-				'bb') repo="https://bitbucket.org/${options_repo[1]}/dots" ;;
-				'ct') repo=$options_repo                                           ;;
-				'+')  repo='+'                                                     ;;
-				'')   repo=''                                                      ;;
-			esac
-		;;
-	esac
+read -p 'Datas address: ' -a options_repo ; options_repo='NNBnh' #FIXME
+case ${options_repo[1]} in
+	'') repo="https://github.com/${options_repo[0]}/dots" ;;
+	*)
+		case ${options_repo[0]} in
+			'gh') repo="https://github.com/${options_repo[1]}/dots"    ;;
+			'gl') repo="https://gitlab.com/${options_repo[1]}/dots"    ;;
+			'bb') repo="https://bitbucket.org/${options_repo[1]}/dots" ;;
+			'ct') repo=$options_repo                                           ;;
+			'+')  repo='+'                                                     ;;
+			'')   repo=''                                                      ;;
+		esac
+	;;
+esac
 
-	if [[ ! -z $options_repo ]]; then
-		echo '''
+if [[ ! -z $options_repo ]]; then
+	echo '''
 Enter directory to store dotfiles
 (Enter "." to use current working directory)
 '''
-		read -p 'Location: ' options_dir
-		case $options_dir in
-			'')  dir_dotfiles="$HOME/dots"    ;;
-			'.') dir_dotfiles=$dir_now             ;;
-			*)   dir_dotfiles="$HOME/$options_dir" ;;
-		esac
-	else
-		dir_dotfiles=$dir_now
-	fi
+	read -p 'Location: ' options_dir
+	case $options_dir in
+		'')  dir_dotfiles="$HOME/dots"    ;;
+		'.') dir_dotfiles=$dir_now             ;;
+		*)   dir_dotfiles="$HOME/$options_dir" ;;
+	esac
+else
+	dir_dotfiles=$dir_now
+fi
 
-	while :; do
-		echo '''
+while :; do
+	echo '''
 Enter the distribution
   a = Archlinux base
   d = Debian base
   v = Voidlinux base
 '''
-		read -N 1 -p 'Distro: ' options_pm ; options_pm='v' #FIXME
-		case $options_pm in
-			'a') pm+=( [0,0]='Archlinux' [0,1]='sudo pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
-			'd') pm+=( [0,0]='Debian'    [0,1]='sudo apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
-			'v') pm+=( [0,0]='Voidlinux' [0,1]='sudo xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
-		esac
-	done
-}
+	read -N 1 -p 'Distro: ' options_pm ; options_pm='v' #FIXME
+	case $options_pm in
+		'a') pm+=( [0,0]='Archlinux' [0,1]='sudo pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
+		'd') pm+=( [0,0]='Debian'    [0,1]='sudo apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
+		'v') pm+=( [0,0]='Voidlinux' [0,1]='sudo xbps'   [0,2]='-install -Sy'              [0,3]='-install -Syu'              [0,4]='XBP' ) && break ;;
+	esac
+done
 
 
 # Functions
@@ -246,11 +244,13 @@ Enter the distribution
 
 
 # Installation
-for stage in prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-dotfiles exec-after; do
-	$stage
-done
+ins-dependencies; dl-dotfiles; ins-packages; exec-before; ins-dotfiles; exec-after
 
 
 exit
+
+
+
+
 
 # Yes, this file has exactly 256 lines.
