@@ -64,15 +64,15 @@ Enter your git repository address
 '''
 read -p 'Datas address: ' -a options_repo ; options_repo='NNBnh' #FIXME
 case ${options_repo[1]} in
-	'') repo="https://github.com/${options_repo[0]}/dots" ;;
+	'') repo="https://github.com/$options_repo/dots" ;;
 	*)
 		case ${options_repo[0]} in
 			'gh') repo="https://github.com/${options_repo[1]}/dots"    ;;
 			'gl') repo="https://gitlab.com/${options_repo[1]}/dots"    ;;
 			'bb') repo="https://bitbucket.org/${options_repo[1]}/dots" ;;
-			'ct') repo=$options_repo                                           ;;
-			'+')  repo='+'                                                     ;;
-			'')   repo=''                                                      ;;
+			'ct') repo=$options_repo                                   ;;
+			'+')  repo='+'                                             ;;
+			'')   repo=''                                              ;;
 		esac
 	;;
 esac
