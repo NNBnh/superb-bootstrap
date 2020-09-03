@@ -38,27 +38,27 @@ declare -A pm=(
 
 function prompt() {
 	echo '''
-  ██                  ██
-  ██                  ██
-  ██████ ▓▓▓▓⣷⣄ █████ ██████
-  ██  ██ ▓▓▓▓▓▓ ██▇▇▇ ██  ██
-  ██████ ▓▓  ▓▓ ▇▇▇██ ██  ██
-         ▓▓▓▓▓▓
+  ##                  ##
+  ##                  ##
+  ###### ||||h. ##### ######
+  ##  ## |||||| ##=== ##  ##
+  ###### ||  || ===## ##  ##
+         ||||||
 
   Dotfiles manager that superB
 '''
-	read -s -p 'Press [↵ Enter]'
+	read -s -p 'Press [Enter]'
 
 	echo '''
 Enter your git repository address
   __ ______
-  ╷  ╷
-  │  └ Username
-  │
-  └ gh = github
-    gl = gitlab
-    bb = bitbucket
-    ct = custom
+  |  |
+  |  `- Username
+  |
+  `- gh = github
+     gl = gitlab
+     bb = bitbucket
+     ct = custom
 
 (Leave all blank to use current working directory)
 (Enter "+" to make new dotfiles directory)
