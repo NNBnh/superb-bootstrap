@@ -63,7 +63,7 @@ Enter your git repository address
 (Leave all blank to use current working directory)
 (Enter "+" to make new dotfiles directory)
 '''
-	read -p 'Datas address: ' -a options_repo ; options_repo='NNBnh' #fixme
+	read -p 'Datas address: ' -a options_repo ; options_repo='NNBnh' #FIXME
 	case ${options_repo[1]} in
 		'') repo="https://github.com/${options_repo[0]}/dots" ;;
 		*)
@@ -100,7 +100,7 @@ Enter the distribution
   d = Debian base
   v = Voidlinux base
 '''
-		read -N 1 -p 'Distro: ' options_pm ; options_pm='v' #fixme
+		read -N 1 -p 'Distro: ' options_pm ; options_pm='v' #FIXME
 		case $options_pm in
 			'a') pm+=( [0,0]='Archlinux' [0,1]='sudo pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]=' -Syu --noconfirm --needed' [0,4]='PAC' ) && break ;;
 			'd') pm+=( [0,0]='Debian'    [0,1]='sudo apt'    [0,2]=' install -y'               [0,3]=' install -y'                [0,4]='APT' ) && break ;;
