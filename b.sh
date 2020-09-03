@@ -29,15 +29,15 @@
 
 
 # Value
-pm=( [0,0]='Archlinux' [0,1]='sudo pacman' [0,2]=' -Sy --noconfirm --needed' [0,3]='PAC'
-pm=( [0,0]='Debian'    [0,1]='sudo apt'    [0,2]=' install -y'               [0,3]='APT'
-pm=( [0,0]='Voidlinux' [0,1]='sudo xbps'   [0,2]='-install -Sy'              [0,3]='XBP'
-pm=( [1,0]='AUR'       [1,1]='yay'          [1,2]=' -S --nodiffmenu --save'  [1,3]='AUR'
-pm=( [2,0]='Flatpak'   [2,1]='sudo flatpak' [2,2]=' install'                 [2,3]='FLA'
-pm=( [3,0]='Snapcraft' [3,1]='sudo snap'    [3,2]=' install'                 [3,3]='SNA'
+pm=( 'Archlinux' 'sudo pacman'  ' -Sy --noconfirm --needed' 'PAC' )
+pm=( 'Debian'    'sudo apt'     ' install -y'               'APT' )
+pm=( 'Voidlinux' 'sudo xbps'    '-install -Sy'              'XBP' )
+pm=( 'AUR'       'yay'          ' -S --nodiffmenu --save'   'AUR' )
+pm=( 'Flatpak'   'sudo flatpak' ' install'                  'FLA' )
+pm=( 'Snapcraft' 'sudo snap'    ' install'                  'SNA' )
 
 # Functions
-info=$(awk '{gsub("#.*$", "");print}' "$dir_dotfiles/install/packages")
+info=$(awk '{gsub("#.*$", "");print}' "$dir_dotfiles/bootstrap/packages")
 info_aur=$(echo $info | awk "!/${pm[0,4]}:/")
 info_flatpak=$(echo $info_aur | awk "!/FLA:/")
 info_snap=$(echo $info_flatpak | awk "!/SNA:/")
