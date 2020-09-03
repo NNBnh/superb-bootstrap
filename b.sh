@@ -167,7 +167,7 @@ Enter the distribution
 	# Dotfiles
 		# Download dotfiles
 		function dl-dotfiles() {
-			if [[ $repo = '+' ]]
+			if [[ $repo = '+' ]]; then
 				echo 'Make dotfiles directory'
 
 				mkdir -p $dir_dotfiles/{install,home,root,other}
@@ -198,7 +198,6 @@ Enter the distribution
 ' > "$dir_dotfiles/install/after"
 				chmod +x {before,after}
 
-				exit
 			elif [[ -z $repo ]]; then
 				echo 'Download dotfiles'
 
@@ -253,4 +252,5 @@ for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-d
 done
 
 exit
+
 # Yes, this file has exactly 256 lines.
