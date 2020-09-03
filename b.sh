@@ -199,7 +199,7 @@ Enter the distribution
 				chmod +x {before,after}
 
 				exit
-			elif [[ -z $repo ]]
+			elif [[ -z $repo ]]; then
 				echo 'Download dotfiles'
 
 				git clone $repo $dir_dotfiles && dotfiles='exist'
