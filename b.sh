@@ -250,7 +250,7 @@ for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-d
 	$stage
 done
 
-exit
 
+exit
 
 # Yes, this file has exactly 256 lines.
