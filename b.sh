@@ -85,7 +85,7 @@ Enter directory to store dotfiles
 '''
 		read -p 'Location: ' options_dir
 		case $options_dir in
-			'')  dir_dotfiles="$$HOME/dots"    ;;
+			'')  dir_dotfiles="$HOME/dots"    ;;
 			'.') dir_dotfiles=$dir_now             ;;
 			*)   dir_dotfiles="$HOME/$options_dir" ;;
 		esac
