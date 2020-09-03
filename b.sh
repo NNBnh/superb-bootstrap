@@ -197,7 +197,6 @@ Enter the distribution
 # This script file ran after dotfiles were linked
 ' > "$dir_dotfiles/install/after"
 				chmod +x {before,after}
-
 			elif [[ -z $repo ]]; then
 				echo 'Download dotfiles'
 
@@ -252,5 +251,6 @@ for stage in 'prompt ins-dependencies dl-dotfiles ins-packages exec-before ins-d
 done
 
 exit
+
 
 # Yes, this file has exactly 256 lines.
