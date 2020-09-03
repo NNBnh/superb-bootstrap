@@ -30,7 +30,7 @@
 
 # Value
 dir_now=$PWD
-declare -a pm=(
+declare -A pm=(
 	[1,0]='AUR'       [1,1]='yay'          [1,2]=' -S --nodiffmenu --save' [1,3]='sudo pacman -S --noconfirm --needed yay || ins-yay'                                           [1,4]='AUR'
 	[2,0]='Flatpak'   [2,1]='sudo flatpak' [2,2]=' install'                [2,3]='sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo' [2,4]='FLA'
 	[3,0]='Snapcraft' [3,1]='sudo snap'    [3,2]=' install'                [3,3]=''                                                                                             [3,4]='SNA'
