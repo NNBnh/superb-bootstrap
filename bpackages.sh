@@ -51,9 +51,8 @@ for pm in $OS $pm_list; do
 
 	echo "Installing $pm Packages"
 
-	$pm_launcher $(echo $pm_packages \
-		| awk -v FPAT="$pm_mark:[^\S]+" 'NF{ print $1 }' \
-		| awk "{gsub(\"$pm_mark:\", \"\");print}")
+	$pm_launcher $(echo $pm_packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	                                 | awk "{gsub(\"$pm_mark:\", \"\");print}")
 done
 
 
