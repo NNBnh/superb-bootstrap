@@ -35,15 +35,15 @@ for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
 		'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ;;
-		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
-		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
-		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
-		*)            echo 'Error'                                       ; exit          ;;
+		'AUR')        [ $pm = 'AUR'       ] && [ $packages = *AUR:* ] && [   $OS = 'Arch-linux' ] && continue
+		              pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
+		'Flatpak')    [ $pm = 'Flatpak'   ] && [ $packages = *FLA:* ]                             && continue
+		              pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
+		'Snapcraft')  [ $pm = 'Snapcraft' ] && [ $packages = *SNA:* ] && [ ! $OS = 'Void-linux' ] && continue
+		              pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
+		*)            echo "Error, no suck OS as \"$SUPERBOOTSTRAP_OS\"" ; exit          ;;
 	esac
 
-	[ $pm = 'AUR'       ] && [ $packages = *AUR:* ] && [   $OS = 'Arch-linux' ] && continue
-	[ $pm = 'Flatpak'   ] && [ $packages = *FLA:* ]                             && continue
-	[ $pm = 'Snapcraft' ] && [ $packages = *SNA:* ] && [ ! $OS = 'Void-linux' ] && continue
 
 	echo "Installing $pm Packages"
 
