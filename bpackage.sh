@@ -31,6 +31,9 @@
 for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 	[ $packages ] && packages=$(echo $packages | awk "!/$pm_mark:/") \
 	              || packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
+	
+	echo $packages
+	
 	case $pm in
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
@@ -55,9 +58,6 @@ done
 
 
 exit
-
-
-
 
 
 
