@@ -54,11 +54,11 @@ for pm in $OS AUR Flatpak Snapcraft; do
 
 	echo "Installing $pm Packages"
 
-	$pm_launcher ($(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	raw_packages=($(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
 	                               | awk "{gsub(\"$pm_mark:\", \"\");print}"))
+	$pm_launcher $raw_packages
 done
 
 
 exit
-
 # Yes, this file has exactly 64 lines.
