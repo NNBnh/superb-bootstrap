@@ -29,24 +29,29 @@
 
 # Value
 packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
-packages_aur=$(echo $packages | awk "!/${pm[0,4]}:/")
-packages_flatpak=$(echo $packages_aur | awk "!/FLA:/")
-packages_snap=$(echo $packages_flatpak | awk "!/SNA:/")
-
-[   "$OS" = 'Arch-linux' ] && [ "$packages_aur"     = *AUR:* ] && pm_list+='AUR '
-                              [ "$packages_flatpak" = *FLA:* ] && pm_list+='Flatpak '
-[ ! "$OS" = 'Void-linux' ] && [ "$packages_snap"    = *SNA:* ] && pm_list+='Snapcraft '
-
 
 # Functions
-for pm in $OS $pm_list; do
+for pm in $OS AUR Flatpak Snapcraft; do
+	pm_packages=$(echo $pm_packages | awk "!/$pm_mark:/")
 	case $pm in
-		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ; pm_packages=$packages     ;;
-		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ; pm_packages=$packages     ;;
-		'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ; pm_packages=$packages     ;;
-		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ; pm_packages=$info_aur     ;;
-		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ; pm_packages=$info_flatpak ;;
-		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ; pm_packages=$info_snap    ;;
+		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
+		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
+		'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ;;
+		'AUR')
+			[ "$packages_aur" = *AUR:* ] && [ "$OS" = 'Arch-linux' ] && continue
+			pm_launcher='yay -S --nodiffmenu --save'
+			pm_mark='AUR'
+		;;
+		'Flatpak')
+			[ "$packages_flatpak" = *FLA:* ] && continue
+			pm_launcher='sudo flatpak install'
+			pm_mark='FLA'
+		;;
+		'Snapcraft')
+			[ "$packages_snap" = *SNA:* ] && [ ! "$OS" = 'Void-linux' ] && continue
+			pm_launcher='sudo snap install'
+			pm_mark='SNA'
+		;;
 	esac
 
 	echo "Installing $pm Packages"
@@ -56,7 +61,4 @@ for pm in $OS $pm_list; do
 done
 
 
-exit
-
-
-# Yes, this file has exactly 64 lines.
+exit # Yes, this file has exactly 64 lines.
