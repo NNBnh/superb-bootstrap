@@ -10,7 +10,7 @@
 # Description:  Packages bootstrap that superB
 # Author:       NNB
 #               └─ https://github.com/NNBnh
-# URL:          https://github.com/NNBnh/b.sh
+# URL:          https://github.com/NNBnh/bpackages
 # License:      GPLv3
 
 #    This program is free software: you can redistribute it and/or modify
