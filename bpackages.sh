@@ -27,12 +27,10 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Value
-packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
-
 # Functions
 for pm in $OS AUR Flatpak Snapcraft; do
-	pm_packages=$(echo $pm_packages | awk "!/$pm_mark:/")
+	[ $packages ] && packages=$(echo $packages | awk "!/$pm_mark:/") \
+	              || packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
 	case $pm in
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
@@ -56,9 +54,11 @@ for pm in $OS AUR Flatpak Snapcraft; do
 
 	echo "Installing $pm Packages"
 
-	$pm_launcher $(echo $(echo $pm_packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
-	                                        | awk "{gsub(\"$pm_mark:\", \"\");print}"))
+	$pm_launcher $(echo $(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	                                     | awk "{gsub(\"$pm_mark:\", \"\");print}"))
 done
 
 
-exit # Yes, this file has exactly 64 lines.
+exit
+
+# Yes, this file has exactly 64 lines.
