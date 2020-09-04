@@ -6,7 +6,7 @@
 # /____/_/   \_,_/\__/_/\_\\_,_/\_, /\__/___/
 #                              /___/
 
-# File:         bpackages.sh
+# File:         bpackage.sh
 # Description:  Packages bootstrap that superB
 # Author:       NNB
 #               └─ https://github.com/NNBnh
