@@ -38,7 +38,7 @@ for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
 		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
 		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
-		*)            exit                                                               ;;
+		*)            echo 'Error'                                       ; exit          ;;
 	esac
 
 	[ $pm = 'AUR'       ] && [ $packages = *AUR:* ] && [   $OS = 'Arch-linux' ] && continue
