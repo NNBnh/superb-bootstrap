@@ -27,8 +27,12 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+# Values
+[ $SUPERBOOTSTRAP_OS ] || read -p 'Enter your OS: ' SUPERBOOTSTRAP_OS
+
+
 # Functions
-for pm in $OS AUR Flatpak Snapcraft; do
+for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 	[ $packages ] && packages=$(echo $packages | awk "!/$pm_mark:/") \
 	              || packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
 	case $pm in
@@ -46,17 +50,13 @@ for pm in $OS AUR Flatpak Snapcraft; do
 
 	echo "Installing $pm Packages"
 
-	$pm_launcher ${$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
-	                                | awk "{gsub(\"$pm_mark:\", \"\");print}")}
+	packages_raw=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	                              | awk "{gsub(\"$pm_mark:\", \"\");print}")
+	$pm_launcher ${packages_raw[*]}
 done
 
 
 exit
-
-
-
-
-
 
 
 
