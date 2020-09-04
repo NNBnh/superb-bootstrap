@@ -28,11 +28,9 @@
 
 
 # Functions
-for pm in $SUPERBOOTSTRAP_OS; do
+for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 	packages=$(echo $packages | awk "!/$pm_mark:/") \
 	[ -z $packages ] && packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
-	
-	echo $packages
 	
 	case $pm in
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
@@ -41,24 +39,17 @@ for pm in $SUPERBOOTSTRAP_OS; do
 		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
 		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
 		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
-		*)            echo "Error, no suck OS as \"$SUPERBOOTSTRAP_OS\"" ; exit          ;;
+		*)            echo "Error, no \"$SUPERBOOTSTRAP_OS\" on index"   ; exit          ;;
 	esac
 	
-	# [ "$pm" = 'AUR'       ] && [ "$packages" = *AUR:* ] && [   $SUPERBOOTSTRAP_OS = 'Arch-linux' ] || continue
-	# [ "$pm" = 'Flatpak'   ] && [ "$packages" = *FLA:* ]                                            || continue
-	# [ "$pm" = 'Snapcraft' ] && [ "$packages" = *SNA:* ] && [ ! $SUPERBOOTSTRAP_OS = 'Void-linux' ] || continue
+	packages_raw=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' | awk "{gsub(\"$pm_mark:\", \"\");print}")
 
-	echo "Installing $pm Packages"
+	if [ -z $packages_raw ]; then
+		echo "Installing $pm Packages"
 
-	packages_raw=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
-	                              | awk "{gsub(\"$pm_mark:\", \"\");print}")
-	echo $packages_raw
-	$pm_launcher $packages_raw
+		$pm_launcher $packages_raw
+	fi
 done
 
 
 exit
-
-
-
-# Yes, this file has exactly 64 lines.
