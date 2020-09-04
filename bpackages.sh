@@ -27,10 +27,6 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Values
-[ $SUPERBOOTSTRAP_OS ] || read -p 'Enter your OS: ' SUPERBOOTSTRAP_OS
-
-
 # Functions
 for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 	[ $packages ] && packages=$(echo $packages | awk "!/$pm_mark:/") \
@@ -57,6 +53,10 @@ done
 
 
 exit
+
+
+
+
 
 
 
