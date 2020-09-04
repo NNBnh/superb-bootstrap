@@ -48,7 +48,7 @@ for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 
 	packages_raw=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
 	                              | awk "{gsub(\"$pm_mark:\", \"\");print}")
-	$pm_launcher ${packages_raw[*]}
+	$pm_launcher ${packages_raw}
 done
 
 
