@@ -29,36 +29,36 @@
 
 
 # Value
-pm=( 'Archlinux' 'sudo pacman'  ' -Sy --noconfirm --needed' 'PAC' )
-pm=( 'Debian'    'sudo apt'     ' install -y'               'APT' )
-pm=( 'Voidlinux' 'sudo xbps'    '-install -Sy'              'XBP' )
-pm=( 'AUR'       'yay'          ' -S --nodiffmenu --save'   'AUR' )
-pm=( 'Flatpak'   'sudo flatpak' ' install'                  'FLA' )
-pm=( 'Snapcraft' 'sudo snap'    ' install'                  'SNA' )
+packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
+packages_aur=$(echo $info | awk "!/${pm[0,4]}:/")
+packages_flatpak=$(echo $info_aur | awk "!/FLA:/")
+packages_snap=$(echo $info_flatpak | awk "!/SNA:/")
+
+[[   $options_pm == 'a' ]] && [[ $info_aur     == *AUR:* ]] && pm_list+='AUR '
+                              [[ $info_flatpak == *FLA:* ]] && pm_list+='Flatpak '
+[[ ! $options_pm == 'v' ]] && [[ $info_snap    == *SNA:* ]] && pm_list+='Snapcraft '
+
 
 # Functions
-info=$(awk '{gsub("#.*$", "");print}' "$dir_dotfiles/bootstrap/packages")
-info_aur=$(echo $info | awk "!/${pm[0,4]}:/")
-info_flatpak=$(echo $info_aur | awk "!/FLA:/")
-info_snap=$(echo $info_flatpak | awk "!/SNA:/")
+for pm in $OS $pm_list; do
+	case $pm in
+		'Arch-linux') ; pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ; pm_packages=$packages     ;;
+		'Debian')     ; pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ; pm_packages=$packages     ;;
+		'Void-linux') ; pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ; pm_packages=$packages     ;;
+		'AUR')        ; pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ; pm_packages=$info_aur     ;;
+		'Flatpak')    ; pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ; pm_packages=$info_flatpak ;;
+		'Snapcraft')  ; pm_launcher='sudo snap install'                    ; pm_mark='SNA' ; pm_packages=$info_snap    ;;
+	esac
 
-[[ $options_pm == 'a' ]] && [[ $info_aur     == *AUR:* ]] && pm_add+="1 "
-                            [[ $info_flatpak == *FLA:* ]] && pm_add+="2 "
-[[ $options_pm == 'a' ]] && [[ $info_snap    == *SNA:* ]] && pm_add+="3 "
-[[ $options_pm == 'd' ]] && [[ $info_snap    == *SNA:* ]] && pm_add+="3 "
+	echo "Installing $pm_name Packages"
 
-for p in 0 $pm_add; do
-	echo "Installing ${pm[$p,0]} Packages"
-
-	${pm[$p,1]}${pm[$p,2]} \
-		$(echo info \
-		| awk -v FPAT="${pm[$p,3]}:[^\S]+" 'NF{ print $1 }' \
-		| awk "{gsub(\"${pm[$p,3]}:\", \"\");print}")
+	$pm_launcher $(echo $pm_packages \
+		| awk -v FPAT="$pm_mark:[^\S]+" 'NF{ print $1 }' \
+		| awk "{gsub(\"$pm_mark:\", \"\");print}")
 done
 
 
 exit
-
 
 
 # Yes, this file has exactly 64 lines.
