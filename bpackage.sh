@@ -28,9 +28,9 @@
 
 
 # Functions
-for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
-	[ $packages ] && packages=$(echo $packages | awk "!/$pm_mark:/") \
-	              || packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
+for pm in $SUPERBOOTSTRAP_OS; do
+	packages=$(echo $packages | awk "!/$pm_mark:/") \
+	[ -z $packages ] && packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
 	
 	echo $packages
 	
