@@ -54,8 +54,8 @@ for pm in $OS AUR Flatpak Snapcraft; do
 
 	echo "Installing $pm Packages"
 
-	raw_packages=($(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
-	                               | awk "{gsub(\"$pm_mark:\", \"\");print}"))
+	raw_packages=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	                              | awk "{gsub(\"$pm_mark:\", \"\");print}")
 	$pm_launcher $raw_packages
 done
 
