@@ -34,9 +34,9 @@ packages_aur=$(echo $info | awk "!/${pm[0,4]}:/")
 packages_flatpak=$(echo $info_aur | awk "!/FLA:/")
 packages_snap=$(echo $info_flatpak | awk "!/SNA:/")
 
-[[   $options_pm == 'a' ]] && [[ $info_aur     == *AUR:* ]] && pm_list+='AUR '
-                              [[ $info_flatpak == *FLA:* ]] && pm_list+='Flatpak '
-[[ ! $options_pm == 'v' ]] && [[ $info_snap    == *SNA:* ]] && pm_list+='Snapcraft '
+[   $OS == 'Arch-linux' ] && [ $info_aur     == *AUR:* ] && pm_list+='AUR '
+                             [ $info_flatpak == *FLA:* ] && pm_list+='Flatpak '
+[ ! $OS == 'Void-linux' ] && [ $info_snap    == *SNA:* ] && pm_list+='Snapcraft '
 
 
 # Functions
