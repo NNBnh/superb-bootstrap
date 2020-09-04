@@ -35,30 +35,30 @@ for pm in $OS AUR Flatpak Snapcraft; do
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
 		'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ;;
-		'AUR')
-			[ $packages = *AUR:* ] && [ $OS = 'Arch-linux' ] && continue
-			pm_launcher='yay -S --nodiffmenu --save'
-			pm_mark='AUR'
-		;;
-		'Flatpak')
-			[ $packages = *FLA:* ] && continue
-			pm_launcher='sudo flatpak install'
-			pm_mark='FLA'
-		;;
-		'Snapcraft')
-			[ $packages = *SNA:* ] && [ ! $OS = 'Void-linux' ] && continue
-			pm_launcher='sudo snap install'
-			pm_mark='SNA'
-		;;
+		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
+		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
+		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
 	esac
+
+	[ $pm = 'AUR'       ] && [ $packages = *AUR:* ] && [   $OS = 'Arch-linux' ] && continue
+	[ $pm = 'Flatpak'   ] && [ $packages = *FLA:* ]                             && continue
+	[ $pm = 'Snapcraft' ] && [ $packages = *SNA:* ] && [ ! $OS = 'Void-linux' ] && continue
 
 	echo "Installing $pm Packages"
 
-	raw_packages=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
-	                              | awk "{gsub(\"$pm_mark:\", \"\");print}")
-	$pm_launcher $raw_packages
+	$pm_launcher ${$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	                                | awk "{gsub(\"$pm_mark:\", \"\");print}")}
 done
 
 
 exit
+
+
+
+
+
+
+
+
+
 # Yes, this file has exactly 64 lines.
