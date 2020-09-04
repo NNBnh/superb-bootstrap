@@ -41,20 +41,20 @@ for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 		*)            echo "Error, no suck OS as \"$SUPERBOOTSTRAP_OS\"" ; exit          ;;
 	esac
 	
-	[ $pm = 'AUR'       ] && [ $packages = *AUR:* ] && [   $SUPERBOOTSTRAP_OS = 'Arch-linux' ] || continue
-	[ $pm = 'Flatpak'   ] && [ $packages = *FLA:* ]                                            || continue
-	[ $pm = 'Snapcraft' ] && [ $packages = *SNA:* ] && [ ! $SUPERBOOTSTRAP_OS = 'Void-linux' ] || continue
+	[ "$pm" = 'AUR'       ] && [ "$packages" = *AUR:* ] && [   $SUPERBOOTSTRAP_OS = 'Arch-linux' ] || continue
+	[ "$pm" = 'Flatpak'   ] && [ "$packages" = *FLA:* ]                                            || continue
+	[ "$pm" = 'Snapcraft' ] && [ "$packages" = *SNA:* ] && [ ! $SUPERBOOTSTRAP_OS = 'Void-linux' ] || continue
 
 	echo "Installing $pm Packages"
 
 	packages_raw=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
 	                              | awk "{gsub(\"$pm_mark:\", \"\");print}")
+	echo $packages_raw
 	$pm_launcher $packages_raw
 done
 
 
 exit
-
 
 
 
