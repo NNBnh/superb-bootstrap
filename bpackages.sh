@@ -29,9 +29,9 @@
 
 # Value
 packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
-packages_aur=$(echo $info | awk "!/${pm[0,4]}:/")
-packages_flatpak=$(echo $info_aur | awk "!/FLA:/")
-packages_snap=$(echo $info_flatpak | awk "!/SNA:/")
+packages_aur=$(echo $packages | awk "!/${pm[0,4]}:/")
+packages_flatpak=$(echo $packages_aur | awk "!/FLA:/")
+packages_snap=$(echo $packages_flatpak | awk "!/SNA:/")
 
 [   $OS = 'Arch-linux' ] && [ $packages_aur     = *AUR:* ] && pm_list+='AUR '
                             [ $packages_flatpak = *FLA:* ] && pm_list+='Flatpak '
@@ -43,7 +43,7 @@ for pm in $OS $pm_list; do
 	case $pm in
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ; pm_packages=$packages     ;;
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ; pm_packages=$packages     ;;
-		'Void-linux') pm_launcher='sudo xbps-install -Syf'               ; pm_mark='XBP' ; pm_packages=$packages     ;;
+		'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ; pm_packages=$packages     ;;
 		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ; pm_packages=$info_aur     ;;
 		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ; pm_packages=$info_flatpak ;;
 		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ; pm_packages=$info_snap    ;;
