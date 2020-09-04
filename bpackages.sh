@@ -1,14 +1,13 @@
 #!/bin/sh
 
-# ██                  ██
-# ██                  ██
-# ██████ ▓▓▓▓⣷⣄ █████ ██████
-# ██  ██ ▓▓▓▓▓▓ ██▇▇▇ ██  ██
-# ██████ ▓▓  ▓▓ ▇▇▇██ ██  ██
-#        ▓▓▓▓▓▓
+#    ___  ___           __
+#   / _ )/ _ \___ _____/ /_____ ____ ____ ___
+#  / _  / ___/ _ `/ __/  '_/ _ `/ _ `/ -_|_-<
+# /____/_/   \_,_/\__/_/\_\\_,_/\_, /\__/___/
+#                              /___/
 
-# File:         b.sh
-# Description:  Dotfiles manager that superB
+# File:         bpackages.sh
+# Description:  Packages bootstrap that superB
 # Author:       NNB
 #               └─ https://github.com/NNBnh
 # URL:          https://github.com/NNBnh/b.sh
