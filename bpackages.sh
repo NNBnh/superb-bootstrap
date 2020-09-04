@@ -36,17 +36,17 @@ for pm in $OS AUR Flatpak Snapcraft; do
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
 		'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ;;
 		'AUR')
-			[ "$packages_aur" = *AUR:* ] && [ "$OS" = 'Arch-linux' ] && continue
+			[ $packages = *AUR:* ] && [ $OS = 'Arch-linux' ] && continue
 			pm_launcher='yay -S --nodiffmenu --save'
 			pm_mark='AUR'
 		;;
 		'Flatpak')
-			[ "$packages_flatpak" = *FLA:* ] && continue
+			[ $packages = *FLA:* ] && continue
 			pm_launcher='sudo flatpak install'
 			pm_mark='FLA'
 		;;
 		'Snapcraft')
-			[ "$packages_snap" = *SNA:* ] && [ ! "$OS" = 'Void-linux' ] && continue
+			[ $packages = *SNA:* ] && [ ! $OS = 'Void-linux' ] && continue
 			pm_launcher='sudo snap install'
 			pm_mark='SNA'
 		;;
@@ -54,8 +54,8 @@ for pm in $OS AUR Flatpak Snapcraft; do
 
 	echo "Installing $pm Packages"
 
-	$pm_launcher $(echo $(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
-	                                     | awk "{gsub(\"$pm_mark:\", \"\");print}"))
+	$pm_launcher ($(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' \
+	                               | awk "{gsub(\"$pm_mark:\", \"\");print}"))
 done
 
 
