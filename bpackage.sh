@@ -25,13 +25,13 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+SUPERBOOTSTRAP_OS=Void-linux
 
 # Functions
 for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
-	packages=$(echo $packages | awk "!/$pm_mark:/") \
 	[ -z $packages ] && packages=$(awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR-$PWD}/bootstrap/packages")
-	
+	packages=$(echo $packages | awk "!/$pm_mark:/")
+
 	case $pm in
 		'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
 		'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
@@ -39,7 +39,7 @@ for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 		'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
 		'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
 		'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
-		*)            echo "Error, no \"$SUPERBOOTSTRAP_OS\" on index"   ; exit          ;;
+		*)            echo "Error, $SUPERBOOTSTRAP_OS OS not found"      ; exit          ;;
 	esac
 	
 	packages_raw=$(echo $packages | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' | awk "{gsub(\"$pm_mark:\", \"\");print}")
