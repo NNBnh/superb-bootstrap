@@ -28,85 +28,43 @@
 
 
 # Values
-pwd="$PWD"
-superboostrap_dir="${SUPERBOOTSTRAP_DIR:-$PWD}"
-packages_file="$superboostrap_dir/bootstrap/packages"
-packages_cache="${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap"
-mainpm=${SUPERBOOTSTRAP_MAINPM:-'APT'}
-
-
-# Functions
-install_packages() {
-	if [ -f "$packages_file" ]; then
-		awk '{gsub("#.*$", "");print}' "$packages_file" > "$packages_cache"
-
-		                             pms="$mainpm"
-		[ "$mainpm"  = 'Pacman' ] && pms="$pms AUR"
-		                             pms="$pms Flatpak"
-		[ "$mainpm" != 'XBPS'   ] && pms="$pms Snapcraft"
-
-		for pm in $pms; do
-			if [ -n "$(cat "$packages_cache")" ]; then
-
-				case $pm in
-					'Pacman')    pm_launcher='sudo pacman --sync --refresh --noconfirm --needed' ; pm_mark='PAC' ;;
-					'APT')       pm_launcher='sudo apt install --assume-yes'                     ; pm_mark='APT' ;;
-					'XBPS')      pm_launcher='sudo xbps-install --sync --yes'                    ; pm_mark='XBP' ;;
-					'AUR')       pm_launcher='yay -Sy --nodiffmenu --save'                       ; pm_mark='AUR' ;; #FIXME
-					'Flatpak')   pm_launcher='sudo flatpak install'                              ; pm_mark='FLA' ;; #FIXME
-					'Snapcraft') pm_launcher='sudo snap install'                                 ; pm_mark='SNA' ;; #FIXME
-				esac
-
-				echo "Installing $pm Packages:"
-
-				$pm_launcher $(cat "$packages_cache" | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' | awk "{gsub(\"$pm_mark:\", \"\");print}")
-
-				awk "!/$pm_mark:/" "$packages_cache" > "$packages_cache"
-			fi
-		done
-	else
-		echo "No packages list found, skip install packages."
-	fi
-}
-
-load_config() {
-	load_config_file="$superboostrap_dir/bootstrap/${1:-'setup'}"
-
-	if [ -f "$load_config_file" ]; then
-		echo "Loading $1 config:"
-		$load_config_file
-	else
-		echo "No $1 file found, skip $1 config."
-	fi
-}
-
-symlink_files() {
-	symlink_dir="${1:-'home'}"
-	target_dir="${2:-'$HOME'}"
-
-	cd "$superboostrap_dir"
-
-	if [ -d "$symlink_dir" ]; then
-		echo "Symlink $1 directory:"
-
-		while :; do
-			${3:+'sudo'} stow -Rt $target_dir $symlink_dir && break
-			sleep 2
-		done
-	else
-		echo "No $1 directory found, skip $1 symlink."
-	fi
-	
-	cd "$pwd"
-}
+packages_cache="${XDG_CACHE_HOME:-"$HOME/.cache"}/bpackages_cache"
 
 
 # Start
-install_packages
-load_config setup
-symlink_files home $HOME
-symlink_files root / sudo
-load_config extra
+if [ -f "$BPACKAGES_FILE" ] && [ -n "$BPACKAGES_MAINPM" ]; then
+	awk '{gsub("#.*$", "");print}' "$BPACKAGES_FILE" > "$packages_cache"
+
+		                                   pms="$BPACKAGES_MAINPM"
+	[ "$BPACKAGES_MAINPM"  = 'Pacman' ] && pms="$pms AUR"
+		                                   pms="$pms Flatpak"
+	[ "$BPACKAGES_MAINPM" != 'XBPS'   ] && pms="$pms Snapcraft"
+
+	for pm in $pms; do
+		if [ -n "$(cat "$packages_cache")" ]; then
+
+			case $pm in
+				'Pacman')    pm_launcher='sudo pacman --sync --refresh --noconfirm --needed' ; pm_mark='PAC' ;;
+				'APT')       pm_launcher='sudo apt install --assume-yes'                     ; pm_mark='APT' ;;
+				'XBPS')      pm_launcher='sudo xbps-install --sync --yes'                    ; pm_mark='XBP' ;;
+				'AUR')       pm_launcher='yay -Sy --nodiffmenu --save'                       ; pm_mark='AUR' ;; #FIXME
+				'Flatpak')   pm_launcher='sudo flatpak install'                              ; pm_mark='FLA' ;; #FIXME
+				'Snapcraft') pm_launcher='sudo snap install'                                 ; pm_mark='SNA' ;; #FIXME
+				*)           echo "'$pm' packages manager not found"                         ; exit 1        ;;
+			esac
+
+			echo "Installing $pm Packages:"
+
+			$pm_launcher $(cat "$packages_cache" | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' | awk "{gsub(\"$pm_mark:\", \"\");print}")
+
+			awk "!/$pm_mark:/" "$packages_cache" > "$packages_cache"
+		fi
+	done
+else
+	[ -f "$BPACKAGES_FILE"   ] || echo '$BPACKAGES_FILE is unset, please `export BPACKAGES_FILE=path/to/packages`'
+	[ -n "$BPACKAGES_MAINPM" ] || echo '$BPACKAGES_MAINPM is unset, please `export BPACKAGES_MAINPM=[Pacman|APT|XBPS]`'
+	exit 1
+fi
 
 
 exit 0
