@@ -90,7 +90,7 @@ symlink_files() {
 		echo "Symlink $1 directory:"
 
 		while :; do
-			${3:+'sudo'} stow --version --dir="$symlink_dir" --target="$target_dir" && break
+			${3:+'sudo'} stow --dir="$symlink_dir" --target="$target_dir" && break
 			echo "Error, please resolve it then press ^d (ctrl+d)"
 			$SHELL
 		done
