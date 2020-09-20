@@ -34,7 +34,7 @@ awk '{gsub("#.*$", "");print}' "$superboostrap_dir/bootstrap/packages" > "$super
 
 
 # Functions
-function load_config() {
+load_config() {
 	load_config_file="$superboostrap_dir/bootstrap/${1:-'setup'}"
 
 	if [ -f "$load_config_file" ]; then
@@ -45,7 +45,7 @@ function load_config() {
 	fi
 }
 
-function symlink_files() {
+symlink_files() {
 	symlink_dir="$superboostrap_dir/${1:-'home'}"
 
 	if [ -d "$symlink_dir" ]; then
@@ -61,7 +61,7 @@ function symlink_files() {
 	fi
 }
 
-function install_packages() {
+install_packages() {
 	for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
 		if [ -n "$(cat "$superboostrap_cache")" ]; then
 
