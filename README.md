@@ -37,15 +37,15 @@
 #### To start Super Bootstrap
 - `git` or anything that can download dotfiles
 - `curl` or `wget` to use [`bawkpack`](https://github.com/NNBnh/bawkpack)
+- `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
 
 #### Installation process
-- `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
 - `stow` to link dotfiles
 
 ### Setup Super Bootstrap
 First create the dotfiles directory:
 
-```
+```sh
 mkdir -p "$HOME/dots/bootstrap"
 mkdir -p "$HOME/dots/home"
 mkdir -p "$HOME/dots/root"
@@ -63,19 +63,63 @@ dots/
 │  ├─ packageslist  # Package-list
 │  └─ setup         # Setup script
 │
-├─ home/            # Symlink to home
-├─ root/            # Symlink to root
-├─ other/           # Not symlink
-└─ wiki/            # Info of dotfiles
+├─ home/            # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
+├─ root/            # Symlink to root (same with this file but it will be symlink to '/' directory)
+├─ other/           # Not symlink (Other file that you want to backup but don't want to symlink)
+└─ wiki/            # Info of dotfiles (Wiki about your rice, blog...)
 ```
 
-Add packages to `packageslist`
+Add packages to `packageslist`:
 
-Add config scripts to `setup`
+```
+### Lable (use '#' to comments)
+  APT:kakoune                  PAC:kakoune                  XBP:kakoune                # Comments...
+  APT:neofetch                 PAC:neofetch                 XBP:neofetch               # Comments...
+  FLA:org.godotengine.Godot    AUR:godot-bin                XBP:godot                  # Comments...
+  SNA:blender                  PAC:blender                  XBP:blender                # Comments...
+# SNA:retroarch                PAC:retroarch                XBP:retroarch              # Comment out a package
+                               AUR:vimv-git               # XBP:vimv                   # Comment out a package only in XBPS
+```
 
+Add config scripts to `setup`:
+
+```sh
+#!/bin/sh
+
+
+# Before symlink
+    # Create directories (to only symlink files inside, not the directory)
+    mkdir $HOME/.local/bin
+    mkdir $HOME/.config/godot
+    mkdir $HOME/.config/retroarch
+    mkdir $HOME/.config/git && echo '' >> $HOME/.config/git/config
+
+
+# Symlink dotfiles
+pwd="$PWD"
+cd ..
+stow -vt ~ home
+sudo stow -vt / root
+cd $pwd
+
+
+# After symlink
+    # Change default shell
+    chsh -s "/usr/bin/fish"
+
+    # Enable firewall
+    sudo ufw enable
+
+
+exit 0
+```
+
+Finally upload your dotfiles.
 
 ## Usage
-Type this command to the terminal:
+First download your dotfiles.
+
+Then type this command to the terminal:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack | sh
