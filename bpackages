@@ -28,31 +28,11 @@
 
 
 # Values
+pwd="$PWD"
 superboostrap_dir="${SUPERBOOTSTRAP_DIR:-$PWD}"
 packages_file="$superboostrap_dir/bootstrap/packages"
 packages_cache="${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap"
-
-if [ -n "$SUPERBOOTSTRAP_MAINPM" ]; then
-	mainpm=$SUPERBOOTSTRAP_MAINPM
-else
-	echo 'Enter your main packages manager:'
-	echo ''
-	echo 'Pacman    (Arch base)'
-	echo 'APT     (Debian base)'
-	echo 'XBPS      (Void base)'
-	echo ''
-	read -p '> ' choose_mainpm
-
-	case $choose_mainpm in
-		'Pacman'|'PacMan'|'pacman') mainpm='Pacman' ;;
-		'APT'|'apt')                mainpm='APT'    ;;
-		'XBPS'|'xbps')              mainpm='XBPS'   ;;
-		*)
-			echo "Error, no $choose_mainpm packages manager found."
-			exit 1
-		;;
-	esac
-fi
+mainpm=${SUPERBOOTSTRAP_MAINPM:-'APT'}
 
 
 # Functions
@@ -60,10 +40,10 @@ install_packages() {
 	if [ -f "$packages_file" ]; then
 		awk '{gsub("#.*$", "");print}' "$packages_file" > "$packages_cache"
 
-		                         pms="$mainpm"
-		[ "$pm"  = 'Pacman' ] && pms="$pms AUR"
-		                         pms="$pms Flatpak"
-		[ "$pm" != 'XBPS'   ] && pms="$pms Snapcraft"
+		                             pms="$mainpm"
+		[ "$mainpm"  = 'Pacman' ] && pms="$pms AUR"
+		                             pms="$pms Flatpak"
+		[ "$mainpm" != 'XBPS'   ] && pms="$pms Snapcraft"
 
 		for pm in $pms; do
 			if [ -n "$(cat "$packages_cache")" ]; then
@@ -101,28 +81,33 @@ load_config() {
 }
 
 symlink_files() {
-	symlink_dir="$superboostrap_dir/${1:-'home'}"
+	symlink_dir="${1:-'home'}"
+	target_dir="${2:-'$HOME'}"
+
+	cd "$superboostrap_dir"
 
 	if [ -d "$symlink_dir" ]; then
 		echo "Symlink $1 directory:"
 
 		while :; do
-			${2:+'sudo'} stow --version --dir="$symlink_dir" --target="$HOME" && break
+			${3:+'sudo'} stow --version --dir="$symlink_dir" --target="$target_dir" && break
 			echo "Error, please resolve it then press ^d (ctrl+d)"
 			$SHELL
 		done
 	else
 		echo "No $1 directory found, skip $1 symlink."
 	fi
+	
+	cd "$pwd"
 }
 
 
 # Start
 install_packages
 load_config setup
-symlink_files home
-symlink_files root sudo
+symlink_files home $HOME
+symlink_files root / sudo
 load_config extra
 
 
-exit
+exit 0
