@@ -32,13 +32,13 @@ superboostrap_dir="${SUPERBOOTSTRAP_DIR:-$PWD}"
 packages_file="$superboostrap_dir/bootstrap/packages"
 packages_cache="${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap"
 
-if [ -n $SUPERBOOTSTRAP_MAINPM ]; then
+if [ -n "$SUPERBOOTSTRAP_MAINPM" ]; then
 	mainpm=$SUPERBOOTSTRAP_MAINPM
 else
-	printf "Enter your main packages manager:"
-	printf "Pacman    (Arch base)"
-	printf "APT     (Debian base)"
-	printf "XBPS      (Void base)"
+	echo 'Enter your main packages manager:'
+	echo 'Pacman    (Arch base)'
+	echo 'APT     (Debian base)'
+	echo 'XBPS      (Void base)'
 
 	read -p '> ' choose_mainpm
 
