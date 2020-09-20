@@ -91,8 +91,7 @@ symlink_files() {
 
 		while :; do
 			${3:+'sudo'} stow --dir="$symlink_dir" --target="$target_dir" && break
-			echo "Error, please resolve it then press ^d (ctrl+d)"
-			$SHELL
+			sleep 2
 		done
 	else
 		echo "No $1 directory found, skip $1 symlink."
