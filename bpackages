@@ -28,30 +28,69 @@
 
 
 # Values
-awk '{gsub("#.*$", "");print}' "${SUPERBOOTSTRAP_DIR:-$PWD}/bootstrap/packages" > "${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap"
+superboostrap_dir="${SUPERBOOTSTRAP_DIR:-$PWD}"
+superboostrap_cache="${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap"
+awk '{gsub("#.*$", "");print}' "$superboostrap_dir/bootstrap/packages" > "$superboostrap_cache"
 
 
 # Functions
-for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
-	if [ -n "$(cat "${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap")" ]; then
+function load_config() {
+	load_config_file="$superboostrap_dir/bootstrap/${1:-'setup'}"
 
-		case $pm in
-			'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
-			'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
-			'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ;;
-			'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
-			'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
-			'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
-			*)            echo "Error, $SUPERBOOTSTRAP_OS OS not found"      ; exit          ;;
-		esac
-
-		echo "Installing $pm Packages"
-
-		$pm_launcher $(cat "${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap" | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' | awk "{gsub(\"$pm_mark:\", \"\");print}")
-
-		awk "!/$pm_mark:/" "${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap" > "${XDG_CACHE_HOME:-"$HOME/.cache"}/superboostrap"
+	if [ -f "$load_config_file" ]; then
+		echo "Loading $1 config:"
+		$load_config_file
+	else
+		echo "No $1 file found, skip $1 config."
 	fi
-done
+}
+
+function symlink_files() {
+	symlink_dir="$superboostrap_dir/${1:-'home'}"
+
+	if [ -d "$symlink_dir" ]; then
+		echo "Symlink $1 directory:"
+
+		while :; do
+			${2:+'sudo'} stow -t "$HOME" "$symlink_dir" && break
+			echo "Error, please resolve it then press ^d (ctrl+d)"
+			$SHELL
+		done
+	else
+		echo "No $1 directory found, skip $1 symlink."
+	fi
+}
+
+function install_packages() {
+	for pm in $SUPERBOOTSTRAP_OS AUR Flatpak Snapcraft; do
+		if [ -n "$(cat "$superboostrap_cache")" ]; then
+
+			case $pm in
+				'Arch-linux') pm_launcher='sudo pacman -Sy --noconfirm --needed' ; pm_mark='PAC' ;;
+				'Debian')     pm_launcher='sudo apt install -y'                  ; pm_mark='APT' ;;
+				'Void-linux') pm_launcher='sudo xbps-install -Sy'                ; pm_mark='XBP' ;;
+				'AUR')        pm_launcher='yay -S --nodiffmenu --save'           ; pm_mark='AUR' ;;
+				'Flatpak')    pm_launcher='sudo flatpak install'                 ; pm_mark='FLA' ;;
+				'Snapcraft')  pm_launcher='sudo snap install'                    ; pm_mark='SNA' ;;
+				*)            echo "Error, $SUPERBOOTSTRAP_OS OS not found"      ; exit          ;;
+			esac
+
+			echo "Installing $pm Packages:"
+
+			$pm_launcher $(cat "$superboostrap_cache" | awk -v FPAT="$pm_mark:[^ ]+" 'NF{ print $1 }' | awk "{gsub(\"$pm_mark:\", \"\");print}")
+
+			awk "!/$pm_mark:/" "$superboostrap_cache" > "$superboostrap_cache"
+		fi
+	done
+}
+
+
+# Start
+install_packages
+load_config setup
+symlink_files home
+symlink_files root sudo
+load_config extra
 
 
 exit
