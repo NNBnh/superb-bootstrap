@@ -8,8 +8,8 @@
 
 ### Features
 - Super **minimum** with exactly [**64** lines of `sh`](superbootstrap#L64).
-- Super [**low dependencies**](#dependencies)
-- Super **easy** to **[setup](#setup-superbootstrap)** and **[use](#usage)**
+- Super **low** [dependencies](#dependencies)
+- Super **easy** to [setup](#setup-superbootstrap) and [use](#usage)
 
 ## Contents
 - [About](#about)
