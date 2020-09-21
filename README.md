@@ -65,7 +65,7 @@ dots/
 │
 ├─ home/            # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
 ├─ root/            # Symlink to root (same with this file but it will be symlink to '/' directory)
-├─ other/           # Not symlink (Other file that you want to backup but don't want to symlink)
+├─ other/           # Not symlink (Other files that you want to backup but don't want to symlink)
 └─ wiki/            # Info of dotfiles (Wiki about your rice, blog...)
 ```
 
@@ -88,7 +88,7 @@ Add config scripts to `setup`:
 
 
 # Before symlink
-    # Create directories (to only symlink files inside, not the directory)
+    # Create directories (to symlink files inside only, not the directory itself)
     mkdir $HOME/.local/bin
     mkdir $HOME/.config/godot
     mkdir $HOME/.config/retroarch
