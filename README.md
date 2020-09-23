@@ -4,10 +4,10 @@
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square">
 
 ## About
-**Super Bootstrap** is a *SuperB* bootstrap system written in [`pure sh`](https://github.com/dylanaraps/pure-sh-bible).
+**Super Bootstrap** is a *SuperB* bootstrap system.
 
 ### Features
-- Super **minimum** with exactly [**64** lines of `sh`](superbootstrap#L64).
+- Super **portable**, work on almost any unix-like OS.
 - Super **low** [dependencies](#dependencies)
 - Super **easy** to [setup](#setup-super-bootstrap) and [use](#usage)
 
@@ -18,7 +18,6 @@
 - [Setup](#setup)
   - [Dependencies](#dependencies)
     - [To setup Super Bootstrap](#to-setup-super-bootstrap)
-    - [To start Super Bootstrap](#to-start-super-bootstrap)
     - [Installation process](#installation-process)
   - [Setup Super Bootstrap](#setup-superbootstrap)
 - [Usage](#usage)
@@ -36,32 +35,29 @@
   - `mkdir` to create directory
   - `chmod` to make setup file executable
 
-#### To start Super Bootstrap
+#### Installation process
 - `git` or anything that can download dotfiles
 - `curl` or `wget` to use [`bawkpack`](https://github.com/NNBnh/bawkpack)
 - `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
-
-#### Installation process
 - `stow` to link dotfiles
 
 ### Setup Super Bootstrap
 First create the dotfiles directory:
 
 ```sh
-mkdir -p "$HOME/dots/bootstrap"
-mkdir -p "$HOME/dots/home"
-mkdir -p "$HOME/dots/root"
-mkdir -p "$HOME/dots/extra"
-mkdir -p "$HOME/dots/wiki"
-echo '' >> "$HOME/dots/bootstrap/packageslist"
-echo '' >> "$HOME/dots/bootstrap/setup"
-chmod +x "$HOME/dots/bootstrap/setup"
+mkdir -p "$HOME/dotfiles/bootstrap"
+mkdir -p "$HOME/dotfiles/home"
+mkdir -p "$HOME/dotfiles/root"
+mkdir -p "$HOME/dotfiles/extra"
+mkdir -p "$HOME/dotfiles/wiki"
+echo '' >> "$HOME/dotfiles/bootstrap/packageslist"
+echo '' >> "$HOME/dotfiles/bootstrap/setup"
 ```
 
 You will have a directory structure that looks like this:
 
 ```
-dots/
+dotfiles/
 ├─ bootstrap/
 │  ├─ packageslist  # Package-list
 │  └─ setup         # Setup script
@@ -74,10 +70,22 @@ dots/
 
 Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
 
-Add config scripts to `setup`:
+Add config scripts to `setup`, for example:
 
 ```sh
 #!/bin/sh
+
+#    ____    __
+#   / __/__ / /___ _____
+#  _\ \/ -_) __/ // / _ \
+# /___/\__/\__/\_,_/ .__/
+#                 /_/
+
+
+# Install packages
+    BAWKPACK_FILE='packageslist'
+    read -p 'Enter your main packages manager: ' BAWKPACK_MAINPM
+    curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack | sh
 
 
 # Before symlink
@@ -87,6 +95,8 @@ Add config scripts to `setup`:
     mkdir $HOME/.config/retroarch
     mkdir $HOME/.config/git && echo '' >> $HOME/.config/git/config
 
+    # Delete files that may conflict when symlink dotfiles
+    rm .bashrc
 
 # Symlink dotfiles
 pwd="$PWD"
@@ -107,11 +117,25 @@ cd $pwd
 exit 0
 ```
 
-Finally upload your dotfiles.
+###### Remember to make `setup` executable:
+
+```sh
+chmod +x "$HOME/dotfiles/bootstrap/setup"
+```
+
+Finally upload your dotfiles to a safe place.
 
 ## Usage
-First download your dotfiles.
+Just download your dotfiles, if you using `git`:
 
-Then type this command to the terminal:
+```sh
+git clone https://github.com/yourname/dotfiles.git
+```
 
-###### #TODO
+Then execute the `setup` file:
+
+```sh
+./dotfiles/bootstrap/setup
+```
+
+Done!
