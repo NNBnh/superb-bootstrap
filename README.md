@@ -1,13 +1,13 @@
 <h1 align="center"><i>Super Bootstrap</i></h1>
 <p align="center">Bootstrap system that <i>SuperB</i>
-<p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/github/languages/top/NNBnh/b.sh?logo=gnu-bash&labelColor=073551&color=4EAA25&logoColor=FFFFFF&style=for-the-badge" alt="Shell: 100%"> <img src="https://img.shields.io/badge/curl-able-%234EAA25.svg?labelColor=073551&style=for-the-badge&logo=curl&logoColor=FFFFFF" alt="Curlable"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge">
+<p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/github/languages/top/NNBnh/b.sh?logo=gnu-bash&labelColor=073551&color=4EAA25&logoColor=FFFFFF&style=for-the-badge" alt="Shell: 100%"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge">
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square">
 
 ## About
 **Super Bootstrap** is a *SuperB* bootstrap system.
 
 ### Features
-- Super **portable**, work on almost any unix-like OS.
+- Super **portable**, work on almost any unix-like operating system.
 - Super **low** [dependencies](#dependencies)
 - Super **easy** to [setup](#setup-super-bootstrap) and [use](#usage)
 
@@ -24,21 +24,19 @@
 
 ## Setup
 ### Dependencies
-- One of these linux distributions:
-  - Archlinux's base
-  - Debian's base
-  - Voidlinux's base
+- One of these [operating system](https://github.com/NNBnh/bawkpack#supported-operating-system)
 - `sh` to process
 
 #### To setup Super Bootstrap
-- `coreutils`
+- `coreutils` will come with:
   - `mkdir` to create directory
   - `chmod` to make setup file executable
 
 #### Installation process
-- `git` or anything that can download dotfiles
-- `curl` or `wget` to use [`bawkpack`](https://github.com/NNBnh/bawkpack)
-- `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
+- `git` or anything that can download dotfiles (optional)
+- `bawkpack` to install packages list, it need:
+  - `curl` or `wget` to get [`bawkpack`](https://github.com/NNBnh/bawkpack)
+  - `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
 - `stow` to link dotfiles
 
 ### Setup Super Bootstrap
