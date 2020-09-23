@@ -1,5 +1,5 @@
 <h1 align="center"><i>Super Bootstrap</i></h1>
-<p align="center">Bootstrap that <i>SuperB</i>
+<p align="center">Bootstrap system that <i>SuperB</i>
 <p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/github/languages/top/NNBnh/b.sh?logo=gnu-bash&labelColor=073551&color=4EAA25&logoColor=FFFFFF&style=for-the-badge" alt="Shell: 100%"> <img src="https://img.shields.io/badge/curl-able-%234EAA25.svg?labelColor=073551&style=for-the-badge&logo=curl&logoColor=FFFFFF" alt="Curlable"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge">
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square">
 
@@ -69,17 +69,7 @@ dots/
 └─ wiki/            # Info of dotfiles (Wiki about your rice, blog...)
 ```
 
-Add packages to `packageslist`:
-
-```
-### Lable (use '#' to comments)
-  APT:kakoune                  PAC:kakoune                  XBP:kakoune                # Comments...
-  APT:neofetch                 PAC:neofetch                 XBP:neofetch               # Comments...
-  FLA:org.godotengine.Godot    AUR:godot-bin                XBP:godot                  # Comments...
-  SNA:blender                  PAC:blender                  XBP:blender                # Comments...
-# SNA:retroarch                PAC:retroarch                XBP:retroarch              # Comment out a package
-                               AUR:vimv-git               # XBP:vimv                   # Comment out a package only in XBPS
-```
+Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
 
 Add config scripts to `setup`:
 
