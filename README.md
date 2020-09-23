@@ -51,7 +51,7 @@ First create the dotfiles directory:
 mkdir -p "$HOME/dots/bootstrap"
 mkdir -p "$HOME/dots/home"
 mkdir -p "$HOME/dots/root"
-mkdir -p "$HOME/dots/other"
+mkdir -p "$HOME/dots/extra"
 mkdir -p "$HOME/dots/wiki"
 echo '' >> "$HOME/dots/bootstrap/packageslist"
 echo '' >> "$HOME/dots/bootstrap/setup"
@@ -68,7 +68,7 @@ dots/
 │
 ├─ home/            # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
 ├─ root/            # Symlink to root (same with this file but it will be symlink to '/' directory)
-├─ other/           # Not symlink (Other files that you want to backup but don't want to symlink)
+├─ extra/           # Not symlink (Other files that you want to backup but don't want to symlink)
 └─ wiki/            # Info of dotfiles (Wiki about your rice, blog...)
 ```
 
