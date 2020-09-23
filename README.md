@@ -32,7 +32,9 @@
 - `sh` to process
 
 #### To setup Super Bootstrap
-- `coreutils` (`mkdir`) to create directory
+- `coreutils`
+  - `mkdir` to create directory
+  - `chmod` to make setup file executable
 
 #### To start Super Bootstrap
 - `git` or anything that can download dotfiles
@@ -52,7 +54,8 @@ mkdir -p "$HOME/dots/root"
 mkdir -p "$HOME/dots/other"
 mkdir -p "$HOME/dots/wiki"
 echo '' >> "$HOME/dots/bootstrap/packageslist"
-echo '#!/bin/sh' >> "$HOME/dots/bootstrap/setup"
+echo '' >> "$HOME/dots/bootstrap/setup"
+chmod +x "$HOME/dots/bootstrap/setup"
 ```
 
 You will have a directory structure that looks like this:
