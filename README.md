@@ -47,7 +47,6 @@ mkdir -p "$HOME/dotfiles/bootstrap"
 mkdir -p "$HOME/dotfiles/home"
 mkdir -p "$HOME/dotfiles/root"
 mkdir -p "$HOME/dotfiles/extra"
-mkdir -p "$HOME/dotfiles/wiki"
 echo '' >> "$HOME/dotfiles/bootstrap/packageslist"
 echo '' >> "$HOME/dotfiles/bootstrap/setup"
 ```
@@ -62,8 +61,7 @@ dotfiles/
 │
 ├─ home/            # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
 ├─ root/            # Symlink to root (same with this file but it will be symlink to '/' directory)
-├─ extra/           # Not symlink (Other files that you want to backup but don't want to symlink)
-└─ wiki/            # Info of dotfiles (Wiki about your rice, blog...)
+└─ extra/           # Not symlink (Other files that you want to backup but don't want to symlink)
 ```
 
 Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
