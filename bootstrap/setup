@@ -1,0 +1,24 @@
+#!/bin/sh
+
+
+# Install packages
+	BAWKPACK_FILE='packageslist'
+	read -p 'Enter your main packages manager: ' BAWKPACK_MAINPM
+	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack | sh
+
+
+# Before symlink
+
+
+# Symlink dotfiles
+pwd="$PWD"
+cd ..
+stow -vt ~ home
+sudo stow -vt / root
+cd $pwd
+
+
+# After symlink
+
+
+exit 0
