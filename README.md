@@ -1,10 +1,10 @@
-<h1 align="center"><i>Super Bootstrap</i></h1>
+<h1 align="center"><i>SuperB Bootstrap</i></h1>
 <p align="center">Bootstrap system that <i>SuperB</i>
 <p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/github/languages/top/NNBnh/b.sh?logo=gnu-bash&labelColor=073551&color=4EAA25&logoColor=FFFFFF&style=for-the-badge" alt="Shell: 100%"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge">
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square">
 
 ## About
-**Super Bootstrap** is a *SuperB* bootstrap system.
+**SuperB Bootstrap** is a *SuperB* bootstrap system.
 
 ### Features
 - Super **portable**, work on almost any unix-like operating system.
@@ -17,9 +17,9 @@
 - [Contents](#contents)
 - [Setup](#setup)
   - [Dependencies](#dependencies)
-    - [To setup Super Bootstrap](#to-setup-super-bootstrap)
+    - [To setup SuperB Bootstrap](#to-setup-superb-bootstrap)
     - [Installation process](#installation-process)
-  - [Setup Super Bootstrap](#setup-superbootstrap)
+  - [Setup SuperB Bootstrap](#setup-superb-bootstrap)
 - [Usage](#usage)
 
 ## Setup
@@ -27,7 +27,7 @@
 - One of these [operating system](https://github.com/NNBnh/bawkpack#supported-operating-system)
 - `sh` to process
 
-#### To setup Super Bootstrap
+#### To setup SuperB Bootstrap
 - `coreutils` will come with:
   - `mkdir` to create directory
   - `chmod` to make setup file executable
@@ -39,7 +39,7 @@
   - `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
 - `stow` to link dotfiles
 
-### Setup Super Bootstrap
+### Setup SuperB Bootstrap
 First create the dotfiles directory:
 
 ```sh
