@@ -40,7 +40,7 @@
 - `stow` to link dotfiles
 
 ### Setup SuperB Bootstrap
-First create the dotfiles directory:
+First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
 
 ```sh
 mkdir -p "$HOME/dotfiles/bootstrap"
