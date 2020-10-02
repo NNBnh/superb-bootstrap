@@ -4,9 +4,10 @@
 # Install packages
 	swd=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack \
-		&& echo 'Do you what to use this script?' && read -p '(y)es or (n)o: ' bawkpack_update
+		&& echo 'Do you what to update Bawkpack to this script?' \
+		&& read -p '(y)es or (n)o: ' bawkpack_update || exit 1
 	case $bawkpack_update in
-		'yes'|'y')
+		'yes'|'y'|'')
 			curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > $swd/bawkpack
 			chmod +x $swd/bawkpack
 		;;
