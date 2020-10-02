@@ -1,5 +1,4 @@
 # Root
-
 Symlink to root:
 
 Same with this file but it will be symlink to '/' directory.
