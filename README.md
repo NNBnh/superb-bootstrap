@@ -79,20 +79,30 @@ Add config scripts to `setup`, for example:
 
 
 # Install packages
-    BAWKPACK_FILE='packageslist'
-    read -p 'Enter your main packages manager: ' BAWKPACK_MAINPM
-    curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack | sh
+	swd=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack \
+		&& echo 'Do you what to use this script?' && read -p '(y)es or (n)o: ' bawkpack_update
+	case $bawkpack_update in
+		'yes'|'y')
+			curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > $swd/bawkpack
+			chmod +x $swd/bawkpack
+		;;
+		'no'|'n')        ;;
+		*)        exit 1 ;;
+	esac
+	[ ! -f "$swd/bawkpack" ] && echo 'Bawkpack is not found' && exit 1
+	$swd/bawkpack "$swd/packageslist"
 
 
 # Before symlink
-    # Create directories (to symlink files inside only, not the directory itself)
-    mkdir $HOME/.local/bin
-    mkdir $HOME/.config/godot
-    mkdir $HOME/.config/retroarch
-    mkdir $HOME/.config/git && echo '' >> $HOME/.config/git/config
+	# Create directories (to symlink files inside only, not the directory itself)
+	mkdir $HOME/.local/bin
+	mkdir $HOME/.config/godot
+	mkdir $HOME/.config/retroarch
+	mkdir $HOME/.config/git && echo '' >> $HOME/.config/git/config
 
-    # Delete files that may conflict when symlink dotfiles
-    rm .bashrc
+	# Delete files that may conflict when symlink dotfiles
+	rm .bashrc
 
 # Symlink dotfiles
 pwd="$PWD"
@@ -103,11 +113,11 @@ cd $pwd
 
 
 # After symlink
-    # Change default shell
-    chsh -s "/usr/bin/fish"
+	# Change default shell
+	chsh -s "/usr/bin/fish"
 
-    # Enable firewall
-    sudo ufw enable
+	# Enable firewall
+	sudo ufw enable
 
 
 exit 0
