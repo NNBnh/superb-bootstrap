@@ -35,7 +35,7 @@
 #### Installation process
 - `git` or anything that can download dotfiles (optional)
 - `bawkpack` to install packages list, it need:
-  - `curl` or `wget` to get [`bawkpack`](https://github.com/NNBnh/bawkpack)
+  - `curl` or `wget` to get [`bawkpack`](https://github.com/NNBnh/bawkpack) if needed
   - `awk` to read packages file ([`bawkpack`](https://github.com/NNBnh/bawkpack) dependencie)
 - `stow` to link dotfiles
 
@@ -56,12 +56,20 @@ You will have a directory structure that looks like this:
 ```
 dotfiles/
 ├─ bootstrap/
-│  ├─ packageslist  # Package-list
+│  ├─ packageslist  # Package list
 │  └─ setup         # Setup script
 │
 ├─ home/            # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
 ├─ root/            # Symlink to root (same with this file but it will be symlink to '/' directory)
 └─ extra/           # Not symlink (Other files that you want to backup but don't want to symlink)
+```
+
+It is recommended to pre-download `bawkpack` so that you don't have to install` curl` before bootstrap:
+
+```sh
+cd path/to/bootstrap
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > bawkpack
+chmod +x bawkpack
 ```
 
 Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
@@ -81,9 +89,10 @@ Add config scripts to `setup`, for example:
 # Install packages
 	swd=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack \
-		&& echo 'Do you what to use this script?' && read -p '(y)es or (n)o: ' bawkpack_update
+		&& echo 'Do you what to update Bawkpack to this script?' \
+		&& read -p '(y)es or (n)o: ' bawkpack_update || exit 1
 	case $bawkpack_update in
-		'yes'|'y')
+		'yes'|'y'|'')
 			curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > $swd/bawkpack
 			chmod +x $swd/bawkpack
 		;;
