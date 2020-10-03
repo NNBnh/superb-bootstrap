@@ -88,9 +88,11 @@ Add config scripts to `setup`, for example:
 
 # Install packages
 	swd=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+	bawkpack_update='no'
+
 	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack \
 		&& echo 'Do you what to update Bawkpack to this script?' \
-		&& read -p '(y)es or (n)o: ' bawkpack_update || exit 1
+		&& read -p '(y)es or (n)o: ' bawkpack_update
 	case $bawkpack_update in
 		'yes'|'y'|'')
 			curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > $swd/bawkpack
