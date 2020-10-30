@@ -1,0 +1,24 @@
+#!/bin/sh
+
+
+# Install packages
+	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o $HOME/.cache/bawkpack
+	chmox +x $HOME/.cache/bawkpack
+    $HOME/.cache/bawkpack "$swd/packageslist"
+
+
+# Before symlink
+
+
+# Symlink dotfiles
+pwd="$PWD"
+cd $(cd -P -- "$(dirname -- "$0")" && pwd -P)
+stow -vt ~ home
+sudo stow -vt / root
+cd $pwd
+
+
+# After symlink
+
+
+exit 0
