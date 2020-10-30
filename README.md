@@ -43,33 +43,23 @@
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
 
 ```sh
-mkdir -p "$HOME/dotfiles/bootstrap"
 mkdir -p "$HOME/dotfiles/home"
 mkdir -p "$HOME/dotfiles/root"
 mkdir -p "$HOME/dotfiles/extra"
-echo '' >> "$HOME/dotfiles/bootstrap/packageslist"
-echo '' >> "$HOME/dotfiles/bootstrap/setup"
+echo '' >> "$HOME/dotfiles/packageslist"
+echo '' >> "$HOME/dotfiles/setup"
 ```
 
 You will have a directory structure that looks like this:
 
 ```
 dotfiles/
-├─ bootstrap/
-│  ├─ packageslist  # Package list
-│  └─ setup         # Setup script
-│
 ├─ home/            # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
 ├─ root/            # Symlink to root (same with this file but it will be symlink to '/' directory)
 └─ extra/           # Not symlink (Other files that you want to backup but don't want to symlink)
-```
-
-It is recommended to pre-download `bawkpack` so that you don't have to install` curl` before bootstrap:
-
-```sh
-cd path/to/bootstrap
-curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > bawkpack
-chmod +x bawkpack
+│
+├─ packageslist     # Package list
+└─ setup            # Setup script
 ```
 
 Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
@@ -87,37 +77,21 @@ Add config scripts to `setup`, for example:
 
 
 # Install packages
-	swd=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-	bawkpack_update='no'
-
-	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack \
-		&& echo 'Do you what to update Bawkpack to this script?' \
-		&& read -p '(y)es or (n)o: ' bawkpack_update
-	case $bawkpack_update in
-		'yes'|'y'|'')
-			curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack > $swd/bawkpack
-			chmod +x $swd/bawkpack
-		;;
-		'no'|'n')        ;;
-		*)        exit 1 ;;
-	esac
-	[ ! -f "$swd/bawkpack" ] && echo 'Bawkpack is not found' && exit 1
-	$swd/bawkpack "$swd/packageslist"
+	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o $HOME/.cache/bawkpack
+	chmox +x $HOME/.cache/bawkpack
+    $HOME/.cache/bawkpack "$swd/packageslist"
 
 
 # Before symlink
 	# Create directories (to symlink files inside only, not the directory itself)
-	mkdir $HOME/.local/bin
-	mkdir $HOME/.config/godot
-	mkdir $HOME/.config/retroarch
-	mkdir $HOME/.config/git && echo '' >> $HOME/.config/git/config
+	mkdir $HOME/.local/bin $HOME/.config/godot $HOME/.config/retroarch
 
 	# Delete files that may conflict when symlink dotfiles
 	rm .bashrc
 
 # Symlink dotfiles
 pwd="$PWD"
-cd ..
+cd $(cd -P -- "$(dirname -- "$0")" && pwd -P)
 stow -vt ~ home
 sudo stow -vt / root
 cd $pwd
@@ -137,7 +111,7 @@ exit 0
 ###### Remember to make `setup` executable:
 
 ```sh
-chmod +x "$HOME/dotfiles/bootstrap/setup"
+chmod +x "$HOME/dotfiles/setup"
 ```
 
 Finally upload your dotfiles to a safe place.
@@ -152,7 +126,7 @@ git clone https://github.com/yourname/dotfiles.git
 Then execute the `setup` file:
 
 ```sh
-./dotfiles/bootstrap/setup
+./dotfiles/setup
 ```
 
 Done!
