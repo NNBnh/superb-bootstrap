@@ -3,8 +3,6 @@
 
 # Values
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-XDG_CACHE_HOME="$HOME/.cache"
-XDG_DATA_HOME="$HOME/.local/share"
 
 
 # Install packages
