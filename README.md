@@ -62,6 +62,14 @@ dotfiles/
 └─ setup            # Setup script
 ```
 
+It is recommended to pre-download `bawkpack` so that you don't have to install curl before bootstrap:
+
+```
+cd path/to/dotfiles
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack -o bawkpack
+chmod +x bawkpack
+```
+
 Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
 
 Add config scripts to `setup`, for example:
@@ -77,9 +85,9 @@ Add config scripts to `setup`, for example:
 
 
 # Install packages
-	curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o $HOME/.cache/bawkpack
-	chmox +x $HOME/.cache/bawkpack
-    $HOME/.cache/bawkpack "$swd/packageslist"
+DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o $DOTS/bawkpack && chmod +x $DOTS/bawkpack
+$DOTS/bawkpack "$pld/packageslist"
 
 
 # Before symlink
@@ -90,11 +98,8 @@ Add config scripts to `setup`, for example:
 	rm .bashrc
 
 # Symlink dotfiles
-pwd="$PWD"
-cd $(cd -P -- "$(dirname -- "$0")" && pwd -P)
 stow -vt ~ home
 sudo stow -vt / root
-cd $pwd
 
 
 # After symlink
