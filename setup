@@ -1,13 +1,10 @@
 #!/bin/sh
 
 
-# Values
-DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-
-
 # Install packages
-curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o $DOTS/bawkpack && chmod +x $DOTS/bawkpack
-$DOTS/bawkpack "$pld/packageslist"
+DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o "$DOTS/bawkpack" && chmod +x "$DOTS/bawkpack"
+"$DOTS/bawkpack" "$DOTS/packageslist"
 
 
 # Before symlink
