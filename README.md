@@ -86,8 +86,8 @@ Add config scripts to `setup`, for example:
 
 # Install packages
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o "$DOTS"/bawkpack && chmod +x "$DOTS"/bawkpack
-"$DOTS"/bawkpack "$DOTS/packageslist"
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o "$DOTS/bawkpack" && chmod +x "$DOTS/bawkpack"
+"$DOTS/bawkpack" "$DOTS/packageslist"
 
 
 # Before symlink
