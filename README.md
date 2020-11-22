@@ -128,10 +128,18 @@ Just download your dotfiles, if you using `git`:
 git clone https://github.com/yourname/dotfiles.git
 ```
 
+`cd` to `dotfiles`:
+
+```sh
+cd dotfiles
+```
+
+###### You have to `cd` to `dotfiles` in order to make `stow` work
+
 Then execute the `setup` file:
 
 ```sh
-./dotfiles/setup
+./setup
 ```
 
 Done!
