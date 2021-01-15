@@ -1,14 +1,27 @@
 #!/bin/sh
 
+#    ____    __
+#   / __/__ / /___ _____
+#  _\ \/ -_) __/ // / _ \
+# /___/\__/\__/\_,_/ .__/
+#                 /_/
+
 
 # Install packages
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-curl -fsSL https://raw.githubusercontent.com/NNBnh/bawkpack/master/bawkpack --create-dirs -o "$DOTS/bawkpack" && chmod +x "$DOTS/bawkpack"
-"$DOTS/bawkpack" "$DOTS/packageslist"
+bawkpack_location="$DOTS/extra/bawkpack"       # You can change where to put bawkpack example:
+# bawkpack_location="${TMPDIR:-/tmp}/bawkpack" # to download and run bawkpack on /tmp/ so it deletes itself after a system reset
+
+curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack --create-dirs --output "$bawkpack_location" && chmod +x "$bawkpack_location" # Update/download bawkpack
+"$bawkpack_location" "$DOTS/packageslist"
 
 
 # Before symlink
+	# Create directories (to symlink files inside only, not the directory itself)
+	mkdir $HOME/.local/bin $HOME/.config/godot $HOME/.config/retroarch
 
+	# Delete files that may conflict when symlink dotfiles
+	rm .bashrc
 
 # Symlink dotfiles
 stow -vt ~ home
@@ -16,6 +29,11 @@ sudo stow -vt / root
 
 
 # After symlink
+	# Change default shell
+	chsh -s "/usr/bin/fish"
+
+	# Enable firewall
+	sudo ufw enable
 
 
 exit 0
