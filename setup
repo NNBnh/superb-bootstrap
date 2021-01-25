@@ -9,23 +9,25 @@
 
 # Install packages
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-bawkpack_location="$DOTS/extra/bawkpack"       # You can change where to put bawkpack example:
-# bawkpack_location="${TMPDIR:-/tmp}/bawkpack" # to download and run bawkpack on /tmp/ so it deletes itself after a system reset
+bawkpack_path="$DOTS/extra/bawkpack"       # You can change where to put bawkpack example:
+# bawkpack_path="${TMPDIR:-/tmp}/bawkpack" # Download and run bawkpack on /tmp/ so it deletes itself after a system reset
+bsymlink_path="$DOTS/extra/bsymlink"       # Same with bsymlink
 
-curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack --create-dirs --output "$bawkpack_location" && chmod +x "$bawkpack_location" # Update/download bawkpack
-"$bawkpack_location" "$DOTS/packageslist"
+curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack' --create-dirs --output "$bawkpack_path" && chmod +x "$bawkpack_path" # Update/download bawkpack
+"$bawkpack_path" "$DOTS/packageslist"
 
 
 # Before symlink
 	# Create directories (to symlink files inside only, not the directory itself)
-	mkdir $HOME/.local/bin $HOME/.config/godot $HOME/.config/retroarch
+	mkdir "$HOME/.local/bin" "$HOME/.config/godot" "$HOME/.config/retroarch"
 
 	# Delete files that may conflict when symlink dotfiles
 	rm .bashrc
 
 # Symlink dotfiles
-stow -vt ~ home
-sudo stow -vt / root
+curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bsymlink' --create-dirs --output "$bsymlink_path" && chmod +x "$bsymlink_path" # Update/download bsymlink
+"$bsymlink_path" "$DOTS/home" "$HOME"
+sudo "$bsymlink_path" "$DOTS/root" '/'
 
 
 # After symlink
