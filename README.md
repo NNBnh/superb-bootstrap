@@ -1,6 +1,6 @@
 <h1 align="center"><i>SuperB Bootstrap</i></h1>
 <p align="center">Bootstrap system that <i>SuperB</i></p>
-<p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/badge/version-1.2-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.2"> <img src="https://img.shields.io/github/last-commit/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge"></p>
+<p align="center"><img src="https://img.shields.io/github/license/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/badge/version-1.2-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.2"></p>
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/b.sh?labelColor=073551&color=4EAA25&style=flat-square"></p>
 
 ## About
@@ -25,7 +25,7 @@
 - One of these [operating system](https://github.com/NNBnh/bawkpack#supported-operating-system)
 - `sh` to process
 - `git` or anything that can download dotfiles (optional)
-- `curl` or `wget` to update [`bawkpack`](https://github.com/NNBnh/bawkpack) and [`bsymlink`]() if needed (optional)
+- `curl` or `wget` to update [`bawkpack`](https://github.com/NNBnh/bawkpack) and [`bsymlink`](https://github.com/NNBnh/bsymlink) if needed (optional)
 
 ### Setup SuperB Bootstrap
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
