@@ -6,36 +6,59 @@
 # /___/\__/\__/\_,_/ .__/
 #                 /_/
 
+# Add description here:
+# > Hello World!
+# > This is my setup script.
 
-# Install packages
+
+# Values
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-bawkpack_path="$DOTS/extra/bawkpack"       # You can change where to put bawkpack example:
-# bawkpack_path="${TMPDIR:-/tmp}/bawkpack" # Download and run bawkpack on /tmp/ so it deletes itself after a system reset
-bsymlink_path="$DOTS/extra/bsymlink"       # Same with bsymlink
 
-curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack' --create-dirs --output "$bawkpack_path" && chmod +x "$bawkpack_path" # Update/download bawkpack
-"$bawkpack_path" "$DOTS/packageslist"
+. "$DOTS/home/.config/env" # Get my environment variables
+
+BAWKPACK_PATH="$DOTS/extra/bawkpack" # You can change bawkpack's path
+BSYMLINK_PATH="$DOTS/extra/bsymlink" # You can also change bsymlink's path
+
+STEPS="${@:-install before symlink after}"
 
 
-# Before symlink
+# Functions
+install_packages() {
+	"$BAWKPACK_PATH" "$DOTS/packageslist"
+}
+
+symlink_dotfiles() {
+	     "$BSYMLINK_PATH" "$DOTS/home" "$HOME"
+	sudo "$BSYMLINK_PATH" "$DOTS/root" '/'
+}
+
+before_symlink() {
 	# Create directories (to symlink files inside only, not the directory itself)
 	mkdir "$HOME/.local/bin" "$HOME/.config/godot" "$HOME/.config/retroarch"
 
 	# Delete files that may conflict when symlink dotfiles
 	rm .bashrc
+}
 
-# Symlink dotfiles
-curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bsymlink' --create-dirs --output "$bsymlink_path" && chmod +x "$bsymlink_path" # Update/download bsymlink
-"$bsymlink_path" "$DOTS/home" "$HOME"
-sudo "$bsymlink_path" "$DOTS/root" '/'
-
-
-# After symlink
+after_symlink() {
 	# Change default shell
-	chsh -s "/usr/bin/fish"
+	chsh -s '/usr/bin/fish'
 
 	# Enable firewall
 	sudo ufw enable
+}
+
+
+# Start
+for step in $STEPS; do
+	case "$step" in
+		'i'|'install') install_packages ;;
+		'b'|'before')  before_symlink   ;;
+		's'|'symlink') symlink_dotfiles ;;
+		'a'|'after')   after_symlink    ;;
+		*)             exit 1           ;;
+	esac
+done
 
 
 exit 0
