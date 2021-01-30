@@ -1,6 +1,6 @@
 <h1 align="center"><i>SuperB Bootstrap</i></h1>
 <p align="center">Bootstrap system that <i>SuperB</i></p>
-<p align="center"><img src="https://img.shields.io/github/license/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/badge/version-1.2-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.2"></p>
+<p align="center"><img src="https://img.shields.io/github/license/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/badge/version-1.3-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.3"></p>
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"></p>
 
 ## About
@@ -24,8 +24,7 @@
 ### Dependencies
 - One of these [operating system](https://github.com/NNBnh/bawkpack#supported-operating-system)
 - `sh` to process
-- `git` or anything that can download dotfiles (optional)
-- `curl` or `wget` to update [`bawkpack`](https://github.com/NNBnh/bawkpack) and [`bsymlink`](https://github.com/NNBnh/bsymlink) if needed (optional)
+- `git` or anything that can download and upload dotfiles (optional)
 
 ### Setup SuperB Bootstrap
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
@@ -39,7 +38,7 @@ mkdir -p "$HOME/dotfiles/extra"
 : >> "$HOME/dotfiles/setup"
 
 curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack --create-dirs --output "$HOME/dotfiles/extra/bawkpack"
-curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bsymlink --create-dirs --output "$HOME/dotfiles/extra/bsymlink"
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bsymlink/main/bsymlink --create-dirs --output "$HOME/dotfiles/extra/bsymlink"
 chmod +x "$HOME/dotfiles/extra/"*
 ```
 
@@ -99,3 +98,8 @@ Done!
 > <h1 align="center">Made with :heart: by <a href="https://github.com/NNBnh"><i>NNB</i></a></h1>
 >
 > <p align="center"><a href="https://www.buymeacoffee.com/nnbnh"><img src="https://img.shields.io/badge/buy_me_a_coffee%20-%23F7CA88.svg?logo=buy-me-a-coffee&logoColor=333333&style=for-the-badge" alt="Buy Me a Coffee"></p>
+
+---
+
+<p align="center"><b>Copyright © 2020 by <a href="https://github.com/NNBnh">NNB</a></b></p>
+<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</p>
