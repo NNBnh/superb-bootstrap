@@ -19,7 +19,7 @@ DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 BAWKPACK_PATH="$DOTS/extra/bawkpack" # You can change bawkpack's path
 BSYMLINK_PATH="$DOTS/extra/bsymlink" # You can also change bsymlink's path
 
-STEPS="${@:-install before symlink after}"
+STEPS="${*:-install before symlink after}"
 
 
 # Functions
