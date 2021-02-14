@@ -6,20 +6,16 @@
 # /___/\__/\__/\_,_/ .__/
 #                 /_/
 
-# Add description here:
-# > Hello World!
-# > This is my setup script.
-
 
 # Values
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
-. "$DOTS/home/.config/env" # Get my environment variables
+. "$DOTS/home/.config/env" # Get your environment variables if you have
 
 BAWKPACK_PATH="$DOTS/extra/bawkpack" # You can change bawkpack's path
 BSYMLINK_PATH="$DOTS/extra/bsymlink" # You can also change bsymlink's path
 
-STEPS="${*:-install before symlink after}"
+STEPS="${*:-install before home root after}" # Default order of steps
 
 
 # Functions
@@ -27,14 +23,17 @@ install_packages() {
 	"$BAWKPACK_PATH" "$DOTS/packageslist"
 }
 
-symlink_dotfiles() {
-	     "$BSYMLINK_PATH" "$DOTS/home" "$HOME"
+symlink_home() {
+	"$BSYMLINK_PATH" "$DOTS/home" "$HOME"
+}
+
+symlink_root() {
 	sudo "$BSYMLINK_PATH" "$DOTS/root" '/'
 }
 
 before_symlink() {
 	# Create directories (to symlink files inside only, not the directory itself)
-	mkdir "$HOME/.local/bin" "$HOME/.config/godot" "$HOME/.config/retroarch"
+	mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin"
 
 	# Delete files that may conflict when symlink dotfiles
 	rm .bashrc
@@ -54,7 +53,8 @@ for step in $STEPS; do
 	case "$step" in
 		'i'|'install') install_packages ;;
 		'b'|'before')  before_symlink   ;;
-		's'|'symlink') symlink_dotfiles ;;
+		'h'|'home')    symlink_home     ;;
+		'r'|'root')    symlink_root     ;;
 		'a'|'after')   after_symlink    ;;
 		*)             exit 1           ;;
 	esac
