@@ -1,15 +1,16 @@
 <h1 align="center"><i>SuperB Bootstrap</i></h1>
-<p align="center">Bootstrap system that <i>SuperB</i></p>
-<p align="center"><img src="https://img.shields.io/github/license/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=for-the-badge" alt="License: GPL-3.0"> <img src="https://img.shields.io/badge/version-1.3-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.3"></p>
+<p align="center">Bootstrap-system/dotfiles-manager that <i>SuperB</i></p>
+<p align="center"><img src="https://img.shields.io/badge/license-cc_by_4.0-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"> <img src="https://img.shields.io/badge/version-1.4-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.4"></p>
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"></p>
 
 ## About
 **SuperB Bootstrap** is a *SuperB* bootstrap system.
 
 ### Features
-- Super **portable**, work on almost any unix-like operating system.
+- Super **portable**, work on almost any unix and unix-like operating system.
 - Super **low** [dependencies](#dependencies)
 - Super **easy** to [setup](#setup-super-bootstrap) and [use](#usage)
+- Super **organized** [file structure](#setup-super-bootstrap) to config and share
 
 ## Contents
 - [About](#about)
@@ -42,9 +43,9 @@ curl -fsSL https://raw.githubusercontent.com/NNBnh/bsymlink/main/bsymlink --crea
 chmod +x "$HOME/dotfiles/extra/"*
 ```
 
-You will have a directory structure that looks like this:
+You will have a file structure that looks like this:
 
-```
+```console
 dotfiles/
 ├─ home/           # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
 ├─ root/           # Symlink to root (same with this file but it will be symlink to '/' directory)
