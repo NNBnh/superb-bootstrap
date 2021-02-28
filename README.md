@@ -46,13 +46,10 @@ You will have a file structure that looks like this:
 
 ```console
 dotfiles/
-├─ home/           # Symlink to home (add any dotfiles like .config or .local that you what to bootstrap here)
-├─ root/           # Symlink to root (same with this file but it will be symlink to '/' directory)
-├─ extra/          # Not symlink (Other files that you want to backup but don't want to symlink)
-│ ├─ bawkpack      # Packages list installer
-│ └─ bsymlink      # Batch symlink tool
-│
-├─ packageslist    # Package list
+├─ extra/          # Non symlink (Other files that you want to backup but don't want to symlink)
+├─ home/           # Symlink to home (add anything like .config/ or .local/ that you what to bootstrap here)
+├─ root/           # Symlink to root (same with this directory but it will be symlink to '/' directory)
+├─ packageslist    # Packages list
 └─ setup           # Setup script
 ```
 
