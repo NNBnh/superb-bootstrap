@@ -1,54 +1,52 @@
 <h1 align="center"><i>SuperB Bootstrap</i></h1>
 <p align="center">OS bootstrap-system/dotfiles-manager-framework that <i>SuperB</i></p>
-<p align="center"><img src="https://img.shields.io/badge/license-cc_by_4.0-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"> <img src="https://img.shields.io/badge/version-1.5-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.5"></p>
+<p align="center"><img src="https://img.shields.io/badge/license-cc_by_4.0-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"> <img src="https://img.shields.io/badge/version-1.5.1-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.5.1"></p>
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"></p>
 
 ## About
-**SuperB Bootstrap** is an OS bootstrapisystem/dotfiles-manager-framework that *SuperB*.
+**SuperB Bootstrap** is a *SuperB* OS bootstrapisystem/dotfiles-manager-framework that can be installed with just one command on a new Unix system installation.
 
 ### Features
 - Super **portable**, work on almost any Unix and Unix-like operating system, it can even install dotfiles locally
-- Super **minimum** dependencies, other than your scripting language (`sh`) you don't need to pre-install anything before the installation process
-- Super **easy** to [setup](#setup-super-bootstrap) and [install](#usage) (You can install your dotfiles with just one command)
-- Super **organized** [file structure](#setup-super-bootstrap) to config and share
+- Super **minimum** [dependencies](#dependencies), you don't need to install anything before the installation process
+- Super **easy** to [setup](#setup) and [install](#usage) (You can install your dotfiles with just one command)
+- Super **organized** [file structure](#setup) to config and share
 
 ## Contents
 - [About](#about)
   - [Features](#features)
 - [Contents](#contents)
+- [Dependencies](#dependencies)
 - [Setup](#setup)
-  - [Dependencies](#dependencies)
-  - [Setup SuperB Bootstrap](#setup-superb-bootstrap)
 - [Usage](#usage)
 
-## Setup
-### Dependencies
-- One of these [operating system](https://github.com/NNBnh/bawkpack#supported-operating-system)
-- `sh` or any scripting language to process
+## Dependencies
+- `sh` to process
+- One of these package manager:
+  - [APT](https://wiki.debian.org/Apt)
+  - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
+  - [XBPS](https://docs.voidlinux.org/xbps/index.html)
 
-### Setup SuperB Bootstrap
+## Setup
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
 
 ```sh
-mkdir -p "$HOME/dotfiles/home"
-mkdir -p "$HOME/dotfiles/root"
-mkdir -p "$HOME/dotfiles/extra"
+mkdir -p "$HOME/dotfiles/home" "$HOME/dotfiles/root" "$HOME/dotfiles/extra"
 
-: >> "$HOME/dotfiles/packageslist"
-: >> "$HOME/dotfiles/setup"
+curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/packageslist' --create-dirs --output "$HOME/dotfiles/packageslist"
+curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/setup'        --create-dirs --output "$HOME/dotfiles/setup"
 
-curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack --create-dirs --output "$HOME/dotfiles/extra/bawkpack"
-curl -fsSL https://raw.githubusercontent.com/NNBnh/bsymlink/main/bsymlink --create-dirs --output "$HOME/dotfiles/extra/bsymlink"
-chmod +x "$HOME/dotfiles/extra/"*
+curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack' --create-dirs --output "$HOME/dotfiles/extra/bawkpack"
+chmod +x "$HOME/dotfiles/extra/bawkpack"
 ```
 
 You will have a file structure that looks like this:
 
 ```console
 dotfiles/
-├─ extra/          # Non symlink (Other files that you want to backup but don't want to symlink)
 ├─ home/           # Symlink to home (add anything like .config/ or .local/ that you what to bootstrap here)
 ├─ root/           # Symlink to root (same with this directory but it will be symlink to '/' directory)
+├─ extra/          # Not symlink (Other files that you want to backup but don't want to symlink)
 ├─ packageslist    # Packages list
 └─ setup           # Setup script
 ```
@@ -66,7 +64,9 @@ chmod +x "$HOME/dotfiles/setup"
 Finally upload your dotfiles to a safe place.
 
 ## Usage
-To install your dotfiles, first download it, if you using [`git`](https://git-scm.com):
+To install your dotfiles, put the dotfiles to the desired location then execute `setup` file.
+
+For example if you store your dotfiles on [Github](https://github.com), first download it:
 
 ```sh
 git clone https://github.com/yourname/dotfiles.git
