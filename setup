@@ -6,37 +6,47 @@
 # /___/\__/\__/\_,_/ .__/
 #                 /_/
 
+# Add description here:
+# > Hello World!
+# > This is my setup script.
+
 
 # Values
 DOTS=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
 . "$DOTS/home/.config/env" # Get your environment variables if you have
 
-BAWKPACK_PATH="$DOTS/extra/bawkpack" # You can change bawkpack's path
-BSYMLINK_PATH="$DOTS/extra/bsymlink" # You can also change bsymlink's path
-
 STEPS="${*:-install before home root after}" # Default order of steps
 
 
 # Functions
 install_packages() {
-	"$BAWKPACK_PATH" "$DOTS/packageslist"
+	"$DOTS/extra/bawkpack" "$DOTS/packageslist"
 }
 
 symlink_home() {
-	"$BSYMLINK_PATH" "$DOTS/home" "$HOME"
+	"$DOTS/extra/bsymlink" "$DOTS/home" "$HOME"
 }
 
 symlink_root() {
-	sudo "$BSYMLINK_PATH" "$DOTS/root" '/'
+	sudo "$DOTS/extra/bsymlink" "$DOTS/root" '/'
 }
 
 before_symlink() {
 	# Create directories (to symlink files inside only, not the directory itself)
 	mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin"
 
-	# Delete files that may conflict when symlink dotfiles
+	# Remove files that may conflict when symlink dotfiles
 	rm .bashrc
+
+	# Remove conflicting items in $HOME/.config
+	for config_directory_path in "$HOME/.config/."* "$HOME/.config/"*; do
+		config_directory_name="${config_directory_path#$XDG_CONFIG_HOME/}"
+
+		if [ "$config_directory_name" != '.' ] && [ "$config_directory_name" != '..' ] && [ -e "$HOME/dots/home/.config/$config_directory_name" ]; then
+			rm "$config_directory_path"
+		fi
+	done
 }
 
 after_symlink() {
