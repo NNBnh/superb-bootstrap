@@ -1,15 +1,15 @@
 <h1 align="center"><i>SuperB Bootstrap</i></h1>
-<p align="center">Bootstrap-system/dotfiles-manager that <i>SuperB</i></p>
-<p align="center"><img src="https://img.shields.io/badge/license-cc_by_4.0-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"> <img src="https://img.shields.io/badge/version-1.4-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.4"></p>
+<p align="center">OS bootstrap-system/dotfiles-manager-framework that <i>SuperB</i></p>
+<p align="center"><img src="https://img.shields.io/badge/license-cc_by_4.0-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"> <img src="https://img.shields.io/badge/version-1.5-%234EAA25.svg?labelColor=073551&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.5"></p>
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=073551&color=4EAA25&style=flat-square"></p>
 
 ## About
-**SuperB Bootstrap** is a *SuperB* bootstrap system.
+**SuperB Bootstrap** is an OS bootstrapisystem/dotfiles-manager-framework that *SuperB*.
 
 ### Features
-- Super **portable**, work on almost any unix and unix-like operating system.
-- Super **low** [dependencies](#dependencies)
-- Super **easy** to [setup](#setup-super-bootstrap) and [use](#usage)
+- Super **portable**, work on almost any Unix and Unix-like operating system, it can even install dotfiles locally
+- Super **minimum** dependencies, other than your scripting language (`sh`) you don't need to pre-install anything before the installation process
+- Super **easy** to [setup](#setup-super-bootstrap) and [install](#usage) (You can install your dotfiles with just one command)
 - Super **organized** [file structure](#setup-super-bootstrap) to config and share
 
 ## Contents
@@ -24,8 +24,7 @@
 ## Setup
 ### Dependencies
 - One of these [operating system](https://github.com/NNBnh/bawkpack#supported-operating-system)
-- `sh` to process
-- `git` or anything that can download and upload dotfiles (optional)
+- `sh` or any scripting language to process
 
 ### Setup SuperB Bootstrap
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
@@ -70,7 +69,7 @@ chmod +x "$HOME/dotfiles/setup"
 Finally upload your dotfiles to a safe place.
 
 ## Usage
-Just download your dotfiles, if you using `git`:
+To install your dotfiles, first download it, if you using [`git`](https://git-scm.com):
 
 ```sh
 git clone https://github.com/yourname/dotfiles.git
@@ -82,15 +81,17 @@ git clone https://github.com/yourname/dotfiles.git
 cd dotfiles
 ```
 
-###### You have to `cd` to `dotfiles` in order to make `stow` work
-
 Then execute the `setup` file:
 
 ```sh
 ./setup
 ```
 
-Done!
+You can install your dotfiles with just one command:
+
+```sh
+git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
+```
 
 <br><br><br><br>
 
