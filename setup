@@ -24,12 +24,38 @@ install_packages() {
 	"$DOTS/extra/bawkpack" "$DOTS/packageslist"
 }
 
+batch_symlink() {
+	[ -d "$1" ] || exit 1
+
+	for file in "$1"/.* "$1"/*; do
+		[ "$file" = "$1/." ] || [ "$file" = "$1/.." ] || [ "$file" = "$1/*" ] && continue
+
+		target="$batch_symlink_target${file#$batch_symlink_directory}"
+
+		if [ -e "$target" ]; then
+			if [ -d "$target" ] && [ ! -h "$target" ]; then
+				batch_symlink "$file"
+			else
+				rm "$target" && ln -s "$file" "$target"
+			fi
+		else
+			ln -s "$file" "$target"
+		fi
+	done
+}
+
 symlink_home() {
-	"$DOTS/extra/bsymlink" "$DOTS/home" "$HOME"
+	batch_symlink_directory="$DOTS/home"
+	batch_symlink_target="$HOME"
+
+	batch_symlink "$batch_symlink_directory"
 }
 
 symlink_root() {
-	sudo "$DOTS/extra/bsymlink" "$DOTS/root" '/'
+	batch_symlink_directory="$DOTS/root"
+	batch_symlink_target='/'
+
+	sudo batch_symlink "$batch_symlink_directory"
 }
 
 before_symlink() {
