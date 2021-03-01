@@ -149,13 +149,13 @@ superbbootstrap_scan_directory() {
 				superbbootstrap_scan_directory "$file"
 			else
 				if [ -n "$TRASH_PATH" ]; then
-					mv "$target" "$TRASH_PATH"
+					mv -f "$target" "$TRASH_PATH"
 				else
 					rm "$target"
-				fi && ln -s "$file" "$target"
+				fi && ln -sf "$file" "$target"
 			fi
 		else
-			ln -s "$file" "$target"
+			ln -sf "$file" "$target"
 		fi
 	done
 }
