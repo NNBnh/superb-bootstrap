@@ -4,7 +4,7 @@
 <p align="center"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"> <img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"> <img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"> <img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></p>
 
 ## About
-**SuperB Bootstrap** is a *SuperB* OS bootstrapisystem/dotfiles-manager-framework that can be installed with just one command on a new Unix system installation.
+**SuperB Bootstrap** is a *SuperB* OS bootstrapisystem/dotfiles-manager framework that can be installed with just one command on a new Unix system installation.
 
 ### Features
 - Super **portable**, work on almost any Unix and Unix-like operating system, it can even install dotfiles locally
