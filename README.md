@@ -35,9 +35,6 @@ mkdir -p "$HOME/dotfiles/home" "$HOME/dotfiles/root" "$HOME/dotfiles/extra"
 
 curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/packageslist' --create-dirs --output "$HOME/dotfiles/packageslist"
 curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/setup'        --create-dirs --output "$HOME/dotfiles/setup"
-
-curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/extra/bawkpack' --create-dirs --output "$HOME/dotfiles/extra/bawkpack"
-chmod +x "$HOME/dotfiles/extra/bawkpack"
 ```
 
 You will have a file structure that looks like this:
@@ -51,7 +48,7 @@ dotfiles/
 └─ setup           # Setup script
 ```
 
-Add packages to `packageslist` (learn more on [Bawkpack: Packages list](https://github.com/NNBnh/bawkpack#packages-list))
+Add packages to `packageslist`, see [example](https://github.com/NNBnh/superb-bootstrap/blob/master/packageslist)
 
 Add config scripts to `setup`, see [example](https://github.com/NNBnh/superb-bootstrap/blob/master/setup)
 
