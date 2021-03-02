@@ -7,7 +7,15 @@
 # Add description here:
 # > Hello World!
 # > This is my packages list.
-
+#
+# Packages manager mark:
+#   APT: APT
+#   PAC: Pacman
+#   XBP: XBPS
+#   AUR: AUR
+#   FLA: Flatpak
+#   SNA: Snap
+#   HBR: Homebrew
 
 ### Lable (use "#" to comments)
   APT:kakoune                  PAC:kakoune                  XBP:kakoune                # Comments...
