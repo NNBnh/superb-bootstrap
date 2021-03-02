@@ -9,8 +9,10 @@
 ### Features
 - Super **portable**, work on almost any Unix and Unix-like operating system, it can even install dotfiles locally
 - Super **minimum** [dependencies](#dependencies), you don't need to install anything before the installation process
-- Super **easy** to [setup](#setup) and [install](#usage) (You can install your dotfiles with **just one command**)
 - Super **organized** [file structure](#setup) to config and share
+- Super **easy** to [setup](#setup) and [install](#usage):
+  - Similar to [Stow method](http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html), it's managing your dotfiles by storing them in a subdirectory (`dotfiles/home/`, `dotfiles/root/`) and symlinking them to their original location
+  - You can even install your dotfiles with **just one command** from a new Unix system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
   - [APT](https://wiki.debian.org/Apt)
   - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
