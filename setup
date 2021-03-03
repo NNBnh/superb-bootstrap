@@ -123,7 +123,7 @@ superbbootstrap_Homebrew() {
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
-superbbootstrap_batch_symlink() {
+sh -c 'superbbootstrap_batch_symlink() {
 	batch_symlink_directory="$1"
 	batch_symlink_target="$2"
 
@@ -132,9 +132,9 @@ superbbootstrap_batch_symlink() {
 	if [ -d "$1" ]; then
 		superbbootstrap_scan_directory "$batch_symlink_directory"
 	else
-		printf '\n\033[1;7;31m%s\033[0m\n' "'$batch_symlink_directory' not found"
-	if
-}
+		printf "\n\033[1;7;31m%s\033[0m\n" "$batch_symlink_directory not found"
+	fi
+}'
 
 superbbootstrap_scan_directory() {
 	[ -d "$1" ] || exit 1
