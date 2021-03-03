@@ -1,8 +1,94 @@
 #!/bin/sh
 
+#    ____    __
+#   / __/__ / /___ _____
+#  _\ \/ -_) __/ // / _ \
+# /___/\__/\__/\_,_/ .__/
+#                 /_/
+
+# Add description here:
+# > Hello World!
+# > This is my setup script.
+
+
+# Values
+DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+
+#. "$DOTFILES_PATH/home/.config/env" # Get your environment variables if you have
+
+STEPS="${*:-install before home root after}" # Default order of steps
+
+#TRASH_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/Trash/files" # Uncomment this if you want to move conflict files to trash instead of delete it
+
+
+# Functions
+install_packages() {
+	printf '\n\033[1;7;34m%s\033[0m\n' 'Install packages'
+	superbbootstrap_install_packages "$DOTFILES_PATH/packageslist" # you can change packageslist's path here
+
+	# Add more packages that you want to install here
+	#printf '\n\033[1;7;34m%s\033[0m\n' 'Install extra packages'
+	#pip install --upgrade 'git+https://github.com/will8211/unimatrix.git'
+}
+
+symlink_home() {
+	printf '\n\033[1;7;36m%s\033[0m\n' "Symlink to home ($HOME)"
+
+	superbbootstrap_batch_symlink "$DOTFILES_PATH/home" "$HOME"
+
+	# Use this if you want to batch symlink with bsymlink
+	#bsymlink "$DOTFILES_PATH/home" "$HOME"
+
+	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
+	#stow -vt ~ home
+}
+
+symlink_root() {
+	printf '\n\033[1;7;36m%s\033[0m\n' 'Symlink to root (/)'
+
+	superbbootstrap_batch_symlink "$DOTFILES_PATH/root" '/' 'sudo'
+
+	# Use this if you want to batch symlink with bsymlink
+	#sudo bsymlink "$DOTFILES_PATH/root" '/'
+
+	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
+	#sudo stow -vt / root
+}
+
+before_symlink() {
+	printf '\n\033[1;7;33m%s\033[0m\n' 'Before symlink step'
+
+	# Remove files that may conflict when symlink dotfiles
+	rm .bashrc
+
+	# Remove conflicting items in $HOME/.config
+	[ -d "$HOME/.config" ] && for config_directory_path in "$HOME/.config/."* "$HOME/.config/"*; do
+		config_directory_name="${config_directory_path#$XDG_CONFIG_HOME/}"
+
+		if [ "$config_directory_name" != '.' ] && [ "$config_directory_name" != '..' ] && [ -e "$HOME/dots/home/.config/$config_directory_name" ]; then
+			rm "$config_directory_path"
+		fi
+	done
+
+	# Create directories (to symlink files inside only, not the directory itself)
+	mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin" "$HOME/.cache"
+}
+
+after_symlink() {
+	printf '\n\033[1;7;33m%s\033[0m\n' 'After symlink step'
+
+	# Change default shell
+	chsh -s '/usr/bin/bash'
+
+	# Enable firewall
+	sudo ufw enable
+}
+
+
+###############################################################################
+
 # WARNING !!!
-# Please skip to line 165!
-# Don't touch anything from here to line 164
+# Don't touch anything from this point to the end of file
 # if you don't know what you are doing.
 
 
@@ -123,18 +209,19 @@ superbbootstrap_Homebrew() {
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
-sh -c 'superbbootstrap_batch_symlink() {
+superbbootstrap_batch_symlink() {
 	batch_symlink_directory="$1"
 	batch_symlink_target="$2"
+	batch_symlink_permission="$3"
 
 	[ -n "$TRASH_PATH" ] && mkdir -p "$TRASH_PATH"
 
 	if [ -d "$1" ]; then
 		superbbootstrap_scan_directory "$batch_symlink_directory"
 	else
-		printf "\n\033[1;7;31m%s\033[0m\n" "$batch_symlink_directory not found"
+		printf '\n\033[1;7;31m%s\033[0m\n' "'$batch_symlink_directory' not found"
 	fi
-}'
+}
 
 superbbootstrap_scan_directory() {
 	[ -d "$1" ] || exit 1
@@ -149,102 +236,15 @@ superbbootstrap_scan_directory() {
 				superbbootstrap_scan_directory "$file"
 			else
 				if [ -n "$TRASH_PATH" ]; then
-					mv -f "$target" "$TRASH_PATH"
+					$batch_symlink_permission mv -f "$target" "$TRASH_PATH"
 				else
-					rm "$target"
-				fi && ln -sf "$file" "$target"
+					$batch_symlink_permission rm "$target"
+				fi && $batch_symlink_permission ln -sf "$file" "$target"
 			fi
 		else
-			ln -sf "$file" "$target"
+			$batch_symlink_permission ln -sf "$file" "$target"
 		fi
 	done
-}
-
-
-###############################################################################
-
-#    ____    __
-#   / __/__ / /___ _____
-#  _\ \/ -_) __/ // / _ \
-# /___/\__/\__/\_,_/ .__/
-#                 /_/
-
-# Add description here:
-# > Hello World!
-# > This is my setup script.
-
-
-# Values
-DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-
-#. "$DOTFILES_PATH/home/.config/env" # Get your environment variables if you have
-
-STEPS="${*:-install before home root after}" # Default order of steps
-
-#TRASH_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/Trash/files" # Uncomment this if you want to move conflict files to trash instead of delete it
-
-
-# Functions
-install_packages() {
-	printf '\n\033[1;7;34m%s\033[0m\n' 'Install packages'
-	superbbootstrap_install_packages "$DOTFILES_PATH/packageslist" # you can change packageslist's path here
-
-	# Add more packages that you want to install here
-	#printf '\n\033[1;7;34m%s\033[0m\n' 'Install extra packages'
-	#pip install --upgrade 'git+https://github.com/will8211/unimatrix.git'
-}
-
-symlink_home() {
-	printf '\n\033[1;7;36m%s\033[0m\n' "Symlink to home ($HOME)"
-
-	superbbootstrap_batch_symlink "$DOTFILES_PATH/home" "$HOME"
-
-	# Use this if you want to batch symlink with bsymlink
-	#bsymlink "$DOTFILES_PATH/home" "$HOME"
-
-	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
-	#stow -vt ~ home
-}
-
-symlink_root() {
-	printf '\n\033[1;7;36m%s\033[0m\n' 'Symlink to root (/)'
-
-	sudo superbbootstrap_batch_symlink "$DOTFILES_PATH/root" '/'
-
-	# Use this if you want to batch symlink with bsymlink
-	#sudo bsymlink "$DOTFILES_PATH/root" '/'
-
-	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
-	#sudo stow -vt / root
-}
-
-before_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'Before symlink step'
-
-	# Remove files that may conflict when symlink dotfiles
-	rm .bashrc
-
-	# Remove conflicting items in $HOME/.config
-	[ -d "$HOME/.config" ] && for config_directory_path in "$HOME/.config/."* "$HOME/.config/"*; do
-		config_directory_name="${config_directory_path#$XDG_CONFIG_HOME/}"
-
-		if [ "$config_directory_name" != '.' ] && [ "$config_directory_name" != '..' ] && [ -e "$HOME/dots/home/.config/$config_directory_name" ]; then
-			rm "$config_directory_path"
-		fi
-	done
-
-	# Create directories (to symlink files inside only, not the directory itself)
-	mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin" "$HOME/.cache"
-}
-
-after_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'After symlink step'
-
-	# Change default shell
-	chsh -s '/usr/bin/bash'
-
-	# Enable firewall
-	sudo ufw enable
 }
 
 
