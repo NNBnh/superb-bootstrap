@@ -8,14 +8,27 @@
 # > Hello World!
 # > This is my packages list.
 #
-# Packages manager mark:
-#   APT: APT
-#   PAC: Pacman
-#   XBP: XBPS
-#   AUR: AUR
-#   FLA: Flatpak
-#   SNA: Snap
-#   HBR: Homebrew
+# Mark cheat sheet:
+#     APT:apt-package-name
+#     PAC:pacman-package-name
+#     PTG:portage-package-name
+#     XBP:xbps-package-name
+#     ZPR:zypper-package-name
+#     AUR:aur-package-name
+#     FLA:flatpak-package-name
+#     HBR:homebrew-package-name
+#     SNA:snap-package-name
+#
+# NOTE: the mark and package name must be joined by a colon in between without whitespace.
+#   WRONG:
+#     APT: apt-package-name
+#     APT : apt-package-name
+#     APT apt-package-name
+#     APT:apt package name
+#
+#   CORRECT:
+#     APT:apt-package-name
+
 
 ### Lable (use "#" to comments)
   APT:kakoune                  PAC:kakoune                  XBP:kakoune                # Comments...

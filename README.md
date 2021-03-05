@@ -16,12 +16,14 @@
   - You can even install your dotfiles with **just one command** from a new Unix system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
   - [APT](https://wiki.debian.org/Apt)
+  - [Portage](https://wiki.gentoo.org/wiki/Portage)
   - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
   - [XBPS](https://docs.voidlinux.org/xbps/index.html)
+  - [Zypper](https://en.opensuse.org/Portal:Zypper)
   - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
+  - [Homebrew](https://docs.brew.sh)
   - [Flatpak](https://flatpak.org)
   - [Snap](https://snapcraft.io)
-  - [Homebrew](https://docs.brew.sh)
 
 ## Contents
 - [About](#about)
@@ -30,6 +32,7 @@
 - [Dependencies](#dependencies)
 - [Setup](#setup)
 - [Install](#install)
+- [Credits](#credits)
 
 ## Dependencies
 - `sh` to process
@@ -93,6 +96,11 @@ You can install your dotfiles with just one command:
 ```sh
 git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 ```
+
+## Credits
+Special thanks to:
+- [**xfzv**](https://github.com/xfzv) for the many bug reports and suggestions
+- [**Carbon**](https://carbon.now.sh) by [@carbon_app](https://twitter.com/carbon_app)
 
 <br><br><br><br>
 

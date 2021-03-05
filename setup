@@ -46,13 +46,13 @@ symlink_home() {
 symlink_root() {
 	printf '\n\033[1;7;36m%s\033[0m\n' 'Symlink to root (/)'
 
-	superbbootstrap_batch_symlink "$DOTFILES_PATH/root" '/' 'sudo'
+	superbbootstrap_batch_symlink "$DOTFILES_PATH/root" '/' "$PERMISSION_COMMAND"
 
 	# Use this if you want to batch symlink with bsymlink
-	#sudo bsymlink "$DOTFILES_PATH/root" '/'
+	#$PERMISSION_COMMAND bsymlink "$DOTFILES_PATH/root" '/'
 
 	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
-	#sudo stow -vt / root
+	#$PERMISSION_COMMAND stow -vt / root
 }
 
 before_symlink() {
@@ -81,11 +81,11 @@ after_symlink() {
 	chsh -s '/usr/bin/bash'
 
 	# Enable firewall
-	sudo ufw enable
+	$PERMISSION_COMMAND ufw enable
 }
 
 
-###############################################################################
+# SBB #########################################################################
 
 # WARNING !!!
 # Don't touch anything from this point to the end of file
@@ -98,13 +98,42 @@ WD="$PWD"
 TMPDIR="${TMPDIR:-/tmp}"
 TEMPORARY="$TMPDIR/superb-bootstrap"
 
-     APT_MARK='APT';      APT_COMMAND='sudo apt install --assume-yes'
-  Pacman_MARK='PAC';   Pacman_COMMAND='sudo pacman --sync --refresh --noconfirm --needed'
-    XBPS_MARK='XBP';     XBPS_COMMAND='sudo xbps-install --sync --yes'
-     AUR_MARK='AUR';      AUR_COMMAND='paru -Sy --nodiffmenu --save --noconfirm'
- Flatpak_MARK='FLA';  Flatpak_COMMAND='sudo flatpak install'
-    Snap_MARK='SNA';     Snap_COMMAND='sudo snap install'
-Homebrew_MARK='HBR'; Homebrew_COMMAND='brew install'
+PERMISSION_COMMAND='sudo' # You can change this to doas
+
+     APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
+  Pacman_MARK='PAC';   Pacman_PM='pacman'      ;   Pacman_COMMAND="$PERMISSION_COMMAND $Pacman_PM --sync --noconfirm --needed"
+ Portage_MARK='PTG';  Portage_PM='emerge'      ;  Portage_COMMAND="$PERMISSION_COMMAND $Portage_PM"
+    XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
+  Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
+     AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --nodiffmenu --save --noconfirm"
+ Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
+Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
+    Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
+
+case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
+	'darwin'*)
+		PACKAGEMANAGER_MAIN='Homebrew'
+	;;
+	*)
+		for packagemanager_check in 'APT' 'Pacman' 'Portage' 'XBPS' 'Zypper'; do
+			eval "command -v \"\$${packagemanager_check}_PM\" >/dev/null" && {
+				PACKAGEMANAGER_MAIN="$packagemanager_check"
+				break
+			}
+		done
+
+		if [ -z "$PACKAGEMANAGER_MAIN" ]; then
+			printf '\n\033[1;7;31m%s\033[0m\n' "Packages manager not found"
+			exit 1
+		fi
+
+		[ "$PACKAGEMANAGER_MAIN"  = 'Pacman' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
+		                                          PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
+		[ "$PACKAGEMANAGER_MAIN" != 'XBPS'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
+	;;
+esac
+
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST"
 
 
 # Functions
@@ -116,29 +145,7 @@ superbbootstrap_install_packages() {
 		exit 1
 	fi
 
-	case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
-		'darwin'*)
-			packagemanager_main='Homebrew'
-		;;
-		*)
-			  if command -v apt          >/dev/null; then packagemanager_main='APT'
-			elif command -v pacman       >/dev/null; then packagemanager_main='Pacman'
-			elif command -v xbps-install >/dev/null; then packagemanager_main='XBPS'
-			else
-				printf '\n\033[1;7;31m%s\033[0m\n' "Packages manager not found"
-				exit 1
-			fi
-
-			[ "$packagemanager_main"  = 'Pacman' ] && packagemanager_list="$packagemanager_list AUR"
-			                                          packagemanager_list="$packagemanager_list Flatpak"
-			[ "$packagemanager_main" != 'XBPS'   ] && packagemanager_list="$packagemanager_list Snap"
-		;;
-	esac
-
-	packagemanager_list="$packagemanager_main${packagemanager_list:+ $packagemanager_list}"
-
-
-	for packagemanager in $packagemanager_list; do
+	for packagemanager in $PACKAGEMANAGER_LIST; do
 		eval "mark=\"\$${packagemanager}_MARK\""
 		eval "install_command=\"\$${packagemanager}_COMMAND\""
 
@@ -157,56 +164,83 @@ superbbootstrap_install_packages() {
 }
 
 superbbootstrap_APT() {
-	sudo apt update  --assume-yes
-	sudo apt upgrade --assume-yes
+	$PERMISSION_COMMAND apt update  --assume-yes
+	$PERMISSION_COMMAND apt upgrade --assume-yes
+}
+
+superbbootstrap_Portage() {
+    $PERMISSION_COMMAND emerge --sync
+    $PERMISSION_COMMAND emerge --update --newuse --deep --with-bdeps=y @world
 }
 
 superbbootstrap_Pacman() {
-	sudo pacman --sync --sysupgrade --refresh --noconfirm --needed
+	$PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --noconfirm --needed
 }
 
 superbbootstrap_XBPS() {
-	sudo xbps-install --sync --yes --update
-	sudo xbps-install --sync --yes --update
-	sudo xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
+	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update XBPS itself so it can update other packages
+	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update packages
+	$PERMISSION_COMMAND xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
+}
+
+superbbootstrap_Zypper() {
+    $PERMISSION_COMMAND zypper --non-interactive update
 }
 
 superbbootstrap_AUR() {
-	sudo pacman --sync --refresh --noconfirm --needed git base-devel
-	git clone 'https://aur.archlinux.org/paru.git' "$TEMPORARY/paru"
-	cd "$TEMPORARY/paru" || exit 1
-	makepkg -si
-	cd "$WD" || exit 1
+	if ! command -v 'paru' >/dev/null; then
+		$PERMISSION_COMMAND pacman --sync --noconfirm --needed git base-devel
+		git clone 'https://aur.archlinux.org/paru.git' "$TEMPORARY/paru"
+		cd "$TEMPORARY/paru" || exit 1
+		makepkg -si
+		cd "$WD" || exit 1
+	else
+		printf '%s\n' "Paru has been installed"
+	fi
 }
 
 superbbootstrap_Flatpak() {
-	case "$packagemanager_main" in
-	'Pacman') sudo pacman --sync --refresh --noconfirm --needed flatpak           ;;
-	'APT')    sudo apt install --assume-yes flatpak gnome-software-plugin-flatpak ;;
-	'XBPS')   sudo xbps-install --sync --yes flatpak                              ;;
-	esac
+	if ! command -v 'flatpak' >/dev/null; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')         $APT_COMMAND flatpak gnome-software-plugin-flatpak ;;
+			'Portage') $Portage_COMMAND sys-apps/flatpak                      ;;
+			'Pacman')   $Pacman_COMMAND flatpak                               ;;
+			'XBPS')       $XBPS_COMMAND flatpak                               ;;
+			'Zypper')   $Zypper_COMMAND flatpak                               ;;
+		esac
+	else
+		printf '%s\n' "Flatpak has been installed"
+	fi
 
 	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
 superbbootstrap_Snap() {
-	if [ $packagemanager_main = 'Pacman' ]; then
-		sudo pacman --sync --refresh --noconfirm --needed git
-		git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
-		cd "$TEMPORARY/snap" || exit 1
-		makepkg -si
-		cd "$WD" || exit 1
-		sudo systemctl enable --now snapd.socket
-		sudo ln -s '/var/lib/snapd/snap' '/snap'
-	elif [ $packagemanager_main = 'APT' ]; then
-		sudo apt install --assume-yes snapd
+	if ! command -v 'snap' >/dev/null; then
+		if [ $PACKAGEMANAGER_MAIN = 'Pacman' ]; then
+			$PERMISSION_COMMAND pacman --sync --noconfirm --needed git
+			git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
+			cd "$TEMPORARY/snap" || exit 1
+			makepkg -si
+			cd "$WD" || exit 1
+			$PERMISSION_COMMAND systemctl enable --now snapd.socket
+			$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
+		elif [ $PACKAGEMANAGER_MAIN = 'APT' ]; then
+			$PERMISSION_COMMAND apt install --assume-yes snapd
+		fi
+	else
+		printf '%s\n' "Snapd has been installed"
 	fi
 
 	snap install core
 }
 
 superbbootstrap_Homebrew() {
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	if ! command -v 'brew' >/dev/null; then
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	else
+		printf '%s\n' "Homebrew has been installed"
+	fi
 }
 
 superbbootstrap_batch_symlink() {
