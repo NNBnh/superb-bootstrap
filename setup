@@ -105,7 +105,7 @@ PERMISSION_COMMAND='sudo' # You can change this to doas
  Portage_MARK='PTG';  Portage_PM='emerge'      ;  Portage_COMMAND="$PERMISSION_COMMAND $Portage_PM"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
-     AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --nodiffmenu --save --noconfirm"
+     AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm"
  Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
