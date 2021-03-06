@@ -56,32 +56,32 @@ symlink_root() {
 }
 
 before_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'Before symlink step'
+	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup before symlink step'
 
 	# Remove files that may conflict when symlink dotfiles
-	rm .bashrc
+	#rm .bashrc
 
 	# Remove conflicting items in $HOME/.config
-	[ -d "$HOME/.config" ] && for config_directory_path in "$HOME/.config/."* "$HOME/.config/"*; do
-		config_directory_name="${config_directory_path#$XDG_CONFIG_HOME/}"
-
-		if [ "$config_directory_name" != '.' ] && [ "$config_directory_name" != '..' ] && [ -e "$HOME/dots/home/.config/$config_directory_name" ]; then
-			rm "$config_directory_path"
-		fi
-	done
+	#[ -d "$HOME/.config" ] && for config_directory_path in "$HOME/.config/."* "$HOME/.config/"*; do
+	#	config_directory_name="${config_directory_path#$XDG_CONFIG_HOME/}"
+	#
+	#	if [ "$config_directory_name" != '.' ] && [ "$config_directory_name" != '..' ] && [ -e "$HOME/dots/home/.config/$config_directory_name" ]; then
+	#		rm "$config_directory_path"
+	#	fi
+	#done
 
 	# Create directories (to symlink files inside only, not the directory itself)
-	mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin" "$HOME/.cache"
+	#mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin" "$HOME/.cache"
 }
 
 after_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'After symlink step'
+	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup after symlink step'
 
 	# Change default shell
-	chsh -s '/usr/bin/bash'
+	#chsh -s '/usr/bin/bash'
 
 	# Enable firewall
-	$PERMISSION_COMMAND ufw enable
+	#$PERMISSION_COMMAND ufw enable
 }
 
 
@@ -133,7 +133,7 @@ case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	;;
 esac
 
-PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST"
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
 
 # Functions
@@ -149,15 +149,18 @@ superbbootstrap_install_packages() {
 		eval "mark=\"\$${packagemanager}_MARK\""
 		eval "install_command=\"\$${packagemanager}_COMMAND\""
 
+		# Find packages with mark
 		packages_installing=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark://g" -e 's/[[:space:]].*$//g' -e '/^$/d' | tr '\n' ' ')
 
+		# If finded, setup package manager then install packages
 		[ -n "$packages_installing" ] && {
+			# Remove lines with current mark so packages don't get reinstall on another package managers later on
 			packages_list=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark.*\$//g")
 
 			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager"
 			eval "superbbootstrap_$packagemanager"
 
-			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager Packages"
+			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages"
 			eval "$install_command $packages_installing"
 		}
 	done

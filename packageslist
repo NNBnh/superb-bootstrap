@@ -7,8 +7,8 @@
 # Add description here:
 # > Hello World!
 # > This is my packages list.
-#
-# Mark cheat sheet:
+
+# MARK_CHEATSHEET:
 #     APT:apt-package-name
 #     PAC:pacman-package-name
 #     PTG:portage-package-name
@@ -21,17 +21,26 @@
 #
 # NOTE: the mark and package name must be joined by a colon in between without whitespace.
 #   WRONG:
-#     APT: apt-package-name
-#     APT : apt-package-name
-#     APT apt-package-name
-#     APT:apt package name
+#     MAK: package-name
+#     MAK : package-name
+#     MAK package-name
+#     MAK:package name
 #
 #   CORRECT:
-#     APT:apt-package-name
+#     MAK:package-name
+#
+# EXAMPLE: to see what a good packages list look like, see NNB's file: https://github.com/NNBnh/dots/blob/master/packageslist
 
 
 ### Lable (use "#" to comments)
-  APT:kakoune                  PAC:kakoune                  XBP:kakoune                # Comments...
-  FLA:org.godotengine.Godot    AUR:godot-bin                XBP:godot                  # Comments...
-  SNA:blender                                                                          # Use Snapcraft package on every distro
-# SNA:retroarch                PAC:retroarch                XBP:retroarch              # Comment out a package
+  APT:firefox                                                                                   # Add some description...
+  APT:mpv                                                                                       # Each individual package should be on a separate line
+
+  APT:kakoune                     PAC:kakoune                     XBP:kakoune                   # Package can be install on multiple different distro
+  APT:libimage-exiftool-perl      PAC:perl-image-exiftool         XBP:exiftool                  # A good practice is to put all distro variant of the same package on one line
+  FLA:org.godotengine.Godot       AUR:godot-bin                   XBP:godot                     # So those package don't get reinstall by another package manager
+
+### More example
+  SNA:blender                                                                                   # Use Snapcraft package on every distro
+                                                                  XBP:shellcheck                # Install this package on Void-Linux only
+# SNA:retroarch                   PAC:retroarch                   XBP:retroarch                 # Comment out a package
