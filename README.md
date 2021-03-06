@@ -99,8 +99,9 @@ git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 
 ## Credits
 Special thanks to:
-- [**xfzv**](https://github.com/xfzv) for the many bug reports and suggestions
-- [**Carbon**](https://carbon.now.sh) by [@carbon_app](https://twitter.com/carbon_app)
+- [**xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
+- [**obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
+- [**Carbon**](https://carbon.now.sh) by [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
 <br><br><br><br>
 
