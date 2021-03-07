@@ -98,7 +98,16 @@ WD="$PWD"
 TMPDIR="${TMPDIR:-/tmp}"
 TEMPORARY="$TMPDIR/superb-bootstrap"
 
-PERMISSION_COMMAND='sudo' # You can change this to doas
+# check if sudo or doas is actually present on the system
+if [ -x "$(command -v sudo)" ]; then
+	PERMISSION_COMMAND='sudo'
+elif [ -x "$(command -v doas)" ]; then
+	PERMISSION_COMMAND='doas'
+elif ! [ -x "$(command -v sudo)" || -x "$(command -v doas)"]; then
+	printf "sudo or doas is either not installed on your system or not present in your path.\n
+	Please install sudo or doas using your package manager or add sudo or doas to your path."
+	exit 1
+fi
 
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
   Pacman_MARK='PAC';   Pacman_PM='pacman'      ;   Pacman_COMMAND="$PERMISSION_COMMAND $Pacman_PM --sync --noconfirm --needed"
@@ -109,6 +118,7 @@ PERMISSION_COMMAND='sudo' # You can change this to doas
  Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
+   OPKG_MARK='OPKG';     OPKG_PM='pkg_add'     ;     OPKG_COMMAND="$PERMISSION_COMMAND $OPKG_PM"
 
 case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	'darwin'*)
@@ -200,6 +210,10 @@ superbbootstrap_AUR() {
 	else
 		printf '%s\n' "Paru has been installed"
 	fi
+}
+
+superbbootstrap_OPKG() {
+	$PERMISSION_COMMAND syspatch
 }
 
 superbbootstrap_Flatpak() {
