@@ -98,7 +98,14 @@ WD="$PWD"
 TMPDIR="${TMPDIR:-/tmp}"
 TEMPORARY="$TMPDIR/superb-bootstrap"
 
-PERMISSION_COMMAND='sudo' # You can change this to doas
+if [ -x "$(command -v sudo)" ]; then
+	PERMISSION_COMMAND='sudo'
+elif [ -x "$(command -v doas)" ]; then
+	PERMISSION_COMMAND='doas'
+else
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found"
+	exit 1
+fi
 
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
   Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM" #TODO
@@ -188,7 +195,9 @@ superbbootstrap_APT() {
 
 #TODO Mports
 
-#TODO OpenBSD
+superbbootstrap_OpenBSD() {
+	$PERMISSION_COMMAND syspatch
+}
 
 superbbootstrap_Pacman() {
 	$PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --noconfirm --needed
