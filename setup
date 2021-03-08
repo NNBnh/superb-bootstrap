@@ -113,6 +113,7 @@ fi
   Pacman_MARK='PAC';   Pacman_PM='pacman'      ;   Pacman_COMMAND="$PERMISSION_COMMAND $Pacman_PM --sync --noconfirm --needed"
  Portage_MARK='PTG';  Portage_PM='emerge'      ;  Portage_COMMAND="$PERMISSION_COMMAND $Portage_PM"
    PKGNG_MARK='PNG';    PKGNG_PM='pkg'         ;    PKGNG_COMMAND="$PERMISSION_COMMAND $PKGNG_PM install -y"
+   PKGIN_MARK='PIN';    PKGIN_PM='pkgin'       ;    PKGIN_COMMAND="$PERMISSION_COMMAND $PKGIN_PM install -y"
 Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_COMMAND $Slackpkg_PM install"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
@@ -131,6 +132,9 @@ case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	;;
 	'freebsd'*)
 		PACKAGEMANAGER_MAIN='PKGNG'
+	;;
+	'netbsd'*)
+		PACKAGEMANAGER_MAIN='PKGIN'
 	;;
 	*)
 		for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
@@ -211,6 +215,11 @@ superbbootstrap_Portage() {
 superbbootstrap_PKGNG() {
     $PERMISSION_COMMAND pkg update -y
     $PERMISSION_COMMAND pkg upgrade -y
+}
+
+superbbootstrap_PKGIN() {
+	$PERMISSION_COMMAND pkgin update -y
+	$PERMISSION_COMMAND pkgin upgrade -y
 }
 
 superbbootstrap_Slackpkg() {

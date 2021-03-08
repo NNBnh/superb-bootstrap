@@ -15,6 +15,7 @@
 #     PAC:pacman-package-name
 #     PTG:portage-package-name
 #     PNG:pkgng-package-name
+#     PIN:pkgin-package-name
 #     SLK:slackpkg-package-name
 #     XBP:xbps-package-name
 #     ZPR:zypper-package-name
