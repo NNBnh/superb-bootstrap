@@ -16,14 +16,18 @@
   - You can even install your dotfiles with **just one command** from a new Unix system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
   - [APT](https://wiki.debian.org/Apt)
-  - [Portage](https://wiki.gentoo.org/wiki/Portage)
+  - [Mports](https://www.midnightbsd.org/mports)
+  - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
   - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
+  - [Portage](https://wiki.gentoo.org/wiki/Portage)
+  - [PKG NG](https://github.com/freebsd/pkg)
+  - [Slack PKG](https://slackpkg.org)
   - [XBPS](https://docs.voidlinux.org/xbps/index.html)
   - [Zypper](https://en.opensuse.org/Portal:Zypper)
   - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
-  - [OpenBSD pkg](https://man.openbsd.org/pkg_add)
-  - [Homebrew](https://docs.brew.sh)
   - [Flatpak](https://flatpak.org)
+  - [Homebrew](https://docs.brew.sh)
+  - [SBO](https://sbopkg.org)
   - [Snap](https://snapcraft.io)
 
 ## Contents
@@ -100,8 +104,13 @@ git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 
 ## Credits
 Special thanks to:
-- [**xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
-- [**obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
+- [**Xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
+- [**Obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
+- [**Package managers supported**]:
+  - Portage and Zypper supported by [Xfzv](https://github.com/xfzv)
+  - [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported by [Kraileth](https://www.reddit.com/user/kraileth)
+  - [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) supported by [Miko](https://github.com/mikoxyz)
+  - Slack PKG supported by [Justin](https://github.com/arcadellama)
 - [**Carbon**](https://carbon.now.sh) from [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
 <br><br><br><br>
