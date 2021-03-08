@@ -212,7 +212,7 @@ superbbootstrap_AUR() {
 	fi
 }
 
-superbbootstrap_OPKG() {
+superbbootstrap_Opkg() {
 	$PERMISSION_COMMAND syspatch
 }
 
