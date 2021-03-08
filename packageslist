@@ -15,6 +15,7 @@
 #     XBP:xbps-package-name
 #     ZPR:zypper-package-name
 #     AUR:aur-package-name
+#    Opkg:opkg-package-name
 #     FLA:flatpak-package-name
 #     HBR:homebrew-package-name
 #     SNA:snap-package-name
