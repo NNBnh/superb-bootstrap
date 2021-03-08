@@ -10,13 +10,18 @@
 
 # MARK_CHEATSHEET:
 #     APT:apt-package-name
+#     MPT:mports-package-name
+#     OBP:openbsd-package-name
 #     PAC:pacman-package-name
 #     PTG:portage-package-name
+#     PNG:pkgng-package-name
+#     SLK:slackpkg-package-name
 #     XBP:xbps-package-name
 #     ZPR:zypper-package-name
 #     AUR:aur-package-name
 #     FLA:flatpak-package-name
 #     HBR:homebrew-package-name
+#     SBO:sbo-package-name
 #     SNA:snap-package-name
 #
 # NOTE: the mark and package name must be joined by a colon in between without whitespace.
