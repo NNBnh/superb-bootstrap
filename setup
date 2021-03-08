@@ -103,7 +103,7 @@ if [ -x "$(command -v sudo)" ]; then
 	PERMISSION_COMMAND='sudo'
 elif [ -x "$(command -v doas)" ]; then
 	PERMISSION_COMMAND='doas'
-elif ! [ -x "$(command -v sudo)" || -x "$(command -v doas)"]; then
+else
 	printf "sudo or doas is either not installed on your system or not present in your path.\n
 	Please install sudo or doas using your package manager or add sudo or doas to your path."
 	exit 1
@@ -118,14 +118,14 @@ fi
  Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
-   OPKG_MARK='OPKG';     OPKG_PM='pkg_add'     ;     OPKG_COMMAND="$PERMISSION_COMMAND $OPKG_PM"
+   Opkg_MARK='Opkg';     Opkg_PM='pkg_add'     ;     Opkg_COMMAND="$PERMISSION_COMMAND $Opkg_PM"
 
 case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	'darwin'*)
 		PACKAGEMANAGER_MAIN='Homebrew'
 	;;
 	*)
-		for packagemanager_check in 'APT' 'Pacman' 'Portage' 'XBPS' 'Zypper'; do
+		for packagemanager_check in 'APT' 'Pacman' 'Portage' 'XBPS' 'Zypper' 'Opkg'; do
 			eval "command -v \"\$${packagemanager_check}_PM\" >/dev/null" && {
 				PACKAGEMANAGER_MAIN="$packagemanager_check"
 				break
