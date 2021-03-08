@@ -21,6 +21,7 @@
   - [XBPS](https://docs.voidlinux.org/xbps/index.html)
   - [Zypper](https://en.opensuse.org/Portal:Zypper)
   - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
+  - [OpenBSD pkg](https://man.openbsd.org/pkg_add)
   - [Homebrew](https://docs.brew.sh)
   - [Flatpak](https://flatpak.org)
   - [Snap](https://snapcraft.io)
