@@ -98,14 +98,12 @@ WD="$PWD"
 TMPDIR="${TMPDIR:-/tmp}"
 TEMPORARY="$TMPDIR/superb-bootstrap"
 
-# check if sudo or doas is actually present on the system
 if [ -x "$(command -v sudo)" ]; then
 	PERMISSION_COMMAND='sudo'
 elif [ -x "$(command -v doas)" ]; then
 	PERMISSION_COMMAND='doas'
 else
-	printf "sudo or doas is either not installed on your system or not present in your path.\n
-	Please install sudo or doas using your package manager or add sudo or doas to your path."
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found"
 	exit 1
 fi
 
@@ -123,7 +121,6 @@ Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_C
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
-   Opkg_MARK='Opkg';     Opkg_PM='pkg_add'     ;     Opkg_COMMAND="$PERMISSION_COMMAND $Opkg_PM"
 
 case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	'darwin'*)
@@ -198,7 +195,9 @@ superbbootstrap_APT() {
 
 #TODO Mports
 
-#TODO OpenBSD
+superbbootstrap_OpenBSD() {
+	$PERMISSION_COMMAND syspatch
+}
 
 superbbootstrap_Pacman() {
 	$PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --noconfirm --needed
@@ -239,10 +238,6 @@ superbbootstrap_AUR() {
 	else
 		printf '%s\n' "Paru has been installed"
 	fi
-}
-
-superbbootstrap_Opkg() {
-	$PERMISSION_COMMAND syspatch
 }
 
 superbbootstrap_Flatpak() {
