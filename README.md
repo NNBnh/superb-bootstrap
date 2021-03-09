@@ -1,6 +1,6 @@
 <p align="center"><img width="100%" src="https://user-images.githubusercontent.com/43980777/109499307-49ca3000-7ac7-11eb-9f66-3a2c8f5e90b4.png"></p>
 <p align="center">OS bootstrap-system/dotfiles-manager framework that <i>SuperB</i></p>
-<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap"><img src="https://img.shields.io/badge/version-1.6.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.6.0"></a></p>
+<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap"><img src="https://img.shields.io/badge/version-1.6.1-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.6.1"></a></p>
 <p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/network/members"><img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/issues"><img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a></p>
 
 ## About
@@ -20,6 +20,7 @@
   - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
   - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
   - [Portage](https://wiki.gentoo.org/wiki/Portage)
+  - [PKG IN](http://www.pkgsrc.org)
   - [PKG NG](https://github.com/freebsd/pkg)
   - [Slack PKG](https://slackpkg.org)
   - [XBPS](https://docs.voidlinux.org/xbps/index.html)
@@ -109,8 +110,9 @@ Special thanks to:
 - [**Package managers supported**]:
   - Portage and Zypper supported by [Xfzv](https://github.com/xfzv)
   - [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported by [Kraileth](https://www.reddit.com/user/kraileth)
-  - [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) supported by [Miko](https://github.com/mikoxyz)
+  - [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) and [PKG IN](https://github.com/NNBnh/superb-bootstrap/pull/12) supported by [Miko](https://github.com/mikoxyz)
   - Slack PKG supported by [Justin](https://github.com/arcadellama)
+  - [Mports](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq8gxa1?utm_source=share&utm_medium=web2x&context=3) supported by [Laffer1](https://www.reddit.com/user/laffer1)
 - [**Carbon**](https://carbon.now.sh) from [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
 <br><br><br><br>

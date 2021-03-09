@@ -49,4 +49,4 @@
 ### More example
   SNA:blender                                                                                   # Use Snapcraft package on every distro
                                                                   XBP:shellcheck                # Install this package on Void-Linux only
-# SNA:retroarch                   PAC:retroarch                   XBP:retroarch                 # Comment out a package
+# SNA:retroarch                   PAC:retroarch                   XBP:retroarch                 # Comment out all package on this line

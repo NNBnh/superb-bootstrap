@@ -103,12 +103,12 @@ if [ -x "$(command -v sudo)" ]; then
 elif [ -x "$(command -v doas)" ]; then
 	PERMISSION_COMMAND='doas'
 else
-	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found"
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
 	exit 1
 fi
 
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
-  Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM" #TODO
+  Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM install"
  OpenBSD_MARK='OBP';  OpenBSD_PM='pkg_add'     ;  OpenBSD_COMMAND="$PERMISSION_COMMAND $OpenBSD_PM -I"
   Pacman_MARK='PAC';   Pacman_PM='pacman'      ;   Pacman_COMMAND="$PERMISSION_COMMAND $Pacman_PM --sync --noconfirm --needed"
  Portage_MARK='PTG';  Portage_PM='emerge'      ;  Portage_COMMAND="$PERMISSION_COMMAND $Portage_PM"
@@ -130,6 +130,9 @@ case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	'freebsd'*)
 		PACKAGEMANAGER_MAIN='PKGNG'
 	;;
+	'midnightbsd'*)
+		PACKAGEMANAGER_MAIN='Mports'
+	;;
 	'netbsd'*)
 		PACKAGEMANAGER_MAIN='PKGIN'
 	;;
@@ -143,11 +146,6 @@ case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 				break
 			}
 		done
-
-		if [ -z "$PACKAGEMANAGER_MAIN" ]; then
-			printf '\n\033[1;7;31m%s\033[0m\n' "Packages manager not found"
-			exit 1
-		fi
 
 		[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 		[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
@@ -166,6 +164,9 @@ PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list
 superbbootstrap_install_packages() {
 	if [ -f "$1" ]; then
 		packages_list=$(sed -e 's/#.*$//g' "$1")
+	elif [ -z "$PACKAGEMANAGER_MAIN" ]; then
+		printf '\n\033[1;7;31m%s\033[0m\n' "Main packages manager not found or unsupported"
+		exit 1
 	else
 		printf '\n\033[1;7;31m%s\033[0m\n' 'Packages list not found'
 		exit 1
@@ -197,7 +198,10 @@ superbbootstrap_APT() {
 	$PERMISSION_COMMAND apt upgrade --assume-yes
 }
 
-#TODO Mports
+superbbootstrap_Mports() {
+	$PERMISSION_COMMAND mport index
+	$PERMISSION_COMMAND mport upgrade
+}
 
 superbbootstrap_OpenBSD() {
 	$PERMISSION_COMMAND syspatch
