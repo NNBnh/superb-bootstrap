@@ -123,7 +123,7 @@ Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM 
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
 
-case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
+case $(uname -s | tr '[:upper:]' '[:lower:]') in
 	'darwin'*)
 		PACKAGEMANAGER_MAIN='Homebrew'
 	;;
