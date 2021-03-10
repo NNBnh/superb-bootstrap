@@ -22,6 +22,8 @@
 #     AUR:aur-package-name
 #     FLA:flatpak-package-name
 #     HBR:homebrew-package-name
+#     MCP:macports-package-name
+#     MAS:mas-package-name
 #     SBO:sbo-package-name
 #     SNA:snap-package-name
 #

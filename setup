@@ -12,8 +12,6 @@
 
 
 # Values
-DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-
 #. "$DOTFILES_PATH/home/.config/env" # Get your environment variables if you have
 
 STEPS="${*:-install before home root after}" # Default order of steps
@@ -98,6 +96,8 @@ WD="$PWD"
 TMPDIR="${TMPDIR:-/tmp}"
 TEMPORARY="$TMPDIR/superb-bootstrap"
 
+DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+
 if [ -x "$(command -v sudo)" ]; then
 	PERMISSION_COMMAND='sudo'
 elif [ -x "$(command -v doas)" ]; then
@@ -120,12 +120,14 @@ Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_C
      AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm"
  Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
+MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_COMMAND $MacPorts_PM install"
+     MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
 
 case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 	'darwin'*)
-		PACKAGEMANAGER_MAIN='Homebrew'
+		PACKAGEMANAGER_LIST='Homebrew MacPorts MAS'
 	;;
 	'freebsd'*)
 		PACKAGEMANAGER_MAIN='PKGNG'
@@ -150,6 +152,7 @@ case $(uname -s | sed -e 's/[[:upper:]]/\L&/g') in
 		[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 		[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
 		                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
+		                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
 
 		if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
 			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
@@ -284,15 +287,46 @@ superbbootstrap_Homebrew() {
 	fi
 }
 
+superbbootstrap_MacPorts() {
+	[ ! -x "$(command -v 'xcode')" ] && {
+		printf '\n\033[1;7;31m%s\033[0m\n' 'Please install XCode first: https://guide.macports.org/#installing.xcode'
+		exit 1
+	}
+
+	xcode-select --install
+	$PERMISSION_COMMAND xcodebuild -license
+	cd "$TEMPORARY" || exit 1
+	curl --remote-header-name --location --remote-name "https://github.com/macports/macports-base/releases/latest/download/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg"
+	$PERMISSION_COMMAND installer -pkg "$TEMPORARY/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg" -target '/'
+	cd "$WD" || exit 1
+}
+
+superbbootstrap_MAS() {
+	if [ ! -x "$(command -v "$MAS_PM")" ]; then
+		if   [ -x "$(command -v "$Homebrew_PM")" ]; then $Homebrew_COMMAND mas
+		elif [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND mas
+		else
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && superbbootstrap_Homebrew
+
+			$Homebrew_COMMAND mas
+		fi
+	else
+		printf '%s\n' "MAS has been installed"
+	fi
+
+	mas account
+	mas signin --dialog "$APPLE_ID"
+}
+
 superbbootstrap_SBO() {
 	if [ ! -x "$(command -v 'sbopkg')" ]; then
-		SLACKWARE_VERSION=$(cut -f '2' -d ' ' '/etc/slackware-version')
 		SBO_VERSION=$(curl -s "https://api.github.com/repos/sbopkg/sbopkg/releases/latest" | grep -e 'tag_name' | cut -f '4' -d '"')
+
 		cd "$TEMPORARY" || exit 1
 		curl --remote-header-name --location --remote-name "https://github.com/sbopkg/sbopkg/releases/download/$SBO_VERSION/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
 		upgradepkg --install-new "$TEMPORARY/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
 		cd "$WD" || exit 1
-		$PERMISSION_COMMAND mkdir -p "/var/lib/sbopkg/SBo/$SLACKWARE_VERSION" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
+		$PERMISSION_COMMAND mkdir -p "/var/lib/sbopkg/SBo/$(cut -f '2' -d ' ' '/etc/slackware-version')" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
 		$PERMISSION_COMMAND sbopkg -rq
 		$PERMISSION_COMMAND sqg -a
 	else
@@ -346,11 +380,15 @@ superbbootstrap_scan_directory() {
 			if [ -d "$target" ] && [ ! -h "$target" ]; then
 				superbbootstrap_scan_directory "$file"
 			else
+				# You can change how batch symlink handle conflict files
 				if [ -n "$TRASH_PATH" ]; then
-					$batch_symlink_permission mv -f "$target" "$TRASH_PATH"
+					rm -rf "$TRASH_PATH/$(basename "$target")" 2>&-
+					$batch_symlink_permission mv -f "$target" "$TRASH_PATH/"
 				else
-					$batch_symlink_permission rm "$target"
-				fi && $batch_symlink_permission ln -sf "$file" "$target"
+					$batch_symlink_permission rm -rf "$target"
+				fi
+
+				$batch_symlink_permission ln -sf "$file" "$target"
 			fi
 		else
 			$batch_symlink_permission ln -sf "$file" "$target"
