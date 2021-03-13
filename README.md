@@ -110,7 +110,7 @@ git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 Special thanks to:
 - [**Xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
 - [**Obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
-- **Package managers supported**:
+- [**Package managers supported**](https://github.com/NNBnh/superb-bootstrap/issues/5):
   - Portage and Zypper supported by [Xfzv](https://github.com/xfzv)
   - [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported by [Kraileth](https://www.reddit.com/user/kraileth)
   - [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) and [PKG IN](https://github.com/NNBnh/superb-bootstrap/pull/12) supported by [Miko](https://github.com/mikoxyz)
