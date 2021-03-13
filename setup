@@ -54,7 +54,7 @@ symlink_root() {
 }
 
 before_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup before symlink step'
+	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup before symlink'
 
 	# Remove files that may conflict when symlink dotfiles
 	#rm .bashrc
@@ -73,10 +73,10 @@ before_symlink() {
 }
 
 after_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup after symlink step'
+	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup after symlink'
 
 	# Change default shell
-	#chsh -s '/usr/bin/bash'
+	#chsh -s "$(command -v bash)"
 
 	# Enable firewall
 	#$PERMISSION_COMMAND ufw enable
@@ -98,15 +98,6 @@ TEMPORARY="$TMPDIR/superb-bootstrap"
 
 DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
-if [ -x "$(command -v sudo)" ]; then
-	PERMISSION_COMMAND='sudo'
-elif [ -x "$(command -v doas)" ]; then
-	PERMISSION_COMMAND='doas'
-else
-	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
-	exit 1
-fi
-
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
   Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM install"
  OpenBSD_MARK='OBP';  OpenBSD_PM='pkg_add'     ;  OpenBSD_COMMAND="$PERMISSION_COMMAND $OpenBSD_PM -I"
@@ -115,6 +106,7 @@ fi
    PKGIN_MARK='PIN';    PKGIN_PM='pkgin'       ;    PKGIN_COMMAND="$PERMISSION_COMMAND $PKGIN_PM install -y"
    PKGNG_MARK='PNG';    PKGNG_PM='pkg'         ;    PKGNG_COMMAND="$PERMISSION_COMMAND $PKGNG_PM install -y"
 Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_COMMAND $Slackpkg_PM install"
+  Termux_MARK='TMP';   Termux_PM='pkg'         ;   Termux_COMMAND="$Termux_PM install --assume-yes"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
      AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm"
@@ -142,17 +134,19 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 		PACKAGEMANAGER_MAIN='OpenBSD'
 	;;
 	*)
-		for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
+		for packagemanager_check in 'Termux' 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
 			[ -x $(eval "command -v \"\$${packagemanager_check}_PM\"") ] && {
 				PACKAGEMANAGER_MAIN="$packagemanager_check"
 				break
 			}
 		done
 
-		[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
-		[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
-		                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
-		                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
+		[ "$PACKAGEMANAGER_MAIN" != 'Termux' ] && {
+			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
+			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
+			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
+			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
+		}
 
 		if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
 			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
@@ -161,6 +155,15 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 esac
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
+
+if [ -x "$(command -v sudo)" ]; then
+	PERMISSION_COMMAND='sudo'
+elif [ -x "$(command -v doas)" ]; then
+	PERMISSION_COMMAND='doas'
+elif [ "$PACKAGEMANAGER_MAIN" != 'Termux' ]; then
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
+	exit 1
+fi
 
 
 # Functions
@@ -232,6 +235,11 @@ superbbootstrap_PKGNG() {
 superbbootstrap_Slackpkg() {
 	$PERMISSION_COMMAND slackpkg update gpg
 	$PERMISSION_COMMAND slackpkg update
+}
+
+superbbootstrap_Termux() {
+	pkg update  --assume-yes
+	pkg upgrade --assume-yes
 }
 
 superbbootstrap_XBPS() {

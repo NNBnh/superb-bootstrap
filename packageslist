@@ -17,6 +17,7 @@
 #     PIN:pkgin-package-name
 #     PNG:pkgng-package-name
 #     SLK:slackpkg-package-name
+#     TMP:termux-package-name
 #     XBP:xbps-package-name
 #     ZPR:zypper-package-name
 #     AUR:aur-package-name
