@@ -134,22 +134,24 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 		PACKAGEMANAGER_MAIN='OpenBSD'
 	;;
 	*)
-		for packagemanager_check in 'Termux' 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
-			[ -x $(eval "command -v \"\$${packagemanager_check}_PM\"") ] && {
-				PACKAGEMANAGER_MAIN="$packagemanager_check"
-				break
-			}
-		done
+		if [ -x $(eval "command -v \"termux-setup-storage\"") ]; then
+			PACKAGEMANAGER_MAIN='Termux'
+		else
+			for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
+				[ -x $(eval "command -v \"\$${packagemanager_check}_PM\"") ] && {
+					PACKAGEMANAGER_MAIN="$packagemanager_check"
+					break
+				}
+			done
 
-		[ "$PACKAGEMANAGER_MAIN" != 'Termux' ] && {
 			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
 			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
 			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
-		}
 
-		if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
-			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
+			if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
+				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
+			fi
 		fi
 	;;
 esac
