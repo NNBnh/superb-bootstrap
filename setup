@@ -216,7 +216,7 @@ superbbootstrap_OpenBSD() {
 }
 
 superbbootstrap_Pacman() {
-	$PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --noconfirm --needed
+	yes | LC_ALL=en_US.UTF-8 $PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --needed
 }
 
 superbbootstrap_Portage() {
