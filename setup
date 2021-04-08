@@ -116,6 +116,8 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
+     PIP_MARK='PIP'; PIP_PM='pip'              ;    PIP_COMMAND="$PIP_PM install"
+     NPM_MARK='NPM'; NPM_PM='npm'              ;    NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
 
 case $(uname -s | tr '[:upper:]' '[:lower:]') in
 	'darwin'*)
@@ -266,6 +268,12 @@ superbbootstrap_AUR() {
 	fi
 }
 
+superbbootstrap_PIP() {
+  pip install pip --upgrade
+}
+superbbootstrap_NPM() {
+  npm install npm@latest -g
+}
 superbbootstrap_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
