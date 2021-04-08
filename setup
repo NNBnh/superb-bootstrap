@@ -148,15 +148,13 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 
 			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
-			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
-			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
-
-			if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
-				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
-			fi
 		fi
 	;;
 esac
+
+for aux_packagemanager in 'PIP' 'NPM' 'Flatpak' 'Homebrew' 'Snap'; do
+  [ -x "$(eval "command -v \"\$${aux_packagemanager}_PM\"")" ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST $aux_packagemanager"
+done
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
@@ -183,6 +181,8 @@ superbbootstrap_install_packages() {
 	fi
 
 	for packagemanager in $PACKAGEMANAGER_LIST; do
+                printf '\n\033[1;7;35m%s\033[0m\n' "Checking for packages from $packagemanager"
+                
 		eval "mark=\"\$${packagemanager}_MARK\""
 		eval "install_command=\"\$${packagemanager}_COMMAND\""
 
@@ -271,9 +271,11 @@ superbbootstrap_AUR() {
 superbbootstrap_PIP() {
   pip install pip --upgrade
 }
+
 superbbootstrap_NPM() {
   npm install npm@latest -g
 }
+
 superbbootstrap_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
