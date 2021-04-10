@@ -192,11 +192,10 @@ superbbootstrap_install_packages() {
 			# Remove lines with current mark so packages don't get reinstall on another package managers later on
 			packages_list=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark.*\$//g")
 
-			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager"
-			eval "superbbootstrap_$packagemanager"
-
-			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages"
-			eval "$install_command $packages_installing"
+			(printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager" && \
+                          eval "superbbootstrap_$packagemanager") && \
+			(printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages" && \
+                          eval "$install_command $packages_installing")
 		}
 	done
 }
