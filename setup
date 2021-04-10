@@ -1,4 +1,4 @@
-!/bin/sh
+#!/bin/sh
 
 #    ____    __
 #   / __/__ / /___ _____
@@ -262,8 +262,8 @@ superbbootstrap_AUR() {
 		makepkg -si
 		cd "$WD" || exit 1
 	else
-		printf '%s\n' "Paru already installed, checking for updates..."
-                $AUR_COMMAND --sysupgrade --refresh --aur
+		printf '%s\n' "Paru has been installed"
+		$AUR_COMMAND --sysupgrade --refresh --aur
 	fi
 }
 
