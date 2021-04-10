@@ -89,6 +89,14 @@ after_symlink() {
 # Don't touch anything from this point to the end of file
 # if you don't know what you are doing.
 
+if [ -x "$(command -v sudo)" ]; then
+	PERMISSION_COMMAND='sudo'
+elif [ -x "$(command -v doas)" ]; then
+	PERMISSION_COMMAND='doas'
+elif [ "$PACKAGEMANAGER_MAIN" != 'Termux' ]; then
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
+	exit 1
+fi
 
 # Values
 WD="$PWD"
@@ -157,16 +165,6 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 esac
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
-
-if [ -x "$(command -v sudo)" ]; then
-	PERMISSION_COMMAND='sudo'
-elif [ -x "$(command -v doas)" ]; then
-	PERMISSION_COMMAND='doas'
-elif [ "$PACKAGEMANAGER_MAIN" != 'Termux' ]; then
-	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
-	exit 1
-fi
-
 
 # Functions
 superbbootstrap_install_packages() {
