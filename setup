@@ -22,6 +22,22 @@ STEPS="${*:-install before home root after}" # Default order of steps
 # Functions
 install_packages() {
 	printf '\n\033[1;7;34m%s\033[0m\n' 'Install packages'
+
+	## Arch Linux: Add keyring and mirrolis to be able to install packages from 'chaotic-aur' 
+	# $Pacman_COMMAND git base-devel
+	# git clone 'https://aur.archlinux.org/chaotic-keyring.git' "$TEMPORARY/chaotic-keyring"
+	# cd "$TEMPORARY/chaotic-keyring" || exit 1
+	# makepkg --noconfirm
+	# $PERMISSION_COMMAND pacman --noconfirm --needed --upgrade chaotic-keyring-*.zst 
+	# git clone 'https://aur.archlinux.org/chaotic-mirrorlist.git' "$TEMPORARY/chaotic-mirrorlist"
+	# cd "$TEMPORARY/chaotic-mirrorlist" || exit 1
+	# makepkg --noconfirm
+	# $PERMISSION_COMMAND pacman --noconfirm --needed --upgrade chaotic-mirrorlist-*.zst   
+	# cd "$WD" || exit 1
+	# $PERMISSION_COMMAND sh -c "echo \"\" >> /etc/pacman.conf"  # for Arco Linux
+	# $PERMISSION_COMMAND sh -c "echo \"[chaotic-aur]\" >> /etc/pacman.conf"
+	# $PERMISSION_COMMAND sh -c "echo \"Include = /etc/pacman.d/chaotic-mirrorlist\" >> /etc/pacman.conf"
+
 	superbbootstrap_install_packages "$DOTFILES_PATH/packageslist" # you can change packageslist's path here
 
 	# Add more packages that you want to install here
