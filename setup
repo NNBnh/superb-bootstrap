@@ -257,7 +257,8 @@ superbbootstrap_AUR() {
 		$Pacman_COMMAND git base-devel
 		git clone 'https://aur.archlinux.org/paru.git' "$TEMPORARY/paru"
 		cd "$TEMPORARY/paru" || exit 1
-		makepkg -si
+		makepkg --syncdeps --noconfirm
+		$PERMISSION_COMMAND $Pacman_PM --needed --noconfirm --upgrade paru-*.zst 
 		cd "$WD" || exit 1
 	else
 		printf '%s\n' "Paru has been installed"
