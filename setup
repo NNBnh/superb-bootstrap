@@ -148,13 +148,11 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 
 			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
+                        PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST PIP NPM Flatpak Homebrew Snap"
 		fi
 	;;
 esac
 
-for aux_packagemanager in 'PIP' 'NPM' 'Flatpak' 'Homebrew' 'Snap'; do
-  (test "$(eval "command -v \"\$${aux_packagemanager}_PM\"")" || test "$(eval "sh -c \"\$${aux_packagemanager}_check\"")" ) && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST $aux_packagemanager"
-done
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
