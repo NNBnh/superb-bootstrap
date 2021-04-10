@@ -263,6 +263,7 @@ superbbootstrap_AUR() {
 		cd "$WD" || exit 1
 	else
 		printf '%s\n' "Paru has been installed"
+		$AUR_COMMAND --sysupgrade --refresh --aur
 	fi
 }
 
