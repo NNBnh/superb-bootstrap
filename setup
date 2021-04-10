@@ -134,11 +134,11 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 		PACKAGEMANAGER_MAIN='OpenBSD'
 	;;
 	*)
-		if [ -x "$(eval "command -v \"termux-setup-storage\"")" ]; then
+		if [ -x $(eval "command -v \"termux-setup-storage\"") ]; then
 			PACKAGEMANAGER_MAIN='Termux'
 		else
 			for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
-				[ -x "$(eval "command -v \"\$${packagemanager_check}_PM\"")" ] && {
+				[ -x $(eval "command -v \"\$${packagemanager_check}_PM\"") ] && {
 					PACKAGEMANAGER_MAIN="$packagemanager_check"
 					break
 				}
