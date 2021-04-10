@@ -116,7 +116,7 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
-     PIP_MARK='PIP'; PIP_PM='pip'              ;    PIP_COMMAND="$PIP_PM install"
+     PIP_MARK='PIP'; PIP_PM='python -m pip'              ;    PIP_COMMAND="$PIP_PM install --upgrade"                           ; PIP_check="python -m ensurepip"
      NPM_MARK='NPM'; NPM_PM='npm'              ;    NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
 
 case $(uname -s | tr '[:upper:]' '[:lower:]') in
@@ -153,7 +153,7 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 esac
 
 for aux_packagemanager in 'PIP' 'NPM' 'Flatpak' 'Homebrew' 'Snap'; do
-  [ -x "$(eval "command -v \"\$${aux_packagemanager}_PM\"")" ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST $aux_packagemanager"
+  (test "$(eval "command -v \"\$${aux_packagemanager}_PM\"")" || test "$(eval "sh -c \"\$${aux_packagemanager}_check\"")" ) && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST $aux_packagemanager"
 done
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
@@ -268,13 +268,6 @@ superbbootstrap_AUR() {
 	fi
 }
 
-superbbootstrap_PIP() {
-  pip install pip --upgrade
-}
-
-superbbootstrap_NPM() {
-  npm install npm@latest -g
-}
 
 superbbootstrap_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
@@ -372,6 +365,15 @@ superbbootstrap_Snap() {
 	fi
 
 	snap install core
+}
+
+
+superbbootstrap_PIP() {
+  python -m pip install --upgrade pip
+}
+
+superbbootstrap_NPM() {
+  npm install npm@latest -g
 }
 
 superbbootstrap_batch_symlink() {
