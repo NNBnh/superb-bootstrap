@@ -41,7 +41,7 @@
 # EXAMPLE: to see what a good packages list look like, see NNB's file: https://github.com/NNBnh/dots/blob/master/packageslist
 
 
-### Lable (use "#" to comments)
+### Label (use "#" to comments)
   APT:firefox                                                                                   # Add some description...
   APT:mpv                                                                                       # Each individual package should be on a separate line
 
