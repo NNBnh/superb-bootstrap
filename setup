@@ -201,7 +201,7 @@ superbbootstrap_install_packages() {
 		eval "install_command=\"\$${packagemanager}_COMMAND\""
 
 		# Find packages with mark
-		packages_installing=$(printf '%s' "$packages_list" | sed -rn "s/$mark:([0-9a-zA-Z-]+)(.*)/\1/p"  | tr '\n' ' ')
+		packages_installing=$(printf '%s' "$packages_list" | sed -e "/^.*$mark:.*\$/!d;s/.*$mark://g" -e 's/[[:space:]].*$//g;/^$/d' | tr '\n' ' ')
 
 		# If finded, setup package manager then install packages
 		[ -n "$packages_installing" ] && {
