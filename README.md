@@ -1,6 +1,6 @@
 <p align="center"><img width="100%" src="https://user-images.githubusercontent.com/43980777/109499307-49ca3000-7ac7-11eb-9f66-3a2c8f5e90b4.png"></p>
 <p align="center">OS bootstrap-system/dotfiles-manager framework that <i>SuperB</i></p>
-<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.1"><img src="https://img.shields.io/badge/version-1.7.1-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.7.1"></a></p>
+<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3"><img src="https://img.shields.io/badge/version-1.7.3-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.7.3"></a></p>
 <p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/network/members"><img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/issues"><img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a></p>
 
 ## About
@@ -110,6 +110,8 @@ git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 Special thanks to:
 - [**Xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
 - [**Obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
+- [**LoricAndre**](https://github.com/LoricAndre) for [Make Paru upgrade AUR packages on bootstrap](https://github.com/NNBnh/superb-bootstrap/pull/20)
+- [**Simon Weiss**](https://github.com/weiss-d) for [most of bugs fix, improvement to 1.7.3](https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3)
 - [**Package managers supported**](https://github.com/NNBnh/superb-bootstrap/issues/5):
   - Portage and Zypper supported by [Xfzv](https://github.com/xfzv)
   - [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported by [Kraileth](https://www.reddit.com/user/kraileth)
