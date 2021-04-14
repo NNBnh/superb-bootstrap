@@ -116,8 +116,8 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
-     PIP_MARK='PIP'; PIP_PM='python -m pip'              ;    PIP_COMMAND="$PIP_PM install --upgrade"
-     NPM_MARK='NPM'; NPM_PM='npm'              ;    NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
+     NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
+  Python_MARK='PIP';   Python_PM='python'      ;   Python_COMMAND="python -m $Python_PM install --upgrade"
 
 case $(uname -s | tr '[:upper:]' '[:lower:]') in
 	'darwin'*)
@@ -148,11 +148,17 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 
 			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
-                        PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST PIP NPM Flatpak Homebrew Snap"
+
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak Homebrew"
+
+			if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
+				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
+			fi
+
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
 		fi
 	;;
 esac
-
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
@@ -179,8 +185,6 @@ superbbootstrap_install_packages() {
 	fi
 
 	for packagemanager in $PACKAGEMANAGER_LIST; do
-                printf '\n\033[1;7;35m%s\033[0m\n' "Checking for packages from $packagemanager"
-                
 		eval "mark=\"\$${packagemanager}_MARK\""
 		eval "install_command=\"\$${packagemanager}_COMMAND\""
 
@@ -192,10 +196,11 @@ superbbootstrap_install_packages() {
 			# Remove lines with current mark so packages don't get reinstall on another package managers later on
 			packages_list=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark.*\$//g")
 
-			(printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager" && \
-                          eval "superbbootstrap_$packagemanager") && \
-			(printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages" && \
-                          eval "$install_command $packages_installing")
+			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager"
+			eval "superbbootstrap_$packagemanager"
+
+			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages"
+			eval "$install_command $packages_installing"
 		}
 	done
 }
@@ -264,7 +269,6 @@ superbbootstrap_AUR() {
 		printf '%s\n' "Paru has been installed"
 	fi
 }
-
 
 superbbootstrap_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
@@ -365,12 +369,12 @@ superbbootstrap_Snap() {
 }
 
 
-superbbootstrap_PIP() {
-  python -m ensurepip --upgrade
+superbbootstrap_NPM() {
+	  npm install npm@latest -g
 }
 
-superbbootstrap_NPM() {
-  npm install npm@latest -g
+superbbootstrap_PIP() {
+	  python -m ensurepip --upgrade
 }
 
 superbbootstrap_batch_symlink() {
