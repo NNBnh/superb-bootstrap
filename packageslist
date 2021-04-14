@@ -28,7 +28,7 @@
 #     SBO:sbo-package-name
 #     SNA:snap-package-name
 #     NPM:npm-package-name
-#     PIP:pip-package-name
+#     PIP:python-package-name
 #
 # NOTE: the mark and package name must be joined by a colon in between without whitespace.
 #   WRONG:
