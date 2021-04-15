@@ -22,6 +22,22 @@ STEPS="${*:-install before home root after}" # Default order of steps
 # Functions
 install_packages() {
 	printf '\n\033[1;7;34m%s\033[0m\n' 'Install packages'
+
+	# Arch Linux: Add keyring and mirrolis to be able to install packages from 'chaotic-aur' 
+	#$Pacman_COMMAND git base-devel
+	#git clone 'https://aur.archlinux.org/chaotic-keyring.git' "$TEMPORARY/chaotic-keyring"
+	#cd "$TEMPORARY/chaotic-keyring" || exit 1
+	#makepkg --noconfirm
+	#$PERMISSION_COMMAND pacman --noconfirm --needed --upgrade chaotic-keyring-*.zst 
+	#git clone 'https://aur.archlinux.org/chaotic-mirrorlist.git' "$TEMPORARY/chaotic-mirrorlist"
+	#cd "$TEMPORARY/chaotic-mirrorlist" || exit 1
+	#makepkg --noconfirm
+	#$PERMISSION_COMMAND pacman --noconfirm --needed --upgrade chaotic-mirrorlist-*.zst   
+	#cd "$WD" || exit 1
+
+	# For Arco Linux
+	#$PERMISSION_COMMAND sh -c "printf '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf"
+
 	superbbootstrap_install_packages "$DOTFILES_PATH/packageslist" # you can change packageslist's path here
 
 	# Add more packages that you want to install here
@@ -98,6 +114,17 @@ TEMPORARY="$TMPDIR/superb-bootstrap"
 
 DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
+if [ -x "$(command -v sudo)" ]; then
+	PERMISSION_COMMAND='sudo'
+elif [ -x "$(command -v doas)" ]; then
+	PERMISSION_COMMAND='doas'
+elif [ -x "$(command -v termux-setup-storage)" ]; then
+	PACKAGEMANAGER_MAIN='Termux'
+else
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
+	exit 1
+fi
+
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
   Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM install"
  OpenBSD_MARK='OBP';  OpenBSD_PM='pkg_add'     ;  OpenBSD_COMMAND="$PERMISSION_COMMAND $OpenBSD_PM -I"
@@ -109,7 +136,7 @@ Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_C
   Termux_MARK='TMP';   Termux_PM='pkg'         ;   Termux_COMMAND="$Termux_PM install --assume-yes"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
-     AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm"
+     AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm --needed"
  Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
 MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_COMMAND $MacPorts_PM install"
@@ -119,28 +146,27 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
   Python_MARK='PIP';   Python_PM='python'      ;   Python_COMMAND="python -m $Python_PM install --upgrade"
 
-case $(uname -s | tr '[:upper:]' '[:lower:]') in
-	'darwin'*)
-		PACKAGEMANAGER_LIST='Homebrew MacPorts MAS'
-	;;
-	'freebsd'*)
-		PACKAGEMANAGER_MAIN='PKGNG'
-	;;
-	'midnightbsd'*)
-		PACKAGEMANAGER_MAIN='Mports'
-	;;
-	'netbsd'*)
-		PACKAGEMANAGER_MAIN='PKGIN'
-	;;
-	'openbsd'*)
-		PACKAGEMANAGER_MAIN='OpenBSD'
-	;;
-	*)
-		if [ -x "$(eval "command -v \"termux-setup-storage\"")" ]; then
-			PACKAGEMANAGER_MAIN='Termux'
-		else
+if [ -z "$PACKAGEMANAGER_MAIN" ]; then
+	case $(uname -s | tr '[:upper:]' '[:lower:]') in
+		'darwin'*)
+			PACKAGEMANAGER_LIST='Homebrew MacPorts MAS'
+		;;
+		'freebsd'*)
+			PACKAGEMANAGER_MAIN='PKGNG'
+		;;
+		'midnightbsd'*)
+			PACKAGEMANAGER_MAIN='Mports'
+		;;
+		'netbsd'*)
+			PACKAGEMANAGER_MAIN='PKGIN'
+		;;
+		'openbsd'*)
+			PACKAGEMANAGER_MAIN='OpenBSD'
+		;;
+		*)
+
 			for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
-				[ -x "$(eval "command -v \"\$${packagemanager_check}_PM\"")" ] && {
+				[ -x "$(eval command -v \$${packagemanager_check}_PM)" ] && {
 					PACKAGEMANAGER_MAIN="$packagemanager_check"
 					break
 				}
@@ -155,22 +181,12 @@ case $(uname -s | tr '[:upper:]' '[:lower:]') in
 				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
 			fi
 
-			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
-		fi
-	;;
-esac
-
-PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
-
-if [ -x "$(command -v sudo)" ]; then
-	PERMISSION_COMMAND='sudo'
-elif [ -x "$(command -v doas)" ]; then
-	PERMISSION_COMMAND='doas'
-elif [ "$PACKAGEMANAGER_MAIN" != 'Termux' ]; then
-	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
-	exit 1
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM Python"
+		;;
+	esac
 fi
 
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
 # Functions
 superbbootstrap_install_packages() {
@@ -189,7 +205,7 @@ superbbootstrap_install_packages() {
 		eval "install_command=\"\$${packagemanager}_COMMAND\""
 
 		# Find packages with mark
-		packages_installing=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark://g" -e 's/[[:space:]].*$//g' -e '/^$/d' | tr '\n' ' ')
+		packages_installing=$(printf '%s' "$packages_list" | sed -e "/^.*$mark:.*\$/!d;s/.*$mark://g" -e 's/[[:space:]].*$//g;/^$/d' | tr '\n' ' ')
 
 		# If finded, setup package manager then install packages
 		[ -n "$packages_installing" ] && {
@@ -263,10 +279,12 @@ superbbootstrap_AUR() {
 		$Pacman_COMMAND git base-devel
 		git clone 'https://aur.archlinux.org/paru.git' "$TEMPORARY/paru"
 		cd "$TEMPORARY/paru" || exit 1
-		makepkg -si
+		makepkg --syncdeps --noconfirm
+		$PERMISSION_COMMAND $Pacman_PM --needed --noconfirm --upgrade paru-*.zst 
 		cd "$WD" || exit 1
 	else
 		printf '%s\n' "Paru has been installed"
+		$AUR_COMMAND --sysupgrade --refresh --aur
 	fi
 }
 
@@ -373,7 +391,7 @@ superbbootstrap_NPM() {
 	  npm install npm@latest -g
 }
 
-superbbootstrap_PIP() {
+superbbootstrap_Python() {
 	  python -m ensurepip --upgrade
 }
 
