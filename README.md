@@ -7,7 +7,7 @@
 **SuperB Bootstrap** is a *SuperB* OS bootstrap-system/dotfiles-manager framework that can be installed with just one command on a new Unix system installation.
 
 ### ✨ Features
-- Super **portable**, work on almost any Unix and Unix-like operating system, you don't need to install anything before the installation process
+- Super **portable**, work on almost any `*NIX` operating system, you don't need to install anything before the installation process
   - Don't know anything about [`git`](https://git-scm.com)? Dont't worry, SBB dotfiles can be host via [Nextcloud](https://nextcloud.com), [Google drive](https://www.google.com/drive) or [Dropbox](https://www.dropbox.com)...
 - Super **organized** [file structure](#-setup) to config and share
 - Super **easy** to [setup](#-setup) and [install](#%EF%B8%8F-usage):
