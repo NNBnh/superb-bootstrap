@@ -3,15 +3,14 @@
 <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3"><img src="https://img.shields.io/badge/version-1.7.3-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.7.3"></a></p>
 <p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/network/members"><img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/issues"><img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a></p>
 
-## About
+## 💡 About
 **SuperB Bootstrap** is a *SuperB* OS bootstrap-system/dotfiles-manager framework that can be installed with just one command on a new Unix system installation.
 
-### Features
-- Super **portable**, work on almost any Unix and Unix-like operating system, it can even install dotfiles locally
+### ✨ Features
+- Super **portable**, work on almost any Unix and Unix-like operating system, you don't need to install anything before the installation process
   - Don't know anything about [`git`](https://git-scm.com)? Dont't worry, SBB dotfiles can be host via [Nextcloud](https://nextcloud.com), [Google drive](https://www.google.com/drive) or [Dropbox](https://www.dropbox.com)...
-- Super **minimum** [dependencies](#dependencies), you don't need to install anything before the installation process
-- Super **organized** [file structure](#setup) to config and share
-- Super **easy** to [setup](#setup) and [install](#usage):
+- Super **organized** [file structure](#-setup) to config and share
+- Super **easy** to [setup](#-setup) and [install](#%EF%B8%8F-usage):
   - Similar to [Stow method](http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html), it's managing your dotfiles by storing them in a subdirectory (`dotfiles/home/`, `dotfiles/root/`) and symlinking them to their original location
   - You can even install your dotfiles with **just one command** from a new Unix system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
@@ -34,19 +33,7 @@
   - [SBO](https://sbopkg.org)
   - [Snap](https://snapcraft.io)
 
-## Contents
-- [About](#about)
-  - [Features](#features)
-- [Contents](#contents)
-- [Dependencies](#dependencies)
-- [Setup](#setup)
-- [Install](#install)
-- [Credits](#credits)
-
-## Dependencies
-- `sh` to process
-
-## Setup
+## 🚀 Setup
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
 
 ```sh
@@ -71,15 +58,15 @@ Add packages to `packageslist`, see [example](https://github.com/NNBnh/superb-bo
 
 Add config scripts to `setup`, see [example](https://github.com/NNBnh/superb-bootstrap/blob/master/setup)
 
-###### Remember to make `setup` executable:
-
-```sh
-chmod +x "$HOME/dotfiles/setup"
-```
+> *Remember to make `setup` executable:*
+>
+> ```sh
+> chmod +x "$HOME/dotfiles/setup"
+> ```
 
 Finally upload your dotfiles to a safe place.
 
-## Install
+### 📥 Installation
 To install your dotfiles, put the dotfiles to the desired location then execute `setup` file.
 
 For example if you store your dotfiles on [Github](https://github.com), first download it:
@@ -106,7 +93,7 @@ You can install your dotfiles with just one command:
 git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 ```
 
-## Credits
+## 💌 Credits
 Special thanks to:
 - [**Xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
 - [**Obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
