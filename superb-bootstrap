@@ -63,6 +63,8 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
+     NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
+     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
 
   Basher_MARK='BSR';   Basher_PM='ssb_basher'  ;   Basher_COMMAND="$PERMISSION_COMMAND $Basher_PM"
     BPKG_MARK='BPK';     BPKG_PM='ssb_bpkg'    ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM"
@@ -103,12 +105,14 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 
 			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
-			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
-			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
+
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak Homebrew"
 
 			if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
 				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
 			fi
+
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
 		;;
 	esac
 fi
@@ -355,10 +359,28 @@ ssb_setup_Snap() {
 	snap install core
 }
 
+<<<<<<< HEAD:superb-bootstrap
 ## Setup language packages manager
 ssb_setup_Basher() {
 	ssb_install_git
 	git clone 'https://github.com/basherpm/basher.git' "${BASHER_ROOT:-$HOME/.basher}"
+=======
+
+superbbootstrap_NPM() {
+	  npm install npm@latest -g
+}
+
+superbbootstrap_PIP() {
+	  python -m ensurepip --upgrade
+}
+
+superbbootstrap_batch_symlink() {
+	batch_symlink_directory="$1"
+	batch_symlink_target="$2"
+	batch_symlink_permission="$3"
+
+	[ -n "$TRASH_PATH" ] && mkdir -p "$TRASH_PATH"
+>>>>>>> a1e0e48b2196cf11846a16c008a03826d17f7a72:setup
 
 	ssb_make_install_command 'basher' "$PERMISSION_COMMAND basher install"
 }
