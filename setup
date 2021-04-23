@@ -143,6 +143,8 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
+     NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
+     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
 
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	case $(uname -s | tr '[:upper:]' '[:lower:]') in
@@ -172,12 +174,14 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 
 			[ "$PACKAGEMANAGER_MAIN"  = 'Pacman'   ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST AUR"
 			[ "$PACKAGEMANAGER_MAIN"  = 'Slackpkg' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST SBO"
-			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak"
-			                                            PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Homebrew"
+
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Flatpak Homebrew"
 
 			if [ "$PACKAGEMANAGER_MAIN" = 'APT' ] || [ "$PACKAGEMANAGER_MAIN" = 'Pacman' ]; then
 				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
 			fi
+
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
 		;;
 	esac
 fi
@@ -380,6 +384,15 @@ superbbootstrap_Snap() {
 	fi
 
 	snap install core
+}
+
+
+superbbootstrap_NPM() {
+	  npm install npm@latest -g
+}
+
+superbbootstrap_Python() {
+	  python -m ensurepip --upgrade
 }
 
 superbbootstrap_batch_symlink() {
