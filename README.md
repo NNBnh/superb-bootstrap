@@ -1,6 +1,6 @@
 <p align="center"><img width="100%" src="https://user-images.githubusercontent.com/43980777/109499307-49ca3000-7ac7-11eb-9f66-3a2c8f5e90b4.png"></p>
 <p align="center">OS bootstrap-system/dotfiles-manager framework that <i>SuperB</i></p>
-<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3"><img src="https://img.shields.io/badge/version-1.7.3-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 1.7.3"></a></p>
+<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap/releases/tag/2.0.0"><img src="https://img.shields.io/badge/version-2.0.0_beta1-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 2.0.0 beta1"></a></p>
 <p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/network/members"><img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/issues"><img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a></p>
 
 ## 💡 About
@@ -32,6 +32,11 @@
   - [MAS](https://github.com/mas-cli/mas)
   - [SBO](https://sbopkg.org)
   - [Snap](https://snapcraft.io)
+  - [Basher](https://github.com/basherpm/basher)
+  - [BPKG](https://github.com/bpkg/bpkg)
+  - [NPM](https://www.npmjs.com)
+  - [PIP](https://pypi.org)
+  - [Yarn](https://yarnpkg.com)
 
 ## 🚀 Setup
 First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
@@ -97,7 +102,7 @@ git clone https://github.com/yourname/dotfiles.git && ./dotfiles/setup
 Special thanks to:
 - [**Xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
 - [**Obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
-- [**LoricAndre**](https://github.com/LoricAndre) for [Make Paru upgrade AUR packages on bootstrap](https://github.com/NNBnh/superb-bootstrap/pull/20)
+- [**LoricAndre**](https://github.com/LoricAndre) for [the great design suggestion](https://github.com/NNBnh/superb-bootstrap/issues/24) and [make Paru upgrade AUR packages on bootstrap](https://github.com/NNBnh/superb-bootstrap/pull/20)
 - [**Simon Weiss**](https://github.com/weiss-d) for [most of bugs fix, improvement to 1.7.3](https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3)
 - [**Package managers supported**](https://github.com/NNBnh/superb-bootstrap/issues/5):
   - Portage and Zypper supported by [Xfzv](https://github.com/xfzv)
@@ -115,8 +120,3 @@ Special thanks to:
 > <h1 align="center">Made with ❤️ by <a href="https://github.com/NNBnh"><i>NNB</i></a></h1>
 >
 > <p align="center"><a href="https://www.buymeacoffee.com/nnbnh"><img src="https://img.shields.io/badge/buy_me_a_coffee%20-%23F7CA88.svg?logo=buy-me-a-coffee&logoColor=333333&style=for-the-badge" alt="Buy Me a Coffee"><a></p>
-
----
-
-> <p align="center"><b>Copyright © 2020-2021 by <a href="https://github.com/NNBnh">NNB</a></b></p>
-> <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0">Creative Commons Attribution 4.0 International License</a>.</p>
