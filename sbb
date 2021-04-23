@@ -359,28 +359,10 @@ ssb_setup_Snap() {
 	snap install core
 }
 
-<<<<<<< HEAD:superb-bootstrap
 ## Setup language packages manager
 ssb_setup_Basher() {
 	ssb_install_git
 	git clone 'https://github.com/basherpm/basher.git' "${BASHER_ROOT:-$HOME/.basher}"
-=======
-
-superbbootstrap_NPM() {
-	  npm install npm@latest -g
-}
-
-superbbootstrap_PIP() {
-	  python -m ensurepip --upgrade
-}
-
-superbbootstrap_batch_symlink() {
-	batch_symlink_directory="$1"
-	batch_symlink_target="$2"
-	batch_symlink_permission="$3"
-
-	[ -n "$TRASH_PATH" ] && mkdir -p "$TRASH_PATH"
->>>>>>> a1e0e48b2196cf11846a16c008a03826d17f7a72:setup
 
 	ssb_make_install_command 'basher' "$PERMISSION_COMMAND basher install"
 }
