@@ -144,7 +144,7 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
-  Python_MARK='PIP';   Python_PM='python'      ;   Python_COMMAND="python -m $Python_PM install --upgrade"
+     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
 
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	case $(uname -s | tr '[:upper:]' '[:lower:]') in
@@ -181,7 +181,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
 			fi
 
-			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM Python"
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
 		;;
 	esac
 fi
