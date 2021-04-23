@@ -1,118 +1,37 @@
 #!/bin/sh
 
-#    ____    __
-#   / __/__ / /___ _____
-#  _\ \/ -_) __/ // / _ \
-# /___/\__/\__/\_,_/ .__/
-#                 /_/
+#    _____ ____  ____
+#   / ___// __ )/ __ )
+#   \__ \/ __  / __  |
+#  ___/ / /_/ / /_/ /
+# /____/_____/_____/
 
-# Add description here:
-# > Hello World!
-# > This is my setup script.
+# File:         ssb
+# Description:  Dotfiles-manager framework that SuperB
+# Main author:  NNB
+#               └─ https://github.com/NNBnh
+# URL:          https://github.com/NNBnh/superb-bootstrap
+# License:      GPLv3
 
-
-# Values
-#. "$DOTFILES_PATH/home/.config/env" # Get your environment variables if you have
-
-STEPS="${*:-install before home root after}" # Default order of steps
-
-#TRASH_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/Trash/files" # Uncomment this if you want to move conflict files to trash instead of delete it
-
-
-# Functions
-install_packages() {
-	printf '\n\033[1;7;34m%s\033[0m\n' 'Install packages'
-
-	# Arch Linux: Add keyring and mirrolis to be able to install packages from 'chaotic-aur' 
-	#$Pacman_COMMAND git base-devel
-	#git clone 'https://aur.archlinux.org/chaotic-keyring.git' "$TEMPORARY/chaotic-keyring"
-	#cd "$TEMPORARY/chaotic-keyring" || exit 1
-	#makepkg --noconfirm
-	#$PERMISSION_COMMAND pacman --noconfirm --needed --upgrade chaotic-keyring-*.zst 
-	#git clone 'https://aur.archlinux.org/chaotic-mirrorlist.git' "$TEMPORARY/chaotic-mirrorlist"
-	#cd "$TEMPORARY/chaotic-mirrorlist" || exit 1
-	#makepkg --noconfirm
-	#$PERMISSION_COMMAND pacman --noconfirm --needed --upgrade chaotic-mirrorlist-*.zst   
-	#cd "$WD" || exit 1
-
-	# For Arco Linux
-	#$PERMISSION_COMMAND sh -c "printf '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf"
-
-	superbbootstrap_install_packages "$DOTFILES_PATH/packageslist" # you can change packageslist's path here
-
-	# Add more packages that you want to install here
-	#printf '\n\033[1;7;34m%s\033[0m\n' 'Install extra packages'
-	#pip install --upgrade 'git+https://github.com/will8211/unimatrix.git'
-}
-
-symlink_home() {
-	printf '\n\033[1;7;36m%s\033[0m\n' "Symlink to home ($HOME)"
-
-	superbbootstrap_batch_symlink "$DOTFILES_PATH/home" "$HOME"
-
-	# Use this if you want to batch symlink with bsymlink
-	#bsymlink "$DOTFILES_PATH/home" "$HOME"
-
-	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
-	#stow -vt ~ home
-}
-
-symlink_root() {
-	printf '\n\033[1;7;36m%s\033[0m\n' 'Symlink to root (/)'
-
-	superbbootstrap_batch_symlink "$DOTFILES_PATH/root" '/' "$PERMISSION_COMMAND"
-
-	# Use this if you want to batch symlink with bsymlink
-	#$PERMISSION_COMMAND bsymlink "$DOTFILES_PATH/root" '/'
-
-	# Use this if you want to batch symlink with stow (you must cd to the directory that contain this setup file)
-	#$PERMISSION_COMMAND stow -vt / root
-}
-
-before_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup before symlink'
-
-	# Remove files that may conflict when symlink dotfiles
-	#rm .bashrc
-
-	# Remove conflicting items in $HOME/.config
-	#[ -d "$HOME/.config" ] && for config_directory_path in "$HOME/.config/."* "$HOME/.config/"*; do
-	#	config_directory_name="${config_directory_path#$XDG_CONFIG_HOME/}"
-	#
-	#	if [ "$config_directory_name" != '.' ] && [ "$config_directory_name" != '..' ] && [ -e "$HOME/dots/home/.config/$config_directory_name" ]; then
-	#		rm "$config_directory_path"
-	#	fi
-	#done
-
-	# Create directories (to symlink files inside only, not the directory itself)
-	#mkdir "$HOME/.config" "$HOME/.local/share" "$HOME/.local/bin" "$HOME/.cache"
-}
-
-after_symlink() {
-	printf '\n\033[1;7;33m%s\033[0m\n' 'Setup after symlink'
-
-	# Change default shell
-	#chsh -s "$(command -v bash)"
-
-	# Enable firewall
-	#$PERMISSION_COMMAND ufw enable
-}
-
-
-# SBB #########################################################################
-
-# WARNING !!!
-# Don't touch anything from this point to the end of file
-# if you don't know what you are doing.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 # Values
-WD="$PWD"
+WD="${WD:-PWD}"
 
 TMPDIR="${TMPDIR:-/tmp}"
-TEMPORARY="$TMPDIR/superb-bootstrap"
-
-DOTFILES_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+TEMPORARY="$TMPDIR/ssb"
 
 if [ -x "$(command -v sudo)" ]; then
 	PERMISSION_COMMAND='sudo'
@@ -136,6 +55,7 @@ Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_C
   Termux_MARK='TMP';   Termux_PM='pkg'         ;   Termux_COMMAND="$Termux_PM install --assume-yes"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
+
      AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm --needed"
  Flatpak_MARK='FLA';  Flatpak_PM='flatpak'     ;  Flatpak_COMMAND="$PERMISSION_COMMAND $Flatpak_PM install"
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
@@ -144,22 +64,33 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
 
+  Basher_MARK='BSR';   Basher_PM='ssb_basher'  ;   Basher_COMMAND="$PERMISSION_COMMAND $Basher_PM"
+    BPKG_MARK='BPK';     BPKG_PM='ssb_bpkg'    ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM"
+     NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM install --global"
+     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
+    Yarn_MARK='YRN';     BPKG_PM='yarn'        ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM global add"
+
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	case $(uname -s | tr '[:upper:]' '[:lower:]') in
 		'darwin'*)
 			PACKAGEMANAGER_LIST='Homebrew MacPorts MAS'
+			KERNEL='darwin'
 		;;
 		'freebsd'*)
 			PACKAGEMANAGER_MAIN='PKGNG'
+			KERNEL='freebsd'
 		;;
 		'midnightbsd'*)
 			PACKAGEMANAGER_MAIN='Mports'
+			KERNEL='midnightbsd'
 		;;
 		'netbsd'*)
 			PACKAGEMANAGER_MAIN='PKGIN'
+			KERNEL='netbsd'
 		;;
 		'openbsd'*)
 			PACKAGEMANAGER_MAIN='OpenBSD'
+			KERNEL='openbsd'
 		;;
 		*)
 
@@ -184,8 +115,9 @@ fi
 
 PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
+
 # Functions
-superbbootstrap_install_packages() {
+ssb_install_packages() {
 	if [ -f "$1" ]; then
 		packages_list=$(sed -e 's/#.*$//g' "$1")
 	elif [ -z "$PACKAGEMANAGER_MAIN" ]; then
@@ -209,7 +141,7 @@ superbbootstrap_install_packages() {
 			packages_list=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark.*\$//g")
 
 			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager"
-			eval "superbbootstrap_$packagemanager"
+			eval "ssb_setup_$packagemanager"
 
 			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages"
 			eval "$install_command $packages_installing"
@@ -217,60 +149,103 @@ superbbootstrap_install_packages() {
 	done
 }
 
-superbbootstrap_APT() {
+ssb_make_install_command() {
+	eval "
+		sbb_$1() {
+			for ${1}_package in \"\$@\"; do
+				$2 \"\$${1}_package\"
+			done
+		}
+	"
+}
+
+ssb_install_git() {
+	if [ ! -x "$(command -v 'git')" ]; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')           $APT_COMMAND git         ;;
+			'Mports')     $Mports_COMMAND devel/git   ;;
+			'OpenBSD')   $OpenBSD_COMMAND devel/git   ;;
+			'Pacman')     $Pacman_COMMAND git         ;;
+			'Portage')   $Portage_COMMAND dev-vcs/git ;;
+			'PKGIN')       $PKGIN_COMMAND devel/git   ;;
+			'PKGNG')       $PKGNG_COMMAND devel/git   ;;
+			'Slackpkg') $Slackpkg_COMMAND git         ;;
+			'Termux')     $Termux_COMMAND git         ;;
+			'XBPS')         $XBPS_COMMAND git         ;;
+			'Zypper')     $Zypper_COMMAND git         ;;
+		esac
+	elif [ "$KERNEL" = 'darwin' ]; then
+		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND git
+		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND git
+		else
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
+
+			$Homebrew_COMMAND git
+		fi
+	else
+		printf '%s\n' "Git has been installed"
+	fi
+}
+
+## Setup main packages manager
+ssb_setup_APT() {
 	$PERMISSION_COMMAND apt update  --assume-yes
 	$PERMISSION_COMMAND apt upgrade --assume-yes
 }
 
-superbbootstrap_Mports() {
+ssb_setup_Mports() {
 	$PERMISSION_COMMAND mport index
 	$PERMISSION_COMMAND mport upgrade
 }
 
-superbbootstrap_OpenBSD() {
+ssb_setup_OpenBSD() {
 	$PERMISSION_COMMAND syspatch
 }
 
-superbbootstrap_Pacman() {
-	yes | LC_ALL=en_US.UTF-8 $PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --needed
+ssb_setup_Pacman() {
+	while :; do
+		printf '%s\n' 'y'
+	done \
+	| LC_ALL=en_US.UTF-8 $PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --needed
 }
 
-superbbootstrap_Portage() {
+ssb_setup_Portage() {
 	$PERMISSION_COMMAND emerge --sync
 	$PERMISSION_COMMAND emerge --update --newuse --deep --with-bdeps=y @world
 }
 
-superbbootstrap_PKGIN() {
+ssb_setup_PKGIN() {
 	$PERMISSION_COMMAND pkgin update -y
 	$PERMISSION_COMMAND pkgin upgrade -y
 }
 
-superbbootstrap_PKGNG() {
+ssb_setup_PKGNG() {
 	$PERMISSION_COMMAND pkg update -y
 	$PERMISSION_COMMAND pkg upgrade -y
 }
 
-superbbootstrap_Slackpkg() {
+ssb_setup_Slackpkg() {
 	$PERMISSION_COMMAND slackpkg update gpg
 	$PERMISSION_COMMAND slackpkg update
 }
 
-superbbootstrap_Termux() {
+ssb_setup_Termux() {
 	pkg update  --assume-yes
 	pkg upgrade --assume-yes
 }
 
-superbbootstrap_XBPS() {
+ssb_setup_XBPS() {
 	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update XBPS itself so it can update other packages
 	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update packages
 	$PERMISSION_COMMAND xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
 }
 
-superbbootstrap_Zypper() {
+ssb_setup_Zypper() {
 	$PERMISSION_COMMAND zypper --non-interactive update
 }
 
-superbbootstrap_AUR() {
+## Setup additional packages manager
+ssb_setup_AUR() {
 	if [ ! -x "$(command -v 'paru')" ]; then
 		$Pacman_COMMAND git base-devel
 		git clone 'https://aur.archlinux.org/paru-bin.git' "$TEMPORARY/paru"
@@ -284,7 +259,7 @@ superbbootstrap_AUR() {
 	fi
 }
 
-superbbootstrap_Flatpak() {
+ssb_setup_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
 			'APT')         $APT_COMMAND flatpak gnome-software-plugin-flatpak ;;
@@ -293,9 +268,7 @@ superbbootstrap_Flatpak() {
 			'XBPS')       $XBPS_COMMAND flatpak                               ;;
 			'Zypper')   $Zypper_COMMAND flatpak                               ;;
 			'Slackpkg')
-				if [ ! -x "$(command -v "$SBO_PM")" ]; then
-					superbbootstrap_SBO
-				fi
+				[ ! -x "$(command -v "$SBO_PM")" ] && ssb_setup_SBO
 
 				$SBO_COMMAND flatpak
 			;;
@@ -307,7 +280,7 @@ superbbootstrap_Flatpak() {
 	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
-superbbootstrap_Homebrew() {
+ssb_setup_Homebrew() {
 	if [ ! -x "$(command -v 'brew')" ] >/dev/null; then
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	else
@@ -315,7 +288,7 @@ superbbootstrap_Homebrew() {
 	fi
 }
 
-superbbootstrap_MacPorts() {
+ssb_setup_MacPorts() {
 	[ ! -x "$(command -v 'xcode')" ] && {
 		printf '\n\033[1;7;31m%s\033[0m\n' 'Please install XCode first: https://guide.macports.org/#installing.xcode'
 		exit 1
@@ -329,12 +302,12 @@ superbbootstrap_MacPorts() {
 	cd "$WD" || exit 1
 }
 
-superbbootstrap_MAS() {
+ssb_setup_MAS() {
 	if [ ! -x "$(command -v "$MAS_PM")" ]; then
 		if   [ -x "$(command -v "$Homebrew_PM")" ]; then $Homebrew_COMMAND mas
 		elif [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND mas
 		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && superbbootstrap_Homebrew
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
 
 			$Homebrew_COMMAND mas
 		fi
@@ -346,7 +319,7 @@ superbbootstrap_MAS() {
 	mas signin --dialog "$APPLE_ID"
 }
 
-superbbootstrap_SBO() {
+ssb_setup_SBO() {
 	if [ ! -x "$(command -v 'sbopkg')" ]; then
 		SBO_VERSION=$(curl -s "https://api.github.com/repos/sbopkg/sbopkg/releases/latest" | grep -e 'tag_name' | cut -f '4' -d '"')
 
@@ -362,10 +335,10 @@ superbbootstrap_SBO() {
 	fi
 }
 
-superbbootstrap_Snap() {
+ssb_setup_Snap() {
 	if [ ! -x "$(command -v 'snap')" ]; then
 		if [ $PACKAGEMANAGER_MAIN = 'Pacman' ]; then
-			$PERMISSION_COMMAND pacman --sync --noconfirm --needed git
+			ssb_install_git
 			git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
 			cd "$TEMPORARY/snap" || exit 1
 			makepkg -si
@@ -382,65 +355,112 @@ superbbootstrap_Snap() {
 	snap install core
 }
 
-superbbootstrap_batch_symlink() {
-	batch_symlink_directory="$1"
-	batch_symlink_target="$2"
-	batch_symlink_permission="$3"
+## Setup language packages manager
+ssb_setup_Basher() {
+	ssb_install_git
+	git clone 'https://github.com/basherpm/basher.git' "${BASHER_ROOT:-$HOME/.basher}"
 
-	[ -n "$TRASH_PATH" ] && mkdir -p "$TRASH_PATH"
-
-	if [ -d "$1" ]; then
-		superbbootstrap_scan_directory "$batch_symlink_directory"
-	else
-		printf '\n\033[1;7;31m%s\033[0m\n' "'$batch_symlink_directory' not found"
-	fi
+	ssb_make_install_command 'basher' "$PERMISSION_COMMAND basher install"
 }
 
-superbbootstrap_scan_directory() {
-	[ -d "$1" ] || exit 1
+ssb_setup_BPKG() {
+	ssb_install_git
+	git clone 'https://github.com/bpkg/bpkg.git' "$TEMPORARY/bpkg"
+	cd "$TEMPORARY/bpkg" || exit 1
+	$PERMISSION_COMMAND "$TEMPORARY/bpkg/setup.sh"
+	cd "$WD" || exit 1
 
-	for file in "$1"/.* "$1"/*; do
-		[ "$file" = "$1/." ] || [ "$file" = "$1/.." ] || [ "$file" = "$1/*" ] && continue
+	ssb_make_install_command 'bpkg' "$PERMISSION_COMMAND bpkg install"
+}
 
-		target="$batch_symlink_target${file#$batch_symlink_directory}"
-
-		if [ -e "$target" ]; then
-			if [ -d "$target" ] && [ ! -h "$target" ]; then
-				superbbootstrap_scan_directory "$file"
-			else
-				# You can change how batch symlink handle conflict files
-				if [ -n "$TRASH_PATH" ]; then
-					rm -rf "$TRASH_PATH/$(basename "$target")" 2>&-
-					$batch_symlink_permission mv -f "$target" "$TRASH_PATH/"
-				else
-					$batch_symlink_permission rm -rf "$target"
-				fi
-
-				$batch_symlink_permission ln -sf "$file" "$target"
-			fi
+ssb_setup_NPM() {
+	if [ ! -x "$(command -v 'npm')" ]; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')           $APT_COMMAND npm             ;;
+			'Mports')     $Mports_COMMAND www/npm         ;;
+			'OpenBSD')   $OpenBSD_COMMAND www/npm         ;;
+			'Pacman')     $Pacman_COMMAND npm             ;;
+			'Portage')   $Portage_COMMAND net-libs/nodejs ;;
+			'PKGIN')       $PKGIN_COMMAND www/npm         ;;
+			'PKGNG')       $PKGNG_COMMAND www/npm         ;;
+			'Slackpkg') $Slackpkg_COMMAND python/npm      ;;
+			'Termux')     $Termux_COMMAND npm             ;;
+			'XBPS')         $XBPS_COMMAND npm             ;;
+			'Zypper')     $Zypper_COMMAND npm             ;;
+		esac
+	elif [ "$KERNEL" = 'darwin' ]; then
+		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND npm
+		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND npm
 		else
-			$batch_symlink_permission ln -sf "$file" "$target"
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
+
+			$Homebrew_COMMAND npm
 		fi
-	done
+	else
+		printf '%s\n' "NPM has been installed"
+	fi
+
+	$PERMISSION_COMMAND npm install --global npm@latest
 }
 
+ssb_setup_PIP() {
+	if [ ! -x "$(command -v 'python')" ]; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')           $APT_COMMAND python          ;;
+			'Mports')     $Mports_COMMAND lang/python38   ;;
+			'OpenBSD')   $OpenBSD_COMMAND lang/python/3.9 ;;
+			'Pacman')     $Pacman_COMMAND python          ;;
+			'Portage')   $Portage_COMMAND dev-lang/python ;;
+			'PKGIN')       $PKGIN_COMMAND lang/python39   ;;
+			'PKGNG')       $PKGNG_COMMAND lang/python39   ;;
+			'Slackpkg') $Slackpkg_COMMAND python3         ;;
+			'Termux')     $Termux_COMMAND python          ;;
+			'XBPS')         $XBPS_COMMAND python3         ;;
+			'Zypper')     $Zypper_COMMAND python3         ;;
+		esac
+	elif [ "$KERNEL" = 'darwin' ]; then
+		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND python
+		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND python
+		else
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
 
-# Start
-for step_check in $STEPS; do
-	case "$step_check" in
-		'i'|'install') steps_list="${steps_list:+$steps_list; }install_packages" ;;
-		'b'|'before')  steps_list="${steps_list:+$steps_list; }before_symlink"   ;;
-		'h'|'home')    steps_list="${steps_list:+$steps_list; }symlink_home"     ;;
-		'r'|'root')    steps_list="${steps_list:+$steps_list; }symlink_root"     ;;
-		'a'|'after')   steps_list="${steps_list:+$steps_list; }after_symlink"    ;;
-		*)
-			printf '\n\033[1;7;31m%s\033[0m\n' "Step '$step_check' not found"
-			exit 1
-		;;
-	esac
-done
+			$Homebrew_COMMAND python
+		fi
+	else
+		printf '%s\n' "Python has been installed"
+	fi
 
-eval "$steps_list"
+	python -m ensurepip --upgrade
+	#python3 -m pip install --user pipx
+	#python3 -m pipx ensurepath
+}
 
+ssb_setup_Yarn() {
+	if [ ! -x "$(command -v 'yarn')" ]; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')           $APT_COMMAND node-yarnpkg     ;;
+			'Mports')     $Mports_COMMAND www/yarn         ;;
+			'OpenBSD')   $OpenBSD_COMMAND devel/yarn       ;;
+			'Pacman')     $Pacman_COMMAND yarn             ;;
+			'Portage')   $Portage_COMMAND sys-apps/yarn    ;;
+			'PKGIN')       $PKGIN_COMMAND www/yarn         ;;
+			'PKGNG')       $PKGNG_COMMAND devel/yarn       ;;
+			'Slackpkg') $Slackpkg_COMMAND development/yarn ;;
+			'Termux')     $Termux_COMMAND yarn             ;;
+			'XBPS')         $XBPS_COMMAND yarn             ;;
+			'Zypper')     $Zypper_COMMAND yarn             ;;
+		esac
+	elif [ "$KERNEL" = 'darwin' ]; then
+		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND yarn
+		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND yarn
+		else
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
 
-exit 0
+			$Homebrew_COMMAND yarn
+		fi
+	else
+		printf '%s\n' "Yarn has been installed"
+	fi
+
+	yarn set version latest
+}
