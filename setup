@@ -391,7 +391,7 @@ superbbootstrap_NPM() {
 	  npm install npm@latest -g
 }
 
-superbbootstrap_Python() {
+superbbootstrap_PIP() {
 	  python -m ensurepip --upgrade
 }
 
