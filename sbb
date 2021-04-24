@@ -474,5 +474,5 @@ sbb_setup_Yarn() {
 
 # Start
 cd "$DOTFILES_PATH" || exit 1
-git submodule update --init --recursive 2>&-
+git submodule update --init --recursive --remote --merge 2>&-
 cd "$WD" || exit 1
