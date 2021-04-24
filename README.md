@@ -1,18 +1,17 @@
 <p align="center"><img width="100%" src="https://user-images.githubusercontent.com/43980777/109499307-49ca3000-7ac7-11eb-9f66-3a2c8f5e90b4.png"></p>
 <p align="center">OS bootstrap-system/dotfiles-manager framework that <i>SuperB</i></p>
-<p align="center"><a rel="license" href="http://creativecommons.org/licenses/by/4.0"><img src="https://img.shields.io/badge/license-cc_by_4.0-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="License: CC BY 4.0"></a> <a href="https://github.com/NNBnh/superb-bootstrap/releases/tag/2.0.0"><img src="https://img.shields.io/badge/version-2.0.0_beta1-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Version: 2.0.0 beta1"></a></p>
+<p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/blob/main/LICENSE"><img src="https://img.shields.io/github/license/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=for-the-badge" alt="License: GPL-3.0"></a> <img src="https://img.shields.io/github/last-commit/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=for-the-badge"></p>
 <p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/watchers"><img src="https://img.shields.io/github/watchers/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/stargazers"><img src="https://img.shields.io/github/stars/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/network/members"><img src="https://img.shields.io/github/forks/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a> <a href="https://github.com/NNBnh/superb-bootstrap/issues"><img src="https://img.shields.io/github/issues/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=flat-square"></a></p>
 
 ## 💡 About
-**SuperB Bootstrap** is a *SuperB* OS bootstrap-system/dotfiles-manager framework that can be installed with just one command on a new Unix system installation.
+**SuperB Bootstrap** is a *SuperB* OS bootstrap-system/dotfiles-manager framework that can be installed with just one command on a new `*NIX` system installation.
 
 ### ✨ Features
 - Super **portable**, work on almost any `*NIX` operating system, you don't need to install anything before the installation process
   - Don't know anything about [`git`](https://git-scm.com)? Dont't worry, SBB dotfiles can be host via [Nextcloud](https://nextcloud.com), [Google drive](https://www.google.com/drive) or [Dropbox](https://www.dropbox.com)...
-- Super **organized** [file structure](#-setup) to config and share `#TODO`
-- Super **easy** to [setup](#-setup) and [install](#%EF%B8%8F-usage):
-  - Similar to [Stow method](http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html), it's managing your dotfiles by storing them in a subdirectory (`dotfiles/home/`, `dotfiles/root/`) and symlinking them to their original location
-  - You can even install your dotfiles with **just one command** from a new Unix system installation
+- Super **organized** [file structure](#-file-structure) to config and share
+- Super **easy** to [setup](#-setup) and [install](#-installation):
+  - You can even install your dotfiles with **just one command** from a new `*NIX` system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
   - Main packages manager:
     - [APT](https://wiki.debian.org/Apt)
@@ -42,11 +41,10 @@
     - [Yarn](https://yarnpkg.com)
 
 ## 🚀 Setup
-First generate using [**this template**](https://github.com/NNBnh/superb-bootstrap-template/generate),
-or if you want, you can setup manually:
+First generate using [**this template**](https://github.com/NNBnh/superb-bootstrap-template/generate), or if you want, you can setup manually:
 
 ### 🔧 Manually
-If you want to manage your dotfiles with [`git`](https://git-scm.com), run the following commands:
+If you manage your dotfiles with [`git`](https://git-scm.com), run the following commands:
 
 ```sh
 mkdir -p ~/dotfiles/home ~/dotfiles/root ~/dotfiles/extra
@@ -82,8 +80,8 @@ dotfiles/
 ├─ home/              # Symlink to home (add anything like .config/ or .local/ that you what to bootstrap here)
 ├─ root/              # Symlink to root (same with this directory but it will be symlink to '/' directory)
 ├─ extra/             # Other files that you want to backup or store but don't want to symlink
-│  ├─ sbb/...         #TODO
-│  └─ bsymlink/...    #TODO
+│  ├─ sbb/...         # This contain the script file to bootstrap
+│  └─ bsymlink/...    # This contain the symlink tool
 ├─ packageslist       # Packages list
 └─ setup              # Setup script
 ```
@@ -137,12 +135,12 @@ Special thanks to:
 - [**Simon Weiss**](https://github.com/weiss-d) for [most of bugs fix, improvement to 1.7.3](https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3), and more...
 - [**Package managers supported**](https://github.com/NNBnh/superb-bootstrap/issues/5):
   - [**Xfzv**](https://github.com/xfzv) for Portage and Zypper supported
-  - [**Kraileth**](https://www.reddit.com/user/kraileth) for [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported
+  - [**Kraileth**](https://www.reddit.com/user/kraileth) for [PKG NG supported](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3)
   - [**Miko**](https://github.com/mikoxyz) for [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) and [PKG IN](https://github.com/NNBnh/superb-bootstrap/pull/12) supported
   - [**Justin**](https://github.com/arcadellama) for Slack PKG supported
-  - [**Laffer1**](https://www.reddit.com/user/laffer1) for [Mports](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq8gxa1?utm_source=share&utm_medium=web2x&context=3) supported
+  - [**Laffer1**](https://www.reddit.com/user/laffer1) for [Mports supported](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq8gxa1?utm_source=share&utm_medium=web2x&context=3)
   - [**Andrea Velásquez**](https://github.com/a4vg) for MacPorts and MAS supported
-  - [**LoricAndre**](https://github.com/LoricAndre) for [PIP and NPM](https://github.com/NNBnh/superb-bootstrap/pull/18) supported
+  - [**LoricAndre**](https://github.com/LoricAndre) for [PIP and NPM supported](https://github.com/NNBnh/superb-bootstrap/pull/18)
 - [**Carbon**](https://carbon.now.sh) from [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
 <br><br><br><br>
