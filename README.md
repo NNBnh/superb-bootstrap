@@ -9,69 +9,100 @@
 ### ✨ Features
 - Super **portable**, work on almost any `*NIX` operating system, you don't need to install anything before the installation process
   - Don't know anything about [`git`](https://git-scm.com)? Dont't worry, SBB dotfiles can be host via [Nextcloud](https://nextcloud.com), [Google drive](https://www.google.com/drive) or [Dropbox](https://www.dropbox.com)...
-- Super **organized** [file structure](#-setup) to config and share
+- Super **organized** [file structure](#-setup) to config and share `#TODO`
 - Super **easy** to [setup](#-setup) and [install](#%EF%B8%8F-usage):
   - Similar to [Stow method](http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html), it's managing your dotfiles by storing them in a subdirectory (`dotfiles/home/`, `dotfiles/root/`) and symlinking them to their original location
   - You can even install your dotfiles with **just one command** from a new Unix system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
-  - [APT](https://wiki.debian.org/Apt)
-  - [Mports](https://www.midnightbsd.org/mports)
-  - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
-  - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
-  - [Portage](https://wiki.gentoo.org/wiki/Portage)
-  - [PKG IN](http://www.pkgsrc.org)
-  - [PKG NG](https://github.com/freebsd/pkg)
-  - [Slack PKG](https://slackpkg.org)
-  - [Termux PKG](https://wiki.termux.com/wiki/Package_Management)
-  - [XBPS](https://docs.voidlinux.org/xbps/index.html)
-  - [Zypper](https://en.opensuse.org/Portal:Zypper)
-  - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
-  - [Flatpak](https://flatpak.org)
-  - [Homebrew](https://docs.brew.sh)
-  - [MacPorts](https://www.macports.org)
-  - [MAS](https://github.com/mas-cli/mas)
-  - [SBO](https://sbopkg.org)
-  - [Snap](https://snapcraft.io)
-  - [Basher](https://github.com/basherpm/basher)
-  - [BPKG](https://github.com/bpkg/bpkg)
-  - [NPM](https://www.npmjs.com)
-  - [PIP](https://pypi.org)
-  - [Yarn](https://yarnpkg.com)
+  - Main packages manager:
+    - [APT](https://wiki.debian.org/Apt)
+    - [Mports](https://www.midnightbsd.org/mports)
+    - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
+    - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
+    - [Portage](https://wiki.gentoo.org/wiki/Portage)
+    - [PKG IN](http://www.pkgsrc.org)
+    - [PKG NG](https://github.com/freebsd/pkg)
+    - [Slack PKG](https://slackpkg.org)
+    - [Termux PKG](https://wiki.termux.com/wiki/Package_Management)
+    - [XBPS](https://docs.voidlinux.org/xbps/index.html)
+    - [Zypper](https://en.opensuse.org/Portal:Zypper)
+  - Additional packages manager:
+    - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
+    - [Flatpak](https://flatpak.org)
+    - [Homebrew](https://docs.brew.sh)
+    - [MacPorts](https://www.macports.org)
+    - [MAS](https://github.com/mas-cli/mas)
+    - [SBO](https://sbopkg.org)
+    - [Snap](https://snapcraft.io)
+  - Language packages manager:
+    - [Basher](https://github.com/basherpm/basher)
+    - [BPKG](https://github.com/bpkg/bpkg)
+    - [NPM](https://www.npmjs.com)
+    - [PIP](https://pypi.org)
+    - [Yarn](https://yarnpkg.com)
 
 ## 🚀 Setup
-First generate using [this template](https://github.com/NNBnh/superb-bootstrap/generate), or if you want to do it manually then create the dotfiles directory:
+First generate using [**this template**](https://github.com/NNBnh/superb-bootstrap-template/generate),
+or if you want, you can setup manually:
+
+### 🔧 Manually
+If you want to manage your dotfiles with [`git`](https://git-scm.com), run the following commands:
 
 ```sh
-mkdir -p "$HOME/dotfiles/home" "$HOME/dotfiles/root" "$HOME/dotfiles/extra"
+mkdir -p ~/dotfiles/home ~/dotfiles/root ~/dotfiles/extra
 
-curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/packageslist' --create-dirs --output "$HOME/dotfiles/packageslist"
-curl -fsSL 'https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/setup'        --create-dirs --output "$HOME/dotfiles/setup"
+curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap-template/main/packageslist --create-dirs --output ~/dotfiles/packageslist
+curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap-template/main/setup --create-dirs --output ~/dotfiles/setup
+
+cd ~/dotfiles
+
+git submodule add https://github.com/NNBnh/superb-bootstrap.git ./extra/sbb
+git submodule add https://github.com/NNBnh/bsymlink.git ./extra/bsymlink
 ```
 
-You will have a file structure that looks like this:
+if not, run the following commands:
+
+```sh
+mkdir -p ~/dotfiles/home ~/dotfiles/root ~/dotfiles/extra
+
+curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap-template/main/packageslist --create-dirs --output ~/dotfiles/packageslist
+curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap-template/main/setup --create-dirs --output ~/dotfiles/setup
+
+curl -fsSL https://raw.githubusercontent.com/NNBnh/superb-bootstrap/master/sbb --create-dirs --output ~/dotfiles/extra/sbb/sbb
+curl -fsSL https://raw.githubusercontent.com/NNBnh/bsymlink/main/bin/bsymlink --create-dirs --output ~/dotfiles/extra/bsymlink/bin/bsymlink
+```
+
+> *Note: if you don't use Git, you have to manually update SBB and Bsymlink by running the last two commands.*
+
+### 📁 File structure
+The file structure will looks like this:
 
 ```console
 dotfiles/
-├─ home/           # Symlink to home (add anything like .config/ or .local/ that you what to bootstrap here)
-├─ root/           # Symlink to root (same with this directory but it will be symlink to '/' directory)
-├─ extra/          # Not symlink (Other files that you want to backup but don't want to symlink)
-├─ packageslist    # Packages list
-└─ setup           # Setup script
+├─ home/              # Symlink to home (add anything like .config/ or .local/ that you what to bootstrap here)
+├─ root/              # Symlink to root (same with this directory but it will be symlink to '/' directory)
+├─ extra/             # Other files that you want to backup or store but don't want to symlink
+│  ├─ sbb/...         #TODO
+│  └─ bsymlink/...    #TODO
+├─ packageslist       # Packages list
+└─ setup              # Setup script
 ```
 
-Add packages to `packageslist`, see [example](https://github.com/NNBnh/superb-bootstrap/blob/master/packageslist)
-
-Add config scripts to `setup`, see [example](https://github.com/NNBnh/superb-bootstrap/blob/master/setup)
+### ⚙️  Customization
+Next, customizing your your dotfiles:
+- Move everything you want to backup in `home/` and `root/`
+- Add packages to `packageslist` (see [example](https://github.com/NNBnh/superb-bootstrap-template/blob/main/packageslist))
+- Config the `setup` scripts (see [example](https://github.com/NNBnh/superb-bootstrap-template/blob/main/setup))
 
 > *Remember to make `setup` executable:*
 >
 > ```sh
-> chmod +x "$HOME/dotfiles/setup"
+> chmod +x ~/dotfiles/setup
 > ```
 
-Finally upload your dotfiles to a safe place.
+Finally store or upload your dotfiles to a safe place.
 
-### 📥 Installation
+## 📥 Installation
 To install your dotfiles, put the dotfiles to the desired location then execute `setup` file.
 
 For example if you store your dotfiles on [Github](https://github.com), first download it:
@@ -103,14 +134,15 @@ Special thanks to:
 - [**Xfzv**](https://github.com/xfzv) for [many bug reports](https://github.com/NNBnh/superb-bootstrap/issues/3) and [suggestions](https://github.com/NNBnh/superb-bootstrap/issues/4)
 - [**Obyyx**](https://github.com/obyyx) for [fixing paru's flags](https://github.com/NNBnh/superb-bootstrap/pull/10)
 - [**LoricAndre**](https://github.com/LoricAndre) for [the great design suggestion](https://github.com/NNBnh/superb-bootstrap/issues/24) and [make Paru upgrade AUR packages on bootstrap](https://github.com/NNBnh/superb-bootstrap/pull/20)
-- [**Simon Weiss**](https://github.com/weiss-d) for [most of bugs fix, improvement to 1.7.3](https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3)
+- [**Simon Weiss**](https://github.com/weiss-d) for [most of bugs fix, improvement to 1.7.3](https://github.com/NNBnh/superb-bootstrap/releases/tag/1.7.3), and more...
 - [**Package managers supported**](https://github.com/NNBnh/superb-bootstrap/issues/5):
-  - Portage and Zypper supported by [Xfzv](https://github.com/xfzv)
-  - [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported by [Kraileth](https://www.reddit.com/user/kraileth)
-  - [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) and [PKG IN](https://github.com/NNBnh/superb-bootstrap/pull/12) supported by [Miko](https://github.com/mikoxyz)
-  - Slack PKG supported by [Justin](https://github.com/arcadellama)
-  - [Mports](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq8gxa1?utm_source=share&utm_medium=web2x&context=3) supported by [Laffer1](https://www.reddit.com/user/laffer1)
-  - MacPorts and MAS supported by [Andrea Velásquez](https://github.com/a4vg)
+  - [**Xfzv**](https://github.com/xfzv) for Portage and Zypper supported
+  - [**Kraileth**](https://www.reddit.com/user/kraileth) for [PKG NG](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq4dwu6?utm_source=share&utm_medium=web2x&context=3) supported
+  - [**Miko**](https://github.com/mikoxyz) for [OpenBSD PKG](https://github.com/NNBnh/superb-bootstrap/pull/11) and [PKG IN](https://github.com/NNBnh/superb-bootstrap/pull/12) supported
+  - [**Justin**](https://github.com/arcadellama) for Slack PKG supported
+  - [**Laffer1**](https://www.reddit.com/user/laffer1) for [Mports](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq8gxa1?utm_source=share&utm_medium=web2x&context=3) supported
+  - [**Andrea Velásquez**](https://github.com/a4vg) for MacPorts and MAS supported
+  - [**LoricAndre**](https://github.com/LoricAndre) for [PIP and NPM](https://github.com/NNBnh/superb-bootstrap/pull/18) supported
 - [**Carbon**](https://carbon.now.sh) from [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
 <br><br><br><br>

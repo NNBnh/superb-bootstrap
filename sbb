@@ -6,7 +6,7 @@
 #  ___/ / /_/ / /_/ /
 # /____/_____/_____/
 
-# File:         ssb
+# File:         sbb
 # Description:  Dotfiles-manager framework that SuperB
 # Main author:  NNB
 #               └─ https://github.com/NNBnh
@@ -31,7 +31,7 @@
 WD="${WD:-PWD}"
 
 TMPDIR="${TMPDIR:-/tmp}"
-TEMPORARY="$TMPDIR/ssb"
+TEMPORARY="$TMPDIR/sbb"
 
 if [ -x "$(command -v sudo)" ]; then
 	PERMISSION_COMMAND='sudo'
@@ -40,7 +40,7 @@ elif [ -x "$(command -v doas)" ]; then
 elif [ -x "$(command -v termux-setup-storage)" ]; then
 	PACKAGEMANAGER_MAIN='Termux'
 else
-	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported"
+	printf '\n\033[1;7;31m%s\033[0m\n' "Permission command not found or unsupported" >&2
 	exit 1
 fi
 
@@ -66,8 +66,8 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
      PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
 
-  Basher_MARK='BSR';   Basher_PM='ssb_basher'  ;   Basher_COMMAND="$PERMISSION_COMMAND $Basher_PM"
-    BPKG_MARK='BPK';     BPKG_PM='ssb_bpkg'    ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM"
+  Basher_MARK='BSR';   Basher_PM='sbb_basher'  ;   Basher_COMMAND="$PERMISSION_COMMAND $Basher_PM"
+    BPKG_MARK='BPK';     BPKG_PM='sbb_bpkg'    ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM"
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM install --global"
      PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
     Yarn_MARK='YRN';     BPKG_PM='yarn'        ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM global add"
@@ -121,14 +121,14 @@ PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list
 
 
 # Functions
-ssb_install_packages() {
+sbb_install_packages() {
 	if [ -f "$1" ]; then
 		packages_list=$(sed -e 's/#.*$//g' "$1")
 	elif [ -z "$PACKAGEMANAGER_MAIN" ]; then
-		printf '\n\033[1;7;31m%s\033[0m\n' "Main packages manager not found or unsupported"
+		printf '\n\033[1;7;31m%s\033[0m\n' "Main packages manager not found or unsupported" >&2
 		exit 1
 	else
-		printf '\n\033[1;7;31m%s\033[0m\n' 'Packages list not found'
+		printf '\n\033[1;7;31m%s\033[0m\n' 'Packages list not found' >&2
 		exit 1
 	fi
 
@@ -144,16 +144,16 @@ ssb_install_packages() {
 			# Remove lines with current mark so packages don't get reinstall on another package managers later on
 			packages_list=$(printf '%s' "$packages_list" | sed -e "s/^.*$mark.*\$//g")
 
-			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager"
-			eval "ssb_setup_$packagemanager"
+			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager" >&2
+			eval "sbb_setup_$packagemanager"
 
-			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages"
+			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages" >&2
 			eval "$install_command $packages_installing"
 		}
 	done
 }
 
-ssb_make_install_command() {
+sbb_make_install_command() {
 	eval "
 		sbb_$1() {
 			for ${1}_package in \"\$@\"; do
@@ -163,7 +163,7 @@ ssb_make_install_command() {
 	"
 }
 
-ssb_install_git() {
+sbb_install_git() {
 	if [ ! -x "$(command -v 'git')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
 			'APT')           $APT_COMMAND git         ;;
@@ -182,232 +182,16 @@ ssb_install_git() {
 		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND git
 		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND git
 		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
 			$Homebrew_COMMAND git
 		fi
 	else
-		printf '%s\n' "Git has been installed"
+		printf '%s\n' "Git has been installed" >&2
 	fi
 }
 
-## Setup main packages manager
-ssb_setup_APT() {
-	$PERMISSION_COMMAND apt update  --assume-yes
-	$PERMISSION_COMMAND apt upgrade --assume-yes
-}
-
-ssb_setup_Mports() {
-	$PERMISSION_COMMAND mport index
-	$PERMISSION_COMMAND mport upgrade
-}
-
-ssb_setup_OpenBSD() {
-	$PERMISSION_COMMAND syspatch
-}
-
-ssb_setup_Pacman() {
-	while :; do
-		printf '%s\n' 'y'
-	done \
-	| LC_ALL=en_US.UTF-8 $PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --needed
-}
-
-ssb_setup_Portage() {
-	$PERMISSION_COMMAND emerge --sync
-	$PERMISSION_COMMAND emerge --update --newuse --deep --with-bdeps=y @world
-}
-
-ssb_setup_PKGIN() {
-	$PERMISSION_COMMAND pkgin update -y
-	$PERMISSION_COMMAND pkgin upgrade -y
-}
-
-ssb_setup_PKGNG() {
-	$PERMISSION_COMMAND pkg update -y
-	$PERMISSION_COMMAND pkg upgrade -y
-}
-
-ssb_setup_Slackpkg() {
-	$PERMISSION_COMMAND slackpkg update gpg
-	$PERMISSION_COMMAND slackpkg update
-}
-
-ssb_setup_Termux() {
-	pkg update  --assume-yes
-	pkg upgrade --assume-yes
-}
-
-ssb_setup_XBPS() {
-	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update XBPS itself so it can update other packages
-	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update packages
-	$PERMISSION_COMMAND xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
-}
-
-ssb_setup_Zypper() {
-	$PERMISSION_COMMAND zypper --non-interactive update
-}
-
-## Setup additional packages manager
-ssb_setup_AUR() {
-	if [ ! -x "$(command -v 'paru')" ]; then
-		$Pacman_COMMAND git base-devel
-		git clone 'https://aur.archlinux.org/paru-bin.git' "$TEMPORARY/paru"
-		cd "$TEMPORARY/paru" || exit 1
-		makepkg --syncdeps --noconfirm
-		$PERMISSION_COMMAND $Pacman_PM --needed --noconfirm --upgrade paru-bin-*.zst 
-		cd "$WD" || exit 1
-	else
-		printf '%s\n' "Paru has been installed"
-		$AUR_COMMAND --sysupgrade --refresh --aur
-	fi
-}
-
-ssb_setup_Flatpak() {
-	if [ ! -x "$(command -v 'flatpak')" ]; then
-		case "$PACKAGEMANAGER_MAIN" in
-			'APT')         $APT_COMMAND flatpak gnome-software-plugin-flatpak ;;
-			'Portage') $Portage_COMMAND sys-apps/flatpak                      ;;
-			'Pacman')   $Pacman_COMMAND flatpak                               ;;
-			'XBPS')       $XBPS_COMMAND flatpak                               ;;
-			'Zypper')   $Zypper_COMMAND flatpak                               ;;
-			'Slackpkg')
-				[ ! -x "$(command -v "$SBO_PM")" ] && ssb_setup_SBO
-
-				$SBO_COMMAND flatpak
-			;;
-		esac
-	else
-		printf '%s\n' "Flatpak has been installed"
-	fi
-
-	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-}
-
-ssb_setup_Homebrew() {
-	if [ ! -x "$(command -v 'brew')" ] >/dev/null; then
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	else
-		printf '%s\n' "Homebrew has been installed"
-	fi
-}
-
-ssb_setup_MacPorts() {
-	[ ! -x "$(command -v 'xcode')" ] && {
-		printf '\n\033[1;7;31m%s\033[0m\n' 'Please install XCode first: https://guide.macports.org/#installing.xcode'
-		exit 1
-	}
-
-	xcode-select --install
-	$PERMISSION_COMMAND xcodebuild -license
-	cd "$TEMPORARY" || exit 1
-	curl --remote-header-name --location --remote-name "https://github.com/macports/macports-base/releases/latest/download/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg"
-	$PERMISSION_COMMAND installer -pkg "$TEMPORARY/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg" -target '/'
-	cd "$WD" || exit 1
-}
-
-ssb_setup_MAS() {
-	if [ ! -x "$(command -v "$MAS_PM")" ]; then
-		if   [ -x "$(command -v "$Homebrew_PM")" ]; then $Homebrew_COMMAND mas
-		elif [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND mas
-		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
-
-			$Homebrew_COMMAND mas
-		fi
-	else
-		printf '%s\n' "MAS has been installed"
-	fi
-
-	mas account
-	mas signin --dialog "$APPLE_ID"
-}
-
-ssb_setup_SBO() {
-	if [ ! -x "$(command -v 'sbopkg')" ]; then
-		SBO_VERSION=$(curl -s "https://api.github.com/repos/sbopkg/sbopkg/releases/latest" | grep -e 'tag_name' | cut -f '4' -d '"')
-
-		cd "$TEMPORARY" || exit 1
-		curl --remote-header-name --location --remote-name "https://github.com/sbopkg/sbopkg/releases/download/$SBO_VERSION/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
-		upgradepkg --install-new "$TEMPORARY/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
-		cd "$WD" || exit 1
-		$PERMISSION_COMMAND mkdir -p "/var/lib/sbopkg/SBo/$(cut -f '2' -d ' ' '/etc/slackware-version')" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
-		$PERMISSION_COMMAND sbopkg -rq
-		$PERMISSION_COMMAND sqg -a
-	else
-		printf '%s\n' "Sbopkg has been installed"
-	fi
-}
-
-ssb_setup_Snap() {
-	if [ ! -x "$(command -v 'snap')" ]; then
-		if [ $PACKAGEMANAGER_MAIN = 'Pacman' ]; then
-			ssb_install_git
-			git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
-			cd "$TEMPORARY/snap" || exit 1
-			makepkg -si
-			cd "$WD" || exit 1
-			$PERMISSION_COMMAND systemctl enable --now snapd.socket
-			$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
-		elif [ $PACKAGEMANAGER_MAIN = 'APT' ]; then
-			$APT_COMMAND snapd
-		fi
-	else
-		printf '%s\n' "Snapd has been installed"
-	fi
-
-	snap install core
-}
-
-## Setup language packages manager
-ssb_setup_Basher() {
-	ssb_install_git
-	git clone 'https://github.com/basherpm/basher.git' "${BASHER_ROOT:-$HOME/.basher}"
-
-	ssb_make_install_command 'basher' "$PERMISSION_COMMAND basher install"
-}
-
-ssb_setup_BPKG() {
-	ssb_install_git
-	git clone 'https://github.com/bpkg/bpkg.git' "$TEMPORARY/bpkg"
-	cd "$TEMPORARY/bpkg" || exit 1
-	$PERMISSION_COMMAND "$TEMPORARY/bpkg/setup.sh"
-	cd "$WD" || exit 1
-
-	ssb_make_install_command 'bpkg' "$PERMISSION_COMMAND bpkg install"
-}
-
-ssb_setup_NPM() {
-	if [ ! -x "$(command -v 'npm')" ]; then
-		case "$PACKAGEMANAGER_MAIN" in
-			'APT')           $APT_COMMAND npm             ;;
-			'Mports')     $Mports_COMMAND www/npm         ;;
-			'OpenBSD')   $OpenBSD_COMMAND www/npm         ;;
-			'Pacman')     $Pacman_COMMAND npm             ;;
-			'Portage')   $Portage_COMMAND net-libs/nodejs ;;
-			'PKGIN')       $PKGIN_COMMAND www/npm         ;;
-			'PKGNG')       $PKGNG_COMMAND www/npm         ;;
-			'Slackpkg') $Slackpkg_COMMAND python/npm      ;;
-			'Termux')     $Termux_COMMAND npm             ;;
-			'XBPS')         $XBPS_COMMAND npm             ;;
-			'Zypper')     $Zypper_COMMAND npm             ;;
-		esac
-	elif [ "$KERNEL" = 'darwin' ]; then
-		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND npm
-		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND npm
-		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
-
-			$Homebrew_COMMAND npm
-		fi
-	else
-		printf '%s\n' "NPM has been installed"
-	fi
-
-	$PERMISSION_COMMAND npm install --global npm@latest
-}
-
-ssb_setup_PIP() {
+sbb_install_python() {
 	if [ ! -x "$(command -v 'python')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
 			'APT')           $APT_COMMAND python          ;;
@@ -426,20 +210,238 @@ ssb_setup_PIP() {
 		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND python
 		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND python
 		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
 			$Homebrew_COMMAND python
 		fi
 	else
-		printf '%s\n' "Python has been installed"
+		printf '%s\n' "Python has been installed" >&2
 	fi
-
-	python -m ensurepip --upgrade
-	#python3 -m pip install --user pipx
-	#python3 -m pipx ensurepath
 }
 
-ssb_setup_Yarn() {
+## Setup main packages manager
+sbb_setup_APT() {
+	$PERMISSION_COMMAND apt update  --assume-yes
+	$PERMISSION_COMMAND apt upgrade --assume-yes
+}
+
+sbb_setup_Mports() {
+	$PERMISSION_COMMAND mport index
+	$PERMISSION_COMMAND mport upgrade
+}
+
+sbb_setup_OpenBSD() {
+	$PERMISSION_COMMAND syspatch
+}
+
+sbb_setup_Pacman() {
+	while :; do
+		printf '%s\n' 'y'
+	done \
+	| LC_ALL=en_US.UTF-8 $PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --needed
+}
+
+sbb_setup_Portage() {
+	$PERMISSION_COMMAND emerge --sync
+	$PERMISSION_COMMAND emerge --update --newuse --deep --with-bdeps=y @world
+}
+
+sbb_setup_PKGIN() {
+	$PERMISSION_COMMAND pkgin update -y
+	$PERMISSION_COMMAND pkgin upgrade -y
+}
+
+sbb_setup_PKGNG() {
+	$PERMISSION_COMMAND pkg update -y
+	$PERMISSION_COMMAND pkg upgrade -y
+}
+
+sbb_setup_Slackpkg() {
+	$PERMISSION_COMMAND slackpkg update gpg
+	$PERMISSION_COMMAND slackpkg update
+}
+
+sbb_setup_Termux() {
+	pkg update  --assume-yes
+	pkg upgrade --assume-yes
+}
+
+sbb_setup_XBPS() {
+	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update XBPS itself so it can update other packages
+	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update packages
+	$PERMISSION_COMMAND xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
+}
+
+sbb_setup_Zypper() {
+	$PERMISSION_COMMAND zypper --non-interactive update
+}
+
+## Setup additional packages manager
+sbb_setup_AUR() {
+	if [ ! -x "$(command -v 'paru')" ]; then
+		$Pacman_COMMAND git base-devel
+		git clone 'https://aur.archlinux.org/paru-bin.git' "$TEMPORARY/paru"
+		cd "$TEMPORARY/paru" || exit 1
+		makepkg --syncdeps --noconfirm
+		$PERMISSION_COMMAND $Pacman_PM --needed --noconfirm --upgrade paru-bin-*.zst 
+		cd "$WD" || exit 1
+	else
+		printf '%s\n' "Paru has been installed" >&2
+		$AUR_COMMAND --sysupgrade --refresh --aur
+	fi
+}
+
+sbb_setup_Flatpak() {
+	if [ ! -x "$(command -v 'flatpak')" ]; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')         $APT_COMMAND flatpak gnome-software-plugin-flatpak ;;
+			'Portage') $Portage_COMMAND sys-apps/flatpak                      ;;
+			'Pacman')   $Pacman_COMMAND flatpak                               ;;
+			'XBPS')       $XBPS_COMMAND flatpak                               ;;
+			'Zypper')   $Zypper_COMMAND flatpak                               ;;
+			'Slackpkg')
+				[ ! -x "$(command -v "$SBO_PM")" ] && sbb_setup_SBO
+
+				$SBO_COMMAND flatpak
+			;;
+		esac
+	else
+		printf '%s\n' "Flatpak has been installed" >&2
+	fi
+
+	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+}
+
+sbb_setup_Homebrew() {
+	if [ ! -x "$(command -v 'brew')" ] >/dev/null; then
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	else
+		printf '%s\n' "Homebrew has been installed" >&2
+	fi
+}
+
+sbb_setup_MacPorts() {
+	[ ! -x "$(command -v 'xcode')" ] && {
+		printf '\n\033[1;7;31m%s\033[0m\n' 'Please install XCode first: https://guide.macports.org/#installing.xcode' >&2
+		exit 1
+	}
+
+	xcode-select --install
+	$PERMISSION_COMMAND xcodebuild -license
+	cd "$TEMPORARY" || exit 1
+	curl --remote-header-name --location --remote-name "https://github.com/macports/macports-base/releases/latest/download/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg"
+	$PERMISSION_COMMAND installer -pkg "$TEMPORARY/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg" -target '/'
+	cd "$WD" || exit 1
+}
+
+sbb_setup_MAS() {
+	if [ ! -x "$(command -v "$MAS_PM")" ]; then
+		if   [ -x "$(command -v "$Homebrew_PM")" ]; then $Homebrew_COMMAND mas
+		elif [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND mas
+		else
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+
+			$Homebrew_COMMAND mas
+		fi
+	else
+		printf '%s\n' "MAS has been installed" >&2
+	fi
+
+	mas account
+	mas signin --dialog "$APPLE_ID"
+}
+
+sbb_setup_SBO() {
+	if [ ! -x "$(command -v 'sbopkg')" ]; then
+		SBO_VERSION=$(curl -s "https://api.github.com/repos/sbopkg/sbopkg/releases/latest" | grep -e 'tag_name' | cut -f '4' -d '"')
+
+		cd "$TEMPORARY" || exit 1
+		curl --remote-header-name --location --remote-name "https://github.com/sbopkg/sbopkg/releases/download/$SBO_VERSION/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
+		upgradepkg --install-new "$TEMPORARY/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
+		cd "$WD" || exit 1
+		$PERMISSION_COMMAND mkdir -p "/var/lib/sbopkg/SBo/$(cut -f '2' -d ' ' '/etc/slackware-version')" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
+		$PERMISSION_COMMAND sbopkg -rq
+		$PERMISSION_COMMAND sqg -a
+	else
+		printf '%s\n' "Sbopkg has been installed" >&2
+	fi
+}
+
+sbb_setup_Snap() {
+	if [ ! -x "$(command -v 'snap')" ]; then
+		if [ $PACKAGEMANAGER_MAIN = 'Pacman' ]; then
+			sbb_install_git
+			git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
+			cd "$TEMPORARY/snap" || exit 1
+			makepkg -si
+			cd "$WD" || exit 1
+			$PERMISSION_COMMAND systemctl enable --now snapd.socket
+			$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
+		elif [ $PACKAGEMANAGER_MAIN = 'APT' ]; then
+			$APT_COMMAND snapd
+		fi
+	else
+		printf '%s\n' "Snapd has been installed" >&2
+	fi
+
+	snap install core
+}
+
+## Setup language packages manager
+sbb_setup_Basher() {
+	sbb_install_git
+	git clone 'https://github.com/basherpm/basher.git' "${BASHER_ROOT:-$HOME/.basher}"
+
+	sbb_make_install_command 'basher' "$PERMISSION_COMMAND basher install"
+}
+
+sbb_setup_BPKG() {
+	sbb_install_git
+	git clone 'https://github.com/bpkg/bpkg.git' "$TEMPORARY/bpkg"
+	cd "$TEMPORARY/bpkg" || exit 1
+	$PERMISSION_COMMAND "$TEMPORARY/bpkg/setup.sh"
+	cd "$WD" || exit 1
+
+	sbb_make_install_command 'bpkg' "$PERMISSION_COMMAND bpkg install"
+}
+
+sbb_setup_NPM() {
+	if [ ! -x "$(command -v 'npm')" ]; then
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')           $APT_COMMAND npm             ;;
+			'Mports')     $Mports_COMMAND www/npm         ;;
+			'OpenBSD')   $OpenBSD_COMMAND www/npm         ;;
+			'Pacman')     $Pacman_COMMAND npm             ;;
+			'Portage')   $Portage_COMMAND net-libs/nodejs ;;
+			'PKGIN')       $PKGIN_COMMAND www/npm         ;;
+			'PKGNG')       $PKGNG_COMMAND www/npm         ;;
+			'Slackpkg') $Slackpkg_COMMAND python/npm      ;;
+			'Termux')     $Termux_COMMAND npm             ;;
+			'XBPS')         $XBPS_COMMAND npm             ;;
+			'Zypper')     $Zypper_COMMAND npm             ;;
+		esac
+	elif [ "$KERNEL" = 'darwin' ]; then
+		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND npm
+		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND npm
+		else
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+
+			$Homebrew_COMMAND npm
+		fi
+	else
+		printf '%s\n' "NPM has been installed" >&2
+	fi
+
+	$PERMISSION_COMMAND npm install --global npm@latest
+}
+
+sbb_setup_PIP() {
+	sbb_install_python
+
+	python -m ensurepip --upgrade
+}
+
+sbb_setup_Yarn() {
 	if [ ! -x "$(command -v 'yarn')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
 			'APT')           $APT_COMMAND node-yarnpkg     ;;
@@ -458,13 +460,19 @@ ssb_setup_Yarn() {
 		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND yarn
 		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND yarn
 		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && ssb_setup_Homebrew
+			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
 			$Homebrew_COMMAND yarn
 		fi
 	else
-		printf '%s\n' "Yarn has been installed"
+		printf '%s\n' "Yarn has been installed" >&2
 	fi
 
 	yarn set version latest
 }
+
+
+# Start
+cd "$DOTFILES_PATH" || exit 1
+git submodule update --init --recursive 2>&-
+cd "$WD" || exit 1
