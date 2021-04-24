@@ -13,7 +13,7 @@
 - Super **easy** to [setup](#-setup) and [install](#-installation):
   - You can even install your dotfiles with **just one command** from a new `*NIX` system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
-  - Main packages manager:
+  - Main packages managers:
     - [APT](https://wiki.debian.org/Apt)
     - [Mports](https://www.midnightbsd.org/mports)
     - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
@@ -25,7 +25,7 @@
     - [Termux PKG](https://wiki.termux.com/wiki/Package_Management)
     - [XBPS](https://docs.voidlinux.org/xbps/index.html)
     - [Zypper](https://en.opensuse.org/Portal:Zypper)
-  - Additional packages manager:
+  - Additional packages managers:
     - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
     - [Flatpak](https://flatpak.org)
     - [Homebrew](https://docs.brew.sh)
@@ -33,7 +33,7 @@
     - [MAS](https://github.com/mas-cli/mas)
     - [SBO](https://sbopkg.org)
     - [Snap](https://snapcraft.io)
-  - Language packages manager:
+  - Language packages managers:
     - [Basher](https://github.com/basherpm/basher)
     - [BPKG](https://github.com/bpkg/bpkg)
     - [NPM](https://www.npmjs.com)

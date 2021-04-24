@@ -75,27 +75,27 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	case $(uname -s | tr '[:upper:]' '[:lower:]') in
 		'darwin'*)
-			PACKAGEMANAGER_LIST='Homebrew MacPorts MAS'
 			KERNEL='darwin'
+			PACKAGEMANAGER_LIST='Homebrew MacPorts MAS'
 		;;
 		'freebsd'*)
-			PACKAGEMANAGER_MAIN='PKGNG'
 			KERNEL='freebsd'
+			PACKAGEMANAGER_MAIN='PKGNG'
 		;;
 		'midnightbsd'*)
-			PACKAGEMANAGER_MAIN='Mports'
 			KERNEL='midnightbsd'
+			PACKAGEMANAGER_MAIN='Mports'
 		;;
 		'netbsd'*)
-			PACKAGEMANAGER_MAIN='PKGIN'
 			KERNEL='netbsd'
+			PACKAGEMANAGER_MAIN='PKGIN'
 		;;
 		'openbsd'*)
-			PACKAGEMANAGER_MAIN='OpenBSD'
 			KERNEL='openbsd'
+			PACKAGEMANAGER_MAIN='OpenBSD'
 		;;
-		*)
-
+		'linux'*)
+			KERNEL='linux'
 			for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
 				[ -x "$(eval command -v \$${packagemanager_check}_PM)" ] && {
 					PACKAGEMANAGER_MAIN="$packagemanager_check"
@@ -113,6 +113,9 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 			fi
 
 			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
+		;;
+		*)
+			printf '\n\033[1;7;31m%s\033[0m\n' "Kernel unsupported" >&2
 		;;
 	esac
 fi
@@ -165,26 +168,28 @@ sbb_make_install_command() {
 
 sbb_install_git() {
 	if [ ! -x "$(command -v 'git')" ]; then
-		case "$PACKAGEMANAGER_MAIN" in
-			'APT')           $APT_COMMAND git         ;;
-			'Mports')     $Mports_COMMAND devel/git   ;;
-			'OpenBSD')   $OpenBSD_COMMAND devel/git   ;;
-			'Pacman')     $Pacman_COMMAND git         ;;
-			'Portage')   $Portage_COMMAND dev-vcs/git ;;
-			'PKGIN')       $PKGIN_COMMAND devel/git   ;;
-			'PKGNG')       $PKGNG_COMMAND devel/git   ;;
-			'Slackpkg') $Slackpkg_COMMAND git         ;;
-			'Termux')     $Termux_COMMAND git         ;;
-			'XBPS')         $XBPS_COMMAND git         ;;
-			'Zypper')     $Zypper_COMMAND git         ;;
-		esac
-	elif [ "$KERNEL" = 'darwin' ]; then
-		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND git
-		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND git
-		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+		if [ "$KERNEL" = 'darwin' ]; then
+			  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND git
+			elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND git
+			else
+				[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
-			$Homebrew_COMMAND git
+				$Homebrew_COMMAND git
+			fi
+		else
+			case "$PACKAGEMANAGER_MAIN" in
+				'APT')           $APT_COMMAND git         ;;
+				'Mports')     $Mports_COMMAND devel/git   ;;
+				'OpenBSD')   $OpenBSD_COMMAND devel/git   ;;
+				'Pacman')     $Pacman_COMMAND git         ;;
+				'Portage')   $Portage_COMMAND dev-vcs/git ;;
+				'PKGIN')       $PKGIN_COMMAND devel/git   ;;
+				'PKGNG')       $PKGNG_COMMAND devel/git   ;;
+				'Slackpkg') $Slackpkg_COMMAND git         ;;
+				'Termux')     $Termux_COMMAND git         ;;
+				'XBPS')         $XBPS_COMMAND git         ;;
+				'Zypper')     $Zypper_COMMAND git         ;;
+			esac
 		fi
 	else
 		printf '%s\n' "Git has been installed" >&2
@@ -193,26 +198,28 @@ sbb_install_git() {
 
 sbb_install_python() {
 	if [ ! -x "$(command -v 'python')" ]; then
-		case "$PACKAGEMANAGER_MAIN" in
-			'APT')           $APT_COMMAND python          ;;
-			'Mports')     $Mports_COMMAND lang/python38   ;;
-			'OpenBSD')   $OpenBSD_COMMAND lang/python/3.9 ;;
-			'Pacman')     $Pacman_COMMAND python          ;;
-			'Portage')   $Portage_COMMAND dev-lang/python ;;
-			'PKGIN')       $PKGIN_COMMAND lang/python39   ;;
-			'PKGNG')       $PKGNG_COMMAND lang/python39   ;;
-			'Slackpkg') $Slackpkg_COMMAND python3         ;;
-			'Termux')     $Termux_COMMAND python          ;;
-			'XBPS')         $XBPS_COMMAND python3         ;;
-			'Zypper')     $Zypper_COMMAND python3         ;;
-		esac
-	elif [ "$KERNEL" = 'darwin' ]; then
-		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND python
-		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND python
-		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+		if [ "$KERNEL" = 'darwin' ]; then
+			  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND python
+			elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND python
+			else
+				[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
-			$Homebrew_COMMAND python
+				$Homebrew_COMMAND python
+			fi
+		else
+			case "$PACKAGEMANAGER_MAIN" in
+				'APT')           $APT_COMMAND python          ;;
+				'Mports')     $Mports_COMMAND lang/python38   ;;
+				'OpenBSD')   $OpenBSD_COMMAND lang/python/3.9 ;;
+				'Pacman')     $Pacman_COMMAND python          ;;
+				'Portage')   $Portage_COMMAND dev-lang/python ;;
+				'PKGIN')       $PKGIN_COMMAND lang/python39   ;;
+				'PKGNG')       $PKGNG_COMMAND lang/python39   ;;
+				'Slackpkg') $Slackpkg_COMMAND python3         ;;
+				'Termux')     $Termux_COMMAND python          ;;
+				'XBPS')         $XBPS_COMMAND python3         ;;
+				'Zypper')     $Zypper_COMMAND python3         ;;
+			esac
 		fi
 	else
 		printf '%s\n' "Python has been installed" >&2
@@ -407,26 +414,28 @@ sbb_setup_BPKG() {
 
 sbb_setup_NPM() {
 	if [ ! -x "$(command -v 'npm')" ]; then
-		case "$PACKAGEMANAGER_MAIN" in
-			'APT')           $APT_COMMAND npm             ;;
-			'Mports')     $Mports_COMMAND www/npm         ;;
-			'OpenBSD')   $OpenBSD_COMMAND www/npm         ;;
-			'Pacman')     $Pacman_COMMAND npm             ;;
-			'Portage')   $Portage_COMMAND net-libs/nodejs ;;
-			'PKGIN')       $PKGIN_COMMAND www/npm         ;;
-			'PKGNG')       $PKGNG_COMMAND www/npm         ;;
-			'Slackpkg') $Slackpkg_COMMAND python/npm      ;;
-			'Termux')     $Termux_COMMAND npm             ;;
-			'XBPS')         $XBPS_COMMAND npm             ;;
-			'Zypper')     $Zypper_COMMAND npm             ;;
-		esac
-	elif [ "$KERNEL" = 'darwin' ]; then
-		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND npm
-		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND npm
-		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+		if [ "$KERNEL" = 'darwin' ]; then
+			  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND npm
+			elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND npm
+			else
+				[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
-			$Homebrew_COMMAND npm
+				$Homebrew_COMMAND npm
+			fi
+		else
+			case "$PACKAGEMANAGER_MAIN" in
+				'APT')           $APT_COMMAND npm             ;;
+				'Mports')     $Mports_COMMAND www/npm         ;;
+				'OpenBSD')   $OpenBSD_COMMAND www/npm         ;;
+				'Pacman')     $Pacman_COMMAND npm             ;;
+				'Portage')   $Portage_COMMAND net-libs/nodejs ;;
+				'PKGIN')       $PKGIN_COMMAND www/npm         ;;
+				'PKGNG')       $PKGNG_COMMAND www/npm         ;;
+				'Slackpkg') $Slackpkg_COMMAND python/npm      ;;
+				'Termux')     $Termux_COMMAND npm             ;;
+				'XBPS')         $XBPS_COMMAND npm             ;;
+				'Zypper')     $Zypper_COMMAND npm             ;;
+			esac
 		fi
 	else
 		printf '%s\n' "NPM has been installed" >&2
@@ -443,26 +452,28 @@ sbb_setup_PIP() {
 
 sbb_setup_Yarn() {
 	if [ ! -x "$(command -v 'yarn')" ]; then
-		case "$PACKAGEMANAGER_MAIN" in
-			'APT')           $APT_COMMAND node-yarnpkg     ;;
-			'Mports')     $Mports_COMMAND www/yarn         ;;
-			'OpenBSD')   $OpenBSD_COMMAND devel/yarn       ;;
-			'Pacman')     $Pacman_COMMAND yarn             ;;
-			'Portage')   $Portage_COMMAND sys-apps/yarn    ;;
-			'PKGIN')       $PKGIN_COMMAND www/yarn         ;;
-			'PKGNG')       $PKGNG_COMMAND devel/yarn       ;;
-			'Slackpkg') $Slackpkg_COMMAND development/yarn ;;
-			'Termux')     $Termux_COMMAND yarn             ;;
-			'XBPS')         $XBPS_COMMAND yarn             ;;
-			'Zypper')     $Zypper_COMMAND yarn             ;;
-		esac
-	elif [ "$KERNEL" = 'darwin' ]; then
-		  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND yarn
-		elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND yarn
-		else
-			[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+		if [ "$KERNEL" = 'darwin' ]; then
+			  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND yarn
+			elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND yarn
+			else
+				[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
 
-			$Homebrew_COMMAND yarn
+				$Homebrew_COMMAND yarn
+			fi
+		else
+			case "$PACKAGEMANAGER_MAIN" in
+				'APT')           $APT_COMMAND node-yarnpkg     ;;
+				'Mports')     $Mports_COMMAND www/yarn         ;;
+				'OpenBSD')   $OpenBSD_COMMAND devel/yarn       ;;
+				'Pacman')     $Pacman_COMMAND yarn             ;;
+				'Portage')   $Portage_COMMAND sys-apps/yarn    ;;
+				'PKGIN')       $PKGIN_COMMAND www/yarn         ;;
+				'PKGNG')       $PKGNG_COMMAND devel/yarn       ;;
+				'Slackpkg') $Slackpkg_COMMAND development/yarn ;;
+				'Termux')     $Termux_COMMAND yarn             ;;
+				'XBPS')         $XBPS_COMMAND yarn             ;;
+				'Zypper')     $Zypper_COMMAND yarn             ;;
+			esac
 		fi
 	else
 		printf '%s\n' "Yarn has been installed" >&2
