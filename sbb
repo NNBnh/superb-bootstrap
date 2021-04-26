@@ -28,7 +28,7 @@
 
 
 # Values
-WD="${WD:-PWD}"
+WD="${WD:-$PWD}"
 
 TMPDIR="${TMPDIR:-/tmp}"
 TEMPORARY="$TMPDIR/sbb"
@@ -63,14 +63,12 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
-     NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM i -g"
-     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
 
-  Basher_MARK='BSR';   Basher_PM='sbb_basher'  ;   Basher_COMMAND="$PERMISSION_COMMAND $Basher_PM"
-    BPKG_MARK='BPK';     BPKG_PM='sbb_bpkg'    ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM"
+  Basher_MARK='BSR';   Basher_PM='sbb_basher'  ;   Basher_COMMAND="$Basher_PM"
+    BPKG_MARK='BPK';     BPKG_PM='sbb_bpkg'    ;     BPKG_COMMAND="$BPKG_PM"
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM install --global"
-     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="python -m $Python_PM install --upgrade"
-    Yarn_MARK='YRN';     BPKG_PM='yarn'        ;     BPKG_COMMAND="$PERMISSION_COMMAND $BPKG_PM global add"
+     PIP_MARK='PIP';      PIP_PM='pip3'        ;      PIP_COMMAND="$PIP_PM install --user"
+    Yarn_MARK='YRN';     Yarn_PM='yarn'        ;     Yarn_COMMAND="$Yarn_PM $([ -e "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config" ] && printf '%s' "--use-yarnrc ${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config") global add"
 
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	case $(uname -s | tr '[:upper:]' '[:lower:]') in
@@ -112,7 +110,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 				PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Snap"
 			fi
 
-			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST NPM PIP"
+			PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Basher BPKG NPM PIP Yarn"
 		;;
 		*)
 			printf '\n\033[1;7;31m%s\033[0m\n' "Kernel unsupported" >&2
@@ -136,10 +134,8 @@ sbb_install_packages() {
 	fi
 
 	for packagemanager in $PACKAGEMANAGER_LIST; do
-		eval "mark=\"\$${packagemanager}_MARK\""
-		eval "install_command=\"\$${packagemanager}_COMMAND\""
-
 		# Find packages with mark
+		eval "mark=\"\$${packagemanager}_MARK\""
 		packages_installing=$(printf '%s' "$packages_list" | sed -e "/^.*$mark:.*\$/!d;s/.*$mark://g" -e 's/[[:space:]].*$//g;/^$/d' | tr '\n' ' ')
 
 		# If finded, setup package manager then install packages
@@ -149,9 +145,10 @@ sbb_install_packages() {
 
 			printf '\n\033[1;7;35m%s\033[0m\n' "Setting up $packagemanager" >&2
 			eval "sbb_setup_$packagemanager"
+			cd "$WD" || exit 1
 
 			printf '\n\033[1;7;32m%s\033[0m\n' "Installing $packagemanager packages" >&2
-			eval "$install_command $packages_installing"
+			eval "\$${packagemanager}_COMMAND $packages_installing"
 		}
 	done
 }
@@ -274,8 +271,7 @@ sbb_setup_Termux() {
 }
 
 sbb_setup_XBPS() {
-	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update XBPS itself so it can update other packages
-	$PERMISSION_COMMAND xbps-install --sync --yes --update # Update packages
+	$PERMISSION_COMMAND xbps-install --sync --yes --update xbps
 	$PERMISSION_COMMAND xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
 }
 
@@ -291,7 +287,6 @@ sbb_setup_AUR() {
 		cd "$TEMPORARY/paru" || exit 1
 		makepkg --syncdeps --noconfirm
 		$PERMISSION_COMMAND $Pacman_PM --needed --noconfirm --upgrade paru-bin-*.zst 
-		cd "$WD" || exit 1
 	else
 		printf '%s\n' "Paru has been installed" >&2
 		$AUR_COMMAND --sysupgrade --refresh --aur
@@ -338,7 +333,6 @@ sbb_setup_MacPorts() {
 	cd "$TEMPORARY" || exit 1
 	curl --remote-header-name --location --remote-name "https://github.com/macports/macports-base/releases/latest/download/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg"
 	$PERMISSION_COMMAND installer -pkg "$TEMPORARY/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg" -target '/'
-	cd "$WD" || exit 1
 }
 
 sbb_setup_MAS() {
@@ -365,7 +359,6 @@ sbb_setup_SBO() {
 		cd "$TEMPORARY" || exit 1
 		curl --remote-header-name --location --remote-name "https://github.com/sbopkg/sbopkg/releases/download/$SBO_VERSION/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
 		upgradepkg --install-new "$TEMPORARY/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
-		cd "$WD" || exit 1
 		$PERMISSION_COMMAND mkdir -p "/var/lib/sbopkg/SBo/$(cut -f '2' -d ' ' '/etc/slackware-version')" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
 		$PERMISSION_COMMAND sbopkg -rq
 		$PERMISSION_COMMAND sqg -a
@@ -381,7 +374,6 @@ sbb_setup_Snap() {
 			git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
 			cd "$TEMPORARY/snap" || exit 1
 			makepkg -si
-			cd "$WD" || exit 1
 			$PERMISSION_COMMAND systemctl enable --now snapd.socket
 			$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
 		elif [ $PACKAGEMANAGER_MAIN = 'APT' ]; then
@@ -399,7 +391,7 @@ sbb_setup_Basher() {
 	sbb_install_git
 	git clone 'https://github.com/basherpm/basher.git' "${BASHER_ROOT:-$HOME/.basher}"
 
-	sbb_make_install_command 'basher' "$PERMISSION_COMMAND basher install"
+	sbb_make_install_command 'basher' "${BASHER_ROOT:-$HOME/.basher}/bin/basher install"
 }
 
 sbb_setup_BPKG() {
@@ -407,7 +399,6 @@ sbb_setup_BPKG() {
 	git clone 'https://github.com/bpkg/bpkg.git' "$TEMPORARY/bpkg"
 	cd "$TEMPORARY/bpkg" || exit 1
 	$PERMISSION_COMMAND "$TEMPORARY/bpkg/setup.sh"
-	cd "$WD" || exit 1
 
 	sbb_make_install_command 'bpkg' "$PERMISSION_COMMAND bpkg install"
 }
@@ -447,7 +438,7 @@ sbb_setup_NPM() {
 sbb_setup_PIP() {
 	sbb_install_python
 
-	python -m ensurepip --upgrade
+	python -m pip install --upgrade pip
 }
 
 sbb_setup_Yarn() {
@@ -479,11 +470,10 @@ sbb_setup_Yarn() {
 		printf '%s\n' "Yarn has been installed" >&2
 	fi
 
-	yarn set version latest
+	cd "$HOME" || exit 1
+	yarn set version berry
 }
 
 
 # Start
-cd "$DOTFILES_PATH" || exit 1
-git submodule update --init --recursive --remote --merge 2>&-
 cd "$WD" || exit 1
