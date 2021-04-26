@@ -68,7 +68,7 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
     BPKG_MARK='BPK';     BPKG_PM='sbb_bpkg'    ;     BPKG_COMMAND="$BPKG_PM"
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM install --global"
      PIP_MARK='PIP';      PIP_PM='pip3'        ;      PIP_COMMAND="$PIP_PM install --user"
-    Yarn_MARK='YRN';     Yarn_PM='yarn'        ;     Yarn_COMMAND="$Yarn_PM $([ -e "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config" ] && printf '%s' "--use-yarnrc ${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config") global add"
+    Yarn_MARK='YRN';     Yarn_PM='yarn'        ;     Yarn_COMMAND="$Yarn_PM global add"
 
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	case $(uname -s | tr '[:upper:]' '[:lower:]') in
@@ -473,7 +473,3 @@ sbb_setup_Yarn() {
 	cd "$HOME" || exit 1
 	yarn set version berry
 }
-
-
-# Start
-cd "$WD" || exit 1
