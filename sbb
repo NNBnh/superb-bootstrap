@@ -67,7 +67,7 @@ MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_C
   Basher_MARK='BSR';   Basher_PM='sbb_basher'  ;   Basher_COMMAND="$Basher_PM"
     BPKG_MARK='BPK';     BPKG_PM='sbb_bpkg'    ;     BPKG_COMMAND="$BPKG_PM"
      NPM_MARK='NPM';      NPM_PM='npm'         ;      NPM_COMMAND="$PERMISSION_COMMAND $NPM_PM install --global"
-     PIP_MARK='PIP';      PIP_PM='pip3'        ;      PIP_COMMAND="$PIP_PM install --user"
+     PIP_MARK='PIP';      PIP_PM='pip'         ;      PIP_COMMAND="$PIP_PM install --user"
     Yarn_MARK='YRN';     Yarn_PM='yarn'        ;     Yarn_COMMAND="$Yarn_PM global add"
 
 if [ -z "$PACKAGEMANAGER_MAIN" ]; then
