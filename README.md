@@ -14,7 +14,9 @@
   - You can even install your dotfiles with **just one command** from a new `*NIX` system installation
 - Super **flexible** with one config, you can bootstrap **cross-platform**. Supported package managers are:
   - Main packages managers:
+    - [APK](https://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management)
     - [APT](https://wiki.debian.org/Apt)
+    - [EOPKG](https://github.com/solus-project/package-management/blob/master/man/eopkg.1.md)
     - [Mports](https://www.midnightbsd.org/mports)
     - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
     - [Pacman](https://wiki.archlinux.org/index.php/Pacman)
@@ -141,6 +143,7 @@ Special thanks to:
   - [**Laffer1**](https://www.reddit.com/user/laffer1) for [Mports supported](https://www.reddit.com/r/BSD/comments/lzo4nt/help_wanted_bss_os_bootstrapsystemdotfilesmanager/gq8gxa1?utm_source=share&utm_medium=web2x&context=3)
   - [**Andrea Velásquez**](https://github.com/a4vg) for MacPorts and MAS supported
   - [**LoricAndre**](https://github.com/LoricAndre) for [PIP and NPM supported](https://github.com/NNBnh/superb-bootstrap/pull/18)
+- [**`get-pip`**](https://bootstrap.pypa.io) from [Python Packaging Authority](https://github.com/pypa) for the `get-pip.py` script
 - [**Carbon**](https://carbon.now.sh) from [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
 <br><br><br><br>

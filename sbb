@@ -44,7 +44,9 @@ else
 	exit 1
 fi
 
+     APK_MARK='APK';      APK_PM='apk'         ;      APK_COMMAND="$PERMISSION_COMMAND $APT_PM add"
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
+   EOPKG_MARK='EOP';    EOPKG_PM='eopkg'       ;    EOPKG_COMMAND="$PERMISSION_COMMAND $EOPKG_PM install --yes-all"
   Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM install"
  OpenBSD_MARK='OBP';  OpenBSD_PM='pkg_add'     ;  OpenBSD_COMMAND="$PERMISSION_COMMAND $OpenBSD_PM -I"
   Pacman_MARK='PAC';   Pacman_PM='pacman'      ;   Pacman_COMMAND="$PERMISSION_COMMAND $Pacman_PM --sync --noconfirm --needed"
@@ -94,7 +96,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 		;;
 		'linux'*)
 			KERNEL='linux'
-			for packagemanager_check in 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
+			for packagemanager_check in 'APK' 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
 				[ -x "$(eval command -v \$${packagemanager_check}_PM)" ] && {
 					PACKAGEMANAGER_MAIN="$packagemanager_check"
 					break
@@ -175,7 +177,9 @@ sbb_install_git() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
+				'APK')           $APK_COMMAND git         ;;
 				'APT')           $APT_COMMAND git         ;;
+				'EOPKG')       $EOPKG_COMMAND git         ;;
 				'Mports')     $Mports_COMMAND devel/git   ;;
 				'OpenBSD')   $OpenBSD_COMMAND devel/git   ;;
 				'Pacman')     $Pacman_COMMAND git         ;;
@@ -193,6 +197,38 @@ sbb_install_git() {
 	fi
 }
 
+sbb_install_curl() {
+	if [ ! -x "$(command -v 'curl')" ]; then
+		if [ "$KERNEL" = 'darwin' ]; then
+			  if [ -x "$(command -v "$MacPorts_PM")" ]; then $MacPorts_COMMAND curl
+			elif [ -x "$(command -v "$MAS_PM")"      ]; then      $MAS_COMMAND curl
+			else
+				[ ! -x "$(command -v "$Homebrew_PM")" ] && sbb_setup_Homebrew
+
+				$Homebrew_COMMAND curl
+			fi
+		else
+			case "$PACKAGEMANAGER_MAIN" in
+				'APK')           $APK_COMMAND curl          ;;
+				'APT')           $APT_COMMAND curl          ;;
+				'EOPKG')       $EOPKG_COMMAND curl          ;;
+				'Mports')     $Mports_COMMAND ftp/curl      ;;
+				'OpenBSD')   $OpenBSD_COMMAND net/curl      ;;
+				'Pacman')     $Pacman_COMMAND curl          ;;
+				'Portage')   $Portage_COMMAND net-misc/curl ;;
+				'PKGIN')       $PKGIN_COMMAND ftp/curl      ;;
+				'PKGNG')       $PKGNG_COMMAND ftp/curl      ;;
+				'Slackpkg') $Slackpkg_COMMAND curl          ;;
+				'Termux')     $Termux_COMMAND curl          ;;
+				'XBPS')         $XBPS_COMMAND curl          ;;
+				'Zypper')     $Zypper_COMMAND curl          ;;
+			esac
+		fi
+	else
+		printf '%s\n' "Curl has been installed" >&2
+	fi
+}
+
 sbb_install_python() {
 	if [ ! -x "$(command -v 'python')" ]; then
 		if [ "$KERNEL" = 'darwin' ]; then
@@ -205,7 +241,9 @@ sbb_install_python() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
+				'APK')           $APK_COMMAND python          ;;
 				'APT')           $APT_COMMAND python          ;;
+				'EOPKG')       $EOPKG_COMMAND python          ;;
 				'Mports')     $Mports_COMMAND lang/python38   ;;
 				'OpenBSD')   $OpenBSD_COMMAND lang/python/3.9 ;;
 				'Pacman')     $Pacman_COMMAND python          ;;
@@ -224,9 +262,19 @@ sbb_install_python() {
 }
 
 ## Setup main packages manager
+sbb_setup_APK() {
+	$PERMISSION_COMMAND apt update
+	$PERMISSION_COMMAND apt upgrade
+}
+
 sbb_setup_APT() {
 	$PERMISSION_COMMAND apt update  --assume-yes
 	$PERMISSION_COMMAND apt upgrade --assume-yes
+}
+
+sbb_setup_EOPKG() {
+	$PERMISSION_COMMAND eopkg update-repo --yes-all
+	$PERMISSION_COMMAND eopkg upgrade     --yes-all
 }
 
 sbb_setup_Mports() {
@@ -296,7 +344,9 @@ sbb_setup_AUR() {
 sbb_setup_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
+			'APK')         $APT_COMMAND flatpak                               ;;
 			'APT')         $APT_COMMAND flatpak gnome-software-plugin-flatpak ;;
+			'EOPKG')       $APT_COMMAND flatpak xdg-desktop-portal-gtk        ;;
 			'Portage') $Portage_COMMAND sys-apps/flatpak                      ;;
 			'Pacman')   $Pacman_COMMAND flatpak                               ;;
 			'XBPS')       $XBPS_COMMAND flatpak                               ;;
@@ -354,6 +404,8 @@ sbb_setup_MAS() {
 
 sbb_setup_SBO() {
 	if [ ! -x "$(command -v 'sbopkg')" ]; then
+		sbb_install_curl
+
 		SBO_VERSION=$(curl -s "https://api.github.com/repos/sbopkg/sbopkg/releases/latest" | grep -e 'tag_name' | cut -f '4' -d '"')
 
 		cd "$TEMPORARY" || exit 1
@@ -369,16 +421,26 @@ sbb_setup_SBO() {
 
 sbb_setup_Snap() {
 	if [ ! -x "$(command -v 'snap')" ]; then
-		if [ $PACKAGEMANAGER_MAIN = 'Pacman' ]; then
-			sbb_install_git
-			git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
-			cd "$TEMPORARY/snap" || exit 1
-			makepkg -si
-			$PERMISSION_COMMAND systemctl enable --now snapd.socket
-			$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
-		elif [ $PACKAGEMANAGER_MAIN = 'APT' ]; then
-			$APT_COMMAND snapd
-		fi
+		case "$PACKAGEMANAGER_MAIN" in
+			'APT')     $APT_COMMAND snapd ;;
+			'EOPKG') $EOPKG_COMMAND snapd ;;
+			'Pacman')
+				sbb_install_git
+				git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
+				cd "$TEMPORARY/snap" || exit 1
+				makepkg -si
+				$PERMISSION_COMMAND systemctl enable --now snapd.socket
+				$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
+			;;
+			'Zypper')
+				$PERMISSION_COMMAND zypper addrepo --refresh 'https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.2' snappy
+				$PERMISSION_COMMAND zypper --gpg-auto-import-keys refresh
+				$PERMISSION_COMMAND zypper dup --from snappy
+				$PERMISSION_COMMAND zypper install snapd
+				$PERMISSION_COMMAND systemctl enable --now snapd
+				$PERMISSION_COMMAND systemctl enable --now snapd.apparmor
+			;;
+		esac
 	else
 		printf '%s\n' "Snapd has been installed" >&2
 	fi
@@ -436,9 +498,14 @@ sbb_setup_NPM() {
 }
 
 sbb_setup_PIP() {
+	sbb_install_curl
 	sbb_install_python
 
-	python -m pip install --upgrade pip
+	cd "$TEMPORARY" || exit 1
+	curl --remote-header-name --location --remote-name "https://bootstrap.pypa.io/get-pip.py"
+	python get-pip.py
+
+	pip install --upgrade pip
 }
 
 sbb_setup_Yarn() {
