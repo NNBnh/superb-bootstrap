@@ -406,7 +406,7 @@ sbb_setup_MAS() {
 sbb_setup_Nix() {
 	sbb_install_curl
 
-	curl --location --remote-name 'https://nixos.org/nix/install' | sh
+	curl -L 'https://nixos.org/nix/install' | sh
 
 	. "$HOME/.nix-profile/etc/profile.d/nix.sh"
 }
