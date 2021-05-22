@@ -33,6 +33,7 @@
     - [Homebrew](https://docs.brew.sh)
     - [MacPorts](https://www.macports.org)
     - [MAS](https://github.com/mas-cli/mas)
+    - [Nix](https://nixos.org)
     - [SBO](https://sbopkg.org)
     - [Snap](https://snapcraft.io)
   - Language packages managers:

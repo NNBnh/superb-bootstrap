@@ -63,6 +63,7 @@ Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_C
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
 MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_COMMAND $MacPorts_PM install"
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
+     Nix_MARK='NIX';      Nix_PM='nix-env'     ;      Nix_COMMAND="$Nix_PM --install --attr"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
 
@@ -120,7 +121,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	esac
 fi
 
-PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST Nix" # This is a list of package managers supported on bootstrapping OS
 
 
 # Functions
@@ -263,54 +264,54 @@ sbb_install_python() {
 
 ## Setup main packages manager
 sbb_setup_APK() {
-	$PERMISSION_COMMAND apt update
-	$PERMISSION_COMMAND apt upgrade
+	"$PERMISSION_COMMAND" apt update
+	"$PERMISSION_COMMAND" apt upgrade
 }
 
 sbb_setup_APT() {
-	$PERMISSION_COMMAND apt update  --assume-yes
-	$PERMISSION_COMMAND apt upgrade --assume-yes
+	"$PERMISSION_COMMAND" apt update  --assume-yes
+	"$PERMISSION_COMMAND" apt upgrade --assume-yes
 }
 
 sbb_setup_EOPKG() {
-	$PERMISSION_COMMAND eopkg update-repo --yes-all
-	$PERMISSION_COMMAND eopkg upgrade     --yes-all
+	"$PERMISSION_COMMAND" eopkg update-repo --yes-all
+	"$PERMISSION_COMMAND" eopkg upgrade     --yes-all
 }
 
 sbb_setup_Mports() {
-	$PERMISSION_COMMAND mport index
-	$PERMISSION_COMMAND mport upgrade
+	"$PERMISSION_COMMAND" mport index
+	"$PERMISSION_COMMAND" mport upgrade
 }
 
 sbb_setup_OpenBSD() {
-	$PERMISSION_COMMAND syspatch
+	"$PERMISSION_COMMAND" syspatch
 }
 
 sbb_setup_Pacman() {
 	while :; do
 		printf '%s\n' 'y'
 	done \
-	| LC_ALL=en_US.UTF-8 $PERMISSION_COMMAND pacman --sync --sysupgrade --refresh --needed
+	| LC_ALL=en_US.UTF-8 "$PERMISSION_COMMAND" pacman --sync --sysupgrade --refresh --needed
 }
 
 sbb_setup_Portage() {
-	$PERMISSION_COMMAND emerge --sync
-	$PERMISSION_COMMAND emerge --update --newuse --deep --with-bdeps=y @world
+	"$PERMISSION_COMMAND" emerge --sync
+	"$PERMISSION_COMMAND" emerge --update --newuse --deep --with-bdeps=y @world
 }
 
 sbb_setup_PKGIN() {
-	$PERMISSION_COMMAND pkgin update -y
-	$PERMISSION_COMMAND pkgin upgrade -y
+	"$PERMISSION_COMMAND" pkgin update -y
+	"$PERMISSION_COMMAND" pkgin upgrade -y
 }
 
 sbb_setup_PKGNG() {
-	$PERMISSION_COMMAND pkg update -y
-	$PERMISSION_COMMAND pkg upgrade -y
+	"$PERMISSION_COMMAND" pkg update -y
+	"$PERMISSION_COMMAND" pkg upgrade -y
 }
 
 sbb_setup_Slackpkg() {
-	$PERMISSION_COMMAND slackpkg update gpg
-	$PERMISSION_COMMAND slackpkg update
+	"$PERMISSION_COMMAND" slackpkg update gpg
+	"$PERMISSION_COMMAND" slackpkg update
 }
 
 sbb_setup_Termux() {
@@ -319,12 +320,12 @@ sbb_setup_Termux() {
 }
 
 sbb_setup_XBPS() {
-	$PERMISSION_COMMAND xbps-install --sync --yes --update xbps
-	$PERMISSION_COMMAND xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
+	"$PERMISSION_COMMAND" xbps-install --sync --yes --update xbps
+	"$PERMISSION_COMMAND" xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
 }
 
 sbb_setup_Zypper() {
-	$PERMISSION_COMMAND zypper --non-interactive update
+	"$PERMISSION_COMMAND" zypper --non-interactive update
 }
 
 ## Setup additional packages manager
@@ -334,7 +335,7 @@ sbb_setup_AUR() {
 		git clone 'https://aur.archlinux.org/paru-bin.git' "$TEMPORARY/paru"
 		cd "$TEMPORARY/paru" || exit 1
 		makepkg --syncdeps --noconfirm
-		$PERMISSION_COMMAND $Pacman_PM --needed --noconfirm --upgrade paru-bin-*.zst 
+		"$PERMISSION_COMMAND" $Pacman_PM --needed --noconfirm --upgrade paru-bin-*.zst 
 	else
 		printf '%s\n' "Paru has been installed" >&2
 		$AUR_COMMAND --sysupgrade --refresh --aur
@@ -379,10 +380,10 @@ sbb_setup_MacPorts() {
 	}
 
 	xcode-select --install
-	$PERMISSION_COMMAND xcodebuild -license
+	"$PERMISSION_COMMAND" xcodebuild -license
 	cd "$TEMPORARY" || exit 1
 	curl --remote-header-name --location --remote-name "https://github.com/macports/macports-base/releases/latest/download/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg"
-	$PERMISSION_COMMAND installer -pkg "$TEMPORARY/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg" -target '/'
+	"$PERMISSION_COMMAND" installer -pkg "$TEMPORARY/MacPorts-$MACPORT_VERSION-$OS_VERSION_NUMBER-$OS_VERSION_NAME.pkg" -target '/'
 }
 
 sbb_setup_MAS() {
@@ -402,6 +403,14 @@ sbb_setup_MAS() {
 	mas signin --dialog "$APPLE_ID"
 }
 
+sbb_setup_Nix() {
+	sbb_install_curl
+
+	curl --location --remote-name 'https://nixos.org/nix/install' | sh
+
+	. "$HOME/.nix-profile/etc/profile.d/nix.sh"
+}
+
 sbb_setup_SBO() {
 	if [ ! -x "$(command -v 'sbopkg')" ]; then
 		sbb_install_curl
@@ -411,9 +420,9 @@ sbb_setup_SBO() {
 		cd "$TEMPORARY" || exit 1
 		curl --remote-header-name --location --remote-name "https://github.com/sbopkg/sbopkg/releases/download/$SBO_VERSION/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
 		upgradepkg --install-new "$TEMPORARY/sbopkg-$SBO_VERSION-noarch-1_wsr.tgz"
-		$PERMISSION_COMMAND mkdir -p "/var/lib/sbopkg/SBo/$(cut -f '2' -d ' ' '/etc/slackware-version')" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
-		$PERMISSION_COMMAND sbopkg -rq
-		$PERMISSION_COMMAND sqg -a
+		"$PERMISSION_COMMAND" mkdir -p "/var/lib/sbopkg/SBo/$(cut -f '2' -d ' ' '/etc/slackware-version')" "/var/lib/sbopkg/queues" "/var/log/sbopkg" "/var/cache/sbopkg"
+		"$PERMISSION_COMMAND" sbopkg -rq
+		"$PERMISSION_COMMAND" sqg -a
 	else
 		printf '%s\n' "Sbopkg has been installed" >&2
 	fi
@@ -429,16 +438,16 @@ sbb_setup_Snap() {
 				git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
 				cd "$TEMPORARY/snap" || exit 1
 				makepkg -si
-				$PERMISSION_COMMAND systemctl enable --now snapd.socket
-				$PERMISSION_COMMAND ln -s '/var/lib/snapd/snap' '/snap'
+				"$PERMISSION_COMMAND" systemctl enable --now snapd.socket
+				"$PERMISSION_COMMAND" ln -s '/var/lib/snapd/snap' '/snap'
 			;;
 			'Zypper')
-				$PERMISSION_COMMAND zypper addrepo --refresh 'https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.2' snappy
-				$PERMISSION_COMMAND zypper --gpg-auto-import-keys refresh
-				$PERMISSION_COMMAND zypper dup --from snappy
-				$PERMISSION_COMMAND zypper install snapd
-				$PERMISSION_COMMAND systemctl enable --now snapd
-				$PERMISSION_COMMAND systemctl enable --now snapd.apparmor
+				"$PERMISSION_COMMAND" zypper addrepo --refresh 'https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.2' snappy
+				"$PERMISSION_COMMAND" zypper --gpg-auto-import-keys refresh
+				"$PERMISSION_COMMAND" zypper dup --from snappy
+				"$PERMISSION_COMMAND" zypper install snapd
+				"$PERMISSION_COMMAND" systemctl enable --now snapd
+				"$PERMISSION_COMMAND" systemctl enable --now snapd.apparmor
 			;;
 		esac
 	else
@@ -460,7 +469,7 @@ sbb_setup_BPKG() {
 	sbb_install_git
 	git clone 'https://github.com/bpkg/bpkg.git' "$TEMPORARY/bpkg"
 	cd "$TEMPORARY/bpkg" || exit 1
-	$PERMISSION_COMMAND "$TEMPORARY/bpkg/setup.sh"
+	"$PERMISSION_COMMAND" "$TEMPORARY/bpkg/setup.sh"
 
 	sbb_make_install_command 'bpkg' "$PERMISSION_COMMAND bpkg install"
 }
@@ -494,7 +503,7 @@ sbb_setup_NPM() {
 		printf '%s\n' "NPM has been installed" >&2
 	fi
 
-	$PERMISSION_COMMAND npm install --global npm@latest
+	"$PERMISSION_COMMAND" npm install --global npm@latest
 }
 
 sbb_setup_PIP() {
