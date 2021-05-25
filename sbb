@@ -31,7 +31,7 @@
 WD="${WD:-$PWD}"
 
 TMPDIR="${TMPDIR:-/tmp}"
-TEMPORARY="$TMPDIR/sbb"
+TEMPORARY="$TMPDIR/sbb"; mkdir -p "$TEMPORARY"
 
 if [ -x "$(command -v sudo)" ]; then
 	PERMISSION_COMMAND='sudo'
@@ -63,7 +63,7 @@ Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_C
 Homebrew_MARK='HBR'; Homebrew_PM='brew'        ; Homebrew_COMMAND="$Homebrew_PM install"
 MacPorts_MARK='MCP'; MacPorts_PM='port'        ; MacPorts_COMMAND="$PERMISSION_COMMAND $MacPorts_PM install"
      MAS_MARK='MAS';      MAS_PM='mas'         ;      MAS_COMMAND="$MAS_PM install"
-     Nix_MARK='NIX';      Nix_PM='nix-env'     ;      Nix_COMMAND="$Nix_PM --install --attr"
+     Nix_MARK='NIX';      Nix_PM='nix-env'     ;      Nix_COMMAND="NIXPKGS_ALLOW_UNFREE='1' $Nix_PM --install --attr"
      SBO_MARK='SBO';      SBO_PM='sbopkg'      ;      SBO_COMMAND="$PERMISSION_COMMAND $SBO_PM -ifq"
     Snap_MARK='SNA';     Snap_PM='snap'        ;     Snap_COMMAND="$PERMISSION_COMMAND $Snap_PM install"
 
@@ -121,7 +121,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	esac
 fi
 
-PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN $PACKAGEMANAGER_LIST Nix" # This is a list of package managers supported on bootstrapping OS
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN Nix $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
 
 
 # Functions
@@ -178,19 +178,19 @@ sbb_install_git() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
-				'APK')           $APK_COMMAND git         ;;
-				'APT')           $APT_COMMAND git         ;;
-				'EOPKG')       $EOPKG_COMMAND git         ;;
-				'Mports')     $Mports_COMMAND devel/git   ;;
-				'OpenBSD')   $OpenBSD_COMMAND devel/git   ;;
-				'Pacman')     $Pacman_COMMAND git         ;;
+				'APK')           $APK_COMMAND         git ;;
+				'APT')           $APT_COMMAND         git ;;
+				'EOPKG')       $EOPKG_COMMAND         git ;;
+				'Mports')     $Mports_COMMAND   devel/git ;;
+				'OpenBSD')   $OpenBSD_COMMAND   devel/git ;;
+				'Pacman')     $Pacman_COMMAND         git ;;
 				'Portage')   $Portage_COMMAND dev-vcs/git ;;
-				'PKGIN')       $PKGIN_COMMAND devel/git   ;;
-				'PKGNG')       $PKGNG_COMMAND devel/git   ;;
-				'Slackpkg') $Slackpkg_COMMAND git         ;;
-				'Termux')     $Termux_COMMAND git         ;;
-				'XBPS')         $XBPS_COMMAND git         ;;
-				'Zypper')     $Zypper_COMMAND git         ;;
+				'PKGIN')       $PKGIN_COMMAND   devel/git ;;
+				'PKGNG')       $PKGNG_COMMAND   devel/git ;;
+				'Slackpkg') $Slackpkg_COMMAND         git ;;
+				'Termux')     $Termux_COMMAND         git ;;
+				'XBPS')         $XBPS_COMMAND         git ;;
+				'Zypper')     $Zypper_COMMAND         git ;;
 			esac
 		fi
 	else
@@ -210,19 +210,19 @@ sbb_install_curl() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
-				'APK')           $APK_COMMAND curl          ;;
-				'APT')           $APT_COMMAND curl          ;;
-				'EOPKG')       $EOPKG_COMMAND curl          ;;
-				'Mports')     $Mports_COMMAND ftp/curl      ;;
-				'OpenBSD')   $OpenBSD_COMMAND net/curl      ;;
-				'Pacman')     $Pacman_COMMAND curl          ;;
+				'APK')           $APK_COMMAND          curl ;;
+				'APT')           $APT_COMMAND          curl ;;
+				'EOPKG')       $EOPKG_COMMAND          curl ;;
+				'Mports')     $Mports_COMMAND      ftp/curl ;;
+				'OpenBSD')   $OpenBSD_COMMAND      net/curl ;;
+				'Pacman')     $Pacman_COMMAND          curl ;;
 				'Portage')   $Portage_COMMAND net-misc/curl ;;
-				'PKGIN')       $PKGIN_COMMAND ftp/curl      ;;
-				'PKGNG')       $PKGNG_COMMAND ftp/curl      ;;
-				'Slackpkg') $Slackpkg_COMMAND curl          ;;
-				'Termux')     $Termux_COMMAND curl          ;;
-				'XBPS')         $XBPS_COMMAND curl          ;;
-				'Zypper')     $Zypper_COMMAND curl          ;;
+				'PKGIN')       $PKGIN_COMMAND      ftp/curl ;;
+				'PKGNG')       $PKGNG_COMMAND      ftp/curl ;;
+				'Slackpkg') $Slackpkg_COMMAND          curl ;;
+				'Termux')     $Termux_COMMAND          curl ;;
+				'XBPS')         $XBPS_COMMAND          curl ;;
+				'Zypper')     $Zypper_COMMAND          curl ;;
 			esac
 		fi
 	else
@@ -242,19 +242,19 @@ sbb_install_python() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
-				'APK')           $APK_COMMAND python          ;;
-				'APT')           $APT_COMMAND python          ;;
-				'EOPKG')       $EOPKG_COMMAND python          ;;
-				'Mports')     $Mports_COMMAND lang/python38   ;;
-				'OpenBSD')   $OpenBSD_COMMAND lang/python/3.9 ;;
-				'Pacman')     $Pacman_COMMAND python          ;;
-				'Portage')   $Portage_COMMAND dev-lang/python ;;
-				'PKGIN')       $PKGIN_COMMAND lang/python39   ;;
-				'PKGNG')       $PKGNG_COMMAND lang/python39   ;;
-				'Slackpkg') $Slackpkg_COMMAND python3         ;;
-				'Termux')     $Termux_COMMAND python          ;;
-				'XBPS')         $XBPS_COMMAND python3         ;;
-				'Zypper')     $Zypper_COMMAND python3         ;;
+				'APK')           $APK_COMMAND          python     ;;
+				'APT')           $APT_COMMAND          python     ;;
+				'EOPKG')       $EOPKG_COMMAND          python     ;;
+				'Mports')     $Mports_COMMAND     lang/python38   ;;
+				'OpenBSD')   $OpenBSD_COMMAND     lang/python/3.9 ;;
+				'Pacman')     $Pacman_COMMAND          python     ;;
+				'Portage')   $Portage_COMMAND dev-lang/python     ;;
+				'PKGIN')       $PKGIN_COMMAND     lang/python39   ;;
+				'PKGNG')       $PKGNG_COMMAND     lang/python39   ;;
+				'Slackpkg') $Slackpkg_COMMAND          python3    ;;
+				'Termux')     $Termux_COMMAND          python     ;;
+				'XBPS')         $XBPS_COMMAND          python3    ;;
+				'Zypper')     $Zypper_COMMAND          python3    ;;
 			esac
 		fi
 	else
@@ -345,13 +345,13 @@ sbb_setup_AUR() {
 sbb_setup_Flatpak() {
 	if [ ! -x "$(command -v 'flatpak')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
-			'APK')         $APT_COMMAND flatpak                               ;;
-			'APT')         $APT_COMMAND flatpak gnome-software-plugin-flatpak ;;
-			'EOPKG')       $APT_COMMAND flatpak xdg-desktop-portal-gtk        ;;
-			'Portage') $Portage_COMMAND sys-apps/flatpak                      ;;
-			'Pacman')   $Pacman_COMMAND flatpak                               ;;
-			'XBPS')       $XBPS_COMMAND flatpak                               ;;
-			'Zypper')   $Zypper_COMMAND flatpak                               ;;
+			'APK')         $APT_COMMAND          flatpak                               ;;
+			'APT')         $APT_COMMAND          flatpak gnome-software-plugin-flatpak ;;
+			'EOPKG')       $APT_COMMAND          flatpak xdg-desktop-portal-gtk        ;;
+			'Portage') $Portage_COMMAND sys-apps/flatpak                               ;;
+			'Pacman')   $Pacman_COMMAND          flatpak                               ;;
+			'XBPS')       $XBPS_COMMAND          flatpak                               ;;
+			'Zypper')   $Zypper_COMMAND          flatpak                               ;;
 			'Slackpkg')
 				[ ! -x "$(command -v "$SBO_PM")" ] && sbb_setup_SBO
 
@@ -486,17 +486,17 @@ sbb_setup_NPM() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
-				'APT')           $APT_COMMAND npm             ;;
-				'Mports')     $Mports_COMMAND www/npm         ;;
-				'OpenBSD')   $OpenBSD_COMMAND www/npm         ;;
-				'Pacman')     $Pacman_COMMAND npm             ;;
+				'APT')           $APT_COMMAND             npm ;;
+				'Mports')     $Mports_COMMAND         www/npm ;;
+				'OpenBSD')   $OpenBSD_COMMAND         www/npm ;;
+				'Pacman')     $Pacman_COMMAND             npm ;;
 				'Portage')   $Portage_COMMAND net-libs/nodejs ;;
-				'PKGIN')       $PKGIN_COMMAND www/npm         ;;
-				'PKGNG')       $PKGNG_COMMAND www/npm         ;;
-				'Slackpkg') $Slackpkg_COMMAND python/npm      ;;
-				'Termux')     $Termux_COMMAND npm             ;;
-				'XBPS')         $XBPS_COMMAND npm             ;;
-				'Zypper')     $Zypper_COMMAND npm             ;;
+				'PKGIN')       $PKGIN_COMMAND         www/npm ;;
+				'PKGNG')       $PKGNG_COMMAND         www/npm ;;
+				'Slackpkg') $Slackpkg_COMMAND      python/npm ;;
+				'Termux')     $Termux_COMMAND             npm ;;
+				'XBPS')         $XBPS_COMMAND             npm ;;
+				'Zypper')     $Zypper_COMMAND             npm ;;
 			esac
 		fi
 	else
@@ -529,17 +529,17 @@ sbb_setup_Yarn() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
-				'APT')           $APT_COMMAND node-yarnpkg     ;;
-				'Mports')     $Mports_COMMAND www/yarn         ;;
-				'OpenBSD')   $OpenBSD_COMMAND devel/yarn       ;;
-				'Pacman')     $Pacman_COMMAND yarn             ;;
-				'Portage')   $Portage_COMMAND sys-apps/yarn    ;;
-				'PKGIN')       $PKGIN_COMMAND www/yarn         ;;
-				'PKGNG')       $PKGNG_COMMAND devel/yarn       ;;
+				'APT')           $APT_COMMAND     node-yarnpkg ;;
+				'Mports')     $Mports_COMMAND         www/yarn ;;
+				'OpenBSD')   $OpenBSD_COMMAND       devel/yarn ;;
+				'Pacman')     $Pacman_COMMAND             yarn ;;
+				'Portage')   $Portage_COMMAND    sys-apps/yarn ;;
+				'PKGIN')       $PKGIN_COMMAND         www/yarn ;;
+				'PKGNG')       $PKGNG_COMMAND       devel/yarn ;;
 				'Slackpkg') $Slackpkg_COMMAND development/yarn ;;
-				'Termux')     $Termux_COMMAND yarn             ;;
-				'XBPS')         $XBPS_COMMAND yarn             ;;
-				'Zypper')     $Zypper_COMMAND yarn             ;;
+				'Termux')     $Termux_COMMAND             yarn ;;
+				'XBPS')         $XBPS_COMMAND             yarn ;;
+				'Zypper')     $Zypper_COMMAND             yarn ;;
 			esac
 		fi
 	else
