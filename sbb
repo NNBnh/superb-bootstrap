@@ -56,7 +56,7 @@ fi
    PKGNG_MARK='PNG';    PKGNG_PM='pkg'         ;    PKGNG_COMMAND="$PERMISSION_COMMAND $PKGNG_PM install -y"
 Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_COMMAND $Slackpkg_PM install"
   Termux_MARK='TMP';   Termux_PM='pkg'         ;   Termux_COMMAND="$Termux_PM install --assume-yes"
-   URPMI_MARK='URP';    URPMI_PM='urpmi'       ;    URPMI_COMMAND="$PERMISSION_COMMAND $URPMI_PM install --force"
+   URPMI_MARK='URP';    URPMI_PM='urpmi'       ;    URPMI_COMMAND="$PERMISSION_COMMAND $URPMI_PM --force"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
      YUM_MARK='YUM';      YUM_PM='yum'         ;      YUM_COMMAND="$PERMISSION_COMMAND $YUM_PM install --assumeyes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
@@ -100,7 +100,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 		;;
 		'linux'*)
 			KERNEL='linux'
-			for packagemanager_check in 'APK' 'APT' 'Nix' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
+			for packagemanager_check in 'APK' 'APT' 'EOPKG' 'DNF' 'Nix' 'Pacman' 'Portage' 'Slackpkg' 'URPMI' 'XBPS' 'YUM' 'Zypper'; do
 				[ -x "$(eval command -v \$${packagemanager_check}_PM)" ] && {
 					PACKAGEMANAGER_MAIN="$packagemanager_check"
 					break
@@ -187,6 +187,7 @@ sbb_install_git() {
 			case "$PACKAGEMANAGER_MAIN" in
 				'APK')           $APK_COMMAND         git ;;
 				'APT')           $APT_COMMAND         git ;;
+				'DNF')           $DNF_COMMAND         git ;;
 				'EOPKG')       $EOPKG_COMMAND         git ;;
 				'Mports')     $Mports_COMMAND   devel/git ;;
 				'OpenBSD')   $OpenBSD_COMMAND   devel/git ;;
@@ -196,7 +197,9 @@ sbb_install_git() {
 				'PKGNG')       $PKGNG_COMMAND   devel/git ;;
 				'Slackpkg') $Slackpkg_COMMAND         git ;;
 				'Termux')     $Termux_COMMAND         git ;;
+				'URPMI')       $URPMI_COMMAND         git ;;
 				'XBPS')         $XBPS_COMMAND         git ;;
+				'YUM')           $DNF_COMMAND         git ;;
 				'Zypper')     $Zypper_COMMAND         git ;;
 			esac
 		fi
@@ -219,6 +222,7 @@ sbb_install_curl() {
 			case "$PACKAGEMANAGER_MAIN" in
 				'APK')           $APK_COMMAND          curl ;;
 				'APT')           $APT_COMMAND          curl ;;
+				'DNF')           $DNF_COMMAND          curl ;;
 				'EOPKG')       $EOPKG_COMMAND          curl ;;
 				'Mports')     $Mports_COMMAND      ftp/curl ;;
 				'OpenBSD')   $OpenBSD_COMMAND      net/curl ;;
@@ -228,7 +232,9 @@ sbb_install_curl() {
 				'PKGNG')       $PKGNG_COMMAND      ftp/curl ;;
 				'Slackpkg') $Slackpkg_COMMAND          curl ;;
 				'Termux')     $Termux_COMMAND          curl ;;
+				'URPMI')       $URPMI_COMMAND          curl ;;
 				'XBPS')         $XBPS_COMMAND          curl ;;
+				'YUM')           $YUM_COMMAND          curl ;;
 				'Zypper')     $Zypper_COMMAND          curl ;;
 			esac
 		fi
@@ -251,6 +257,7 @@ sbb_install_python() {
 			case "$PACKAGEMANAGER_MAIN" in
 				'APK')           $APK_COMMAND          python     ;;
 				'APT')           $APT_COMMAND          python     ;;
+				'DNF')           $DNF_COMMAND          python3    ;;
 				'EOPKG')       $EOPKG_COMMAND          python     ;;
 				'Mports')     $Mports_COMMAND     lang/python38   ;;
 				'OpenBSD')   $OpenBSD_COMMAND     lang/python/3.9 ;;
@@ -260,7 +267,9 @@ sbb_install_python() {
 				'PKGNG')       $PKGNG_COMMAND     lang/python39   ;;
 				'Slackpkg') $Slackpkg_COMMAND          python3    ;;
 				'Termux')     $Termux_COMMAND          python     ;;
+				'URPMI')       $URPMI_COMMAND          python3    ;;
 				'XBPS')         $XBPS_COMMAND          python3    ;;
+				'YUM')           $YUM_COMMAND          python3    ;;
 				'Zypper')     $Zypper_COMMAND          python3    ;;
 			esac
 		fi
@@ -278,6 +287,10 @@ sbb_setup_APK() {
 sbb_setup_APT() {
 	"$PERMISSION_COMMAND" apt update  --assume-yes
 	"$PERMISSION_COMMAND" apt upgrade --assume-yes
+}
+
+sbb_setup_DNF() {
+	"$PERMISSION_COMMAND" dnf upgrade --assumeyes
 }
 
 sbb_setup_EOPKG() {
@@ -326,9 +339,18 @@ sbb_setup_Termux() {
 	pkg upgrade --assume-yes
 }
 
+sbb_setup_URPMI() {
+	"$PERMISSION_COMMAND" urpmi.update --force --all
+	"$PERMISSION_COMMAND" urpmi        --force --auto-update
+}
+
 sbb_setup_XBPS() {
 	"$PERMISSION_COMMAND" xbps-install --sync --yes --update xbps
 	"$PERMISSION_COMMAND" xbps-install --sync --yes void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree void-repo-debug
+}
+
+sbb_setup_YUM() {
+	"$PERMISSION_COMMAND" yum upgrade --assumeyes
 }
 
 sbb_setup_Zypper() {
@@ -493,7 +515,10 @@ sbb_setup_NPM() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
+				'APK')           $APK_COMMAND             npm ;;
 				'APT')           $APT_COMMAND             npm ;;
+				'DNF')           $DNF_COMMAND             npm ;;
+				'EOPKG')       $EOPKG_COMMAND             npm ;;
 				'Mports')     $Mports_COMMAND         www/npm ;;
 				'OpenBSD')   $OpenBSD_COMMAND         www/npm ;;
 				'Pacman')     $Pacman_COMMAND             npm ;;
@@ -502,7 +527,9 @@ sbb_setup_NPM() {
 				'PKGNG')       $PKGNG_COMMAND         www/npm ;;
 				'Slackpkg') $Slackpkg_COMMAND      python/npm ;;
 				'Termux')     $Termux_COMMAND             npm ;;
+				'URPMI')       $URPMI_COMMAND             npm ;;
 				'XBPS')         $XBPS_COMMAND             npm ;;
+				'YUM')           $YUM_COMMAND             npm ;;
 				'Zypper')     $Zypper_COMMAND             npm ;;
 			esac
 		fi
@@ -536,7 +563,10 @@ sbb_setup_Yarn() {
 			fi
 		else
 			case "$PACKAGEMANAGER_MAIN" in
+				'APK')           $APK_COMMAND             yarn ;;
 				'APT')           $APT_COMMAND     node-yarnpkg ;;
+				'DNF')           $DNF_COMMAND             yarn ;;
+				'EOPKG')       $EOPKG_COMMAND             yarn ;;
 				'Mports')     $Mports_COMMAND         www/yarn ;;
 				'OpenBSD')   $OpenBSD_COMMAND       devel/yarn ;;
 				'Pacman')     $Pacman_COMMAND             yarn ;;
@@ -544,8 +574,10 @@ sbb_setup_Yarn() {
 				'PKGIN')       $PKGIN_COMMAND         www/yarn ;;
 				'PKGNG')       $PKGNG_COMMAND       devel/yarn ;;
 				'Slackpkg') $Slackpkg_COMMAND development/yarn ;;
+				'URPMI')       $URPMI_COMMAND             yarn ;;
 				'Termux')     $Termux_COMMAND             yarn ;;
 				'XBPS')         $XBPS_COMMAND             yarn ;;
+				'YUM')           $YUM_COMMAND             yarn ;;
 				'Zypper')     $Zypper_COMMAND             yarn ;;
 			esac
 		fi
