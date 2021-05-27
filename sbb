@@ -46,6 +46,7 @@ fi
 
      APK_MARK='APK';      APK_PM='apk'         ;      APK_COMMAND="$PERMISSION_COMMAND $APT_PM add"
      APT_MARK='APT';      APT_PM='apt'         ;      APT_COMMAND="$PERMISSION_COMMAND $APT_PM install --assume-yes"
+     DNF_MARK='DNF';      DNF_PM='dnf'         ;      DNF_COMMAND="$PERMISSION_COMMAND $DNF_PM install --assumeyes"
    EOPKG_MARK='EOP';    EOPKG_PM='eopkg'       ;    EOPKG_COMMAND="$PERMISSION_COMMAND $EOPKG_PM install --yes-all"
   Mports_MARK='MPT';   Mports_PM='mports'      ;   Mports_COMMAND="$PERMISSION_COMMAND $Mports_PM install"
  OpenBSD_MARK='OBP';  OpenBSD_PM='pkg_add'     ;  OpenBSD_COMMAND="$PERMISSION_COMMAND $OpenBSD_PM -I"
@@ -55,7 +56,9 @@ fi
    PKGNG_MARK='PNG';    PKGNG_PM='pkg'         ;    PKGNG_COMMAND="$PERMISSION_COMMAND $PKGNG_PM install -y"
 Slackpkg_MARK='SLK'; Slackpkg_PM='slackpkg'    ; Slackpkg_COMMAND="$PERMISSION_COMMAND $Slackpkg_PM install"
   Termux_MARK='TMP';   Termux_PM='pkg'         ;   Termux_COMMAND="$Termux_PM install --assume-yes"
+   URPMI_MARK='URP';    URPMI_PM='urpmi'       ;    URPMI_COMMAND="$PERMISSION_COMMAND $URPMI_PM install --force"
     XBPS_MARK='XBP';     XBPS_PM='xbps-install';     XBPS_COMMAND="$PERMISSION_COMMAND $XBPS_PM --yes"
+     YUM_MARK='YUM';      YUM_PM='yum'         ;      YUM_COMMAND="$PERMISSION_COMMAND $YUM_PM install --assumeyes"
   Zypper_MARK='ZPR';   Zypper_PM='zypper'      ;   Zypper_COMMAND="$PERMISSION_COMMAND $Zypper_PM --non-interactive install"
 
      AUR_MARK='AUR';      AUR_PM='paru'        ;      AUR_COMMAND="$AUR_PM --sync --skipreview --useask --noconfirm --needed"
@@ -97,7 +100,7 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 		;;
 		'linux'*)
 			KERNEL='linux'
-			for packagemanager_check in 'APK' 'APT' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
+			for packagemanager_check in 'APK' 'APT' 'Nix' 'Pacman' 'Portage' 'Slackpkg' 'XBPS' 'Zypper'; do
 				[ -x "$(eval command -v \$${packagemanager_check}_PM)" ] && {
 					PACKAGEMANAGER_MAIN="$packagemanager_check"
 					break
@@ -121,7 +124,11 @@ if [ -z "$PACKAGEMANAGER_MAIN" ]; then
 	esac
 fi
 
-PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN Nix $PACKAGEMANAGER_LIST" # This is a list of package managers supported on bootstrapping OS
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_MAIN" # This is a list of package managers supported on bootstrapping OS
+
+[ "$PACKAGEMANAGER_MAIN" != 'Nix' ] && PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST Nix"
+
+PACKAGEMANAGER_LIST="$PACKAGEMANAGER_LIST $PACKAGEMANAGER_LIST"
 
 
 # Functions
