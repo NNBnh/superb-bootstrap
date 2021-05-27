@@ -150,10 +150,6 @@ Special thanks to:
 - [**`get-pip`**](https://bootstrap.pypa.io) from [Python Packaging Authority](https://github.com/pypa) for the `get-pip.py` script
 - [**Carbon**](https://carbon.now.sh) from [@carbon_app](https://twitter.com/carbon_app) to create the banner
 
-<br><br>
-
-<p align="center"><a href="https://github.com/nnbnh/superb-bootstrap/graphs/contributors"><img src="https://contrib.rocks/image?repo=nnbnh/superb-bootstrap" /></a></p>
-
 <br><br><br><br>
 
 ---
