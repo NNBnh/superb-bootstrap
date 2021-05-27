@@ -376,10 +376,13 @@ sbb_setup_Flatpak() {
 		case "$PACKAGEMANAGER_MAIN" in
 			'APK')         $APT_COMMAND          flatpak                               ;;
 			'APT')         $APT_COMMAND          flatpak gnome-software-plugin-flatpak ;;
+			'DNF')         $DNF_COMMAND          flatpak                               ;;
 			'EOPKG')       $APT_COMMAND          flatpak xdg-desktop-portal-gtk        ;;
 			'Portage') $Portage_COMMAND sys-apps/flatpak                               ;;
 			'Pacman')   $Pacman_COMMAND          flatpak                               ;;
+			'URPMI')     $URPMI_COMMAND          flatpak                               ;;
 			'XBPS')       $XBPS_COMMAND          flatpak                               ;;
+			'YUM')         $YUM_COMMAND          flatpak                               ;;
 			'Zypper')   $Zypper_COMMAND          flatpak                               ;;
 			'Slackpkg')
 				[ ! -x "$(command -v "$SBO_PM")" ] && sbb_setup_SBO
@@ -460,23 +463,31 @@ sbb_setup_SBO() {
 sbb_setup_Snap() {
 	if [ ! -x "$(command -v 'snap')" ]; then
 		case "$PACKAGEMANAGER_MAIN" in
-			'APT')     $APT_COMMAND snapd ;;
-			'EOPKG') $EOPKG_COMMAND snapd ;;
+			'APT')     $APT_COMMAND snapd                    ;;
+			'EOPKG') $EOPKG_COMMAND snapd                    ;;
+			'DNF')   "$PERMISSION_COMMAND" dnf install snapd ;;
+			'YUM')   "$PERMISSION_COMMAND" yum install snapd ;;
 			'Pacman')
 				sbb_install_git
 				git clone 'https://aur.archlinux.org/snapd.git' "$TEMPORARY/snap"
 				cd "$TEMPORARY/snap" || exit 1
 				makepkg -si
-				"$PERMISSION_COMMAND" systemctl enable --now snapd.socket
-				"$PERMISSION_COMMAND" ln -s '/var/lib/snapd/snap' '/snap'
 			;;
 			'Zypper')
 				"$PERMISSION_COMMAND" zypper addrepo --refresh 'https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.2' snappy
 				"$PERMISSION_COMMAND" zypper --gpg-auto-import-keys refresh
 				"$PERMISSION_COMMAND" zypper dup --from snappy
 				"$PERMISSION_COMMAND" zypper install snapd
+
 				"$PERMISSION_COMMAND" systemctl enable --now snapd
 				"$PERMISSION_COMMAND" systemctl enable --now snapd.apparmor
+			;;
+		esac
+
+		case "$PACKAGEMANAGER_MAIN" in
+			'DNF'|'Pacman'|'YUM')
+				"$PERMISSION_COMMAND" systemctl enable --now snapd.socket
+				"$PERMISSION_COMMAND" ln -s '/var/lib/snapd/snap' '/snap'
 			;;
 		esac
 	else
