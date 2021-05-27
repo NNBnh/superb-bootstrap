@@ -16,6 +16,7 @@
   - Main packages managers:
     - [APK](https://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management)
     - [APT](https://wiki.debian.org/Apt)
+    - [DNF](https://rpm-software-management.github.io)
     - [EOPKG](https://github.com/solus-project/package-management/blob/master/man/eopkg.1.md)
     - [Mports](https://www.midnightbsd.org/mports)
     - [OpenBSD PKG](https://www.openbsd.org/faq/faq15.html)
@@ -25,7 +26,9 @@
     - [PKG NG](https://github.com/freebsd/pkg)
     - [Slack PKG](https://slackpkg.org)
     - [Termux PKG](https://wiki.termux.com/wiki/Package_Management)
+    - [URPMI](https://en.wikipedia.org/wiki/Urpmi)
     - [XBPS](https://docs.voidlinux.org/xbps/index.html)
+    - [YUM](http://yum.baseurl.org)
     - [Zypper](https://en.opensuse.org/Portal:Zypper)
   - Additional packages managers:
     - [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository)
