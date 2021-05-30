@@ -436,11 +436,15 @@ sbb_setup_MAS() {
 }
 
 sbb_setup_Nix() {
-	sbb_install_curl
+	if [ ! -x "$(command -v 'nix-env')" ]; then
+		sbb_install_curl
 
-	curl -L 'https://nixos.org/nix/install' | sh
+		curl -L 'https://nixos.org/nix/install' | sh
 
-	. "$HOME/.nix-profile/etc/profile.d/nix.sh"
+		. "$HOME/.nix-profile/etc/profile.d/nix.sh"
+	else
+		printf '%s\n' "Nix has been installed" >&2
+	fi
 }
 
 sbb_setup_SBO() {
