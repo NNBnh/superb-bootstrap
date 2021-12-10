@@ -1,3 +1,5 @@
+> # ⚠️ This project although convenient, it's too unreliable. Please use [Nixpkgs](https://nixos.org/manual/nixpkgs/stable) instead.
+
 <p align="center"><img width="100%" src="https://user-images.githubusercontent.com/43980777/109499307-49ca3000-7ac7-11eb-9f66-3a2c8f5e90b4.png"></p>
 <p align="center">OS bootstrap-system/dotfiles-manager framework that <i>SuperB</i></p>
 <p align="center"><a href="https://github.com/NNBnh/superb-bootstrap/blob/main/LICENSE"><img src="https://img.shields.io/github/license/NNBnh/superb-bootstrap?labelColor=2A2734&color=FF5F56&style=for-the-badge" alt="License: GPL-3.0"></a> <a href="https://gist.github.com/NNBnh/9ef453aba3efce26046e0d3119dab5a7#development-completed"><img src="https://img.shields.io/badge/development-completed-%23FF5F56.svg?labelColor=2A2734&style=for-the-badge&logoColor=FFFFFF" alt="Development completed"></a></p>
